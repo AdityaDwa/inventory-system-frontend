@@ -1,7 +1,13 @@
+import SideBar from "./components/SideBar.jsx";
+import DashBoard from "./app/Dashboard/DashBoard.jsx";
+
 function App() {
   return (
     <>
-      <h1>Inventory System</h1>
+      <main className="flex min-h-screen">
+        <SideBar />
+        <DashBoard />
+      </main>
     </>
   );
 }
