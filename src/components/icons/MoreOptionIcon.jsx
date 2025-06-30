@@ -1,4 +1,4 @@
-export default function PlusIcon({ cssClass = "" }) {
+export default function MoreOptionIcon() {
   return (
     <svg
       width="24"
@@ -9,10 +9,11 @@ export default function PlusIcon({ cssClass = "" }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`${cssClass} h-4 w-4`}
+      className="h-4 w-4"
     >
-      <path d="M5 12h14"></path>
-      <path d="M12 5v14"></path>
+      <circle cx="12" cy="12" r="1"></circle>
+      <circle cx="19" cy="12" r="1"></circle>
+      <circle cx="5" cy="12" r="1"></circle>
     </svg>
   );
 }

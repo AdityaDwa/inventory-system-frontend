@@ -11,7 +11,7 @@ export default function DashBoardOverview({ hidden }) {
       className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4"
       hidden={hidden}
     >
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" hidden={hidden}>
         <OverviewCard
           title="Total Items"
           overviewNum="10"
@@ -46,12 +46,12 @@ export default function DashBoardOverview({ hidden }) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm col-span-4">
-          <div className="flex flex-col space-y-1.5 p-6 bg-primary/5 mb-4 rounded-t-lg">
+        <article className="rounded-lg border bg-card text-card-foreground shadow-sm col-span-4">
+          <header className="flex flex-col space-y-1.5 p-6 bg-primary/5 mb-4 rounded-t-lg">
             <div className="text-2xl font-semibold leading-none tracking-tight">
               Inventory Overview
             </div>
-          </div>
+          </header>
           <div className="p-6 pt-0 pl-2">
             <div
               className="recharts-responsive-container"
@@ -101,18 +101,18 @@ export default function DashBoardOverview({ hidden }) {
               </div>
             </div>
           </div>
-        </div>
+        </article>
 
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm col-span-3">
-          <div className="flex flex-col space-y-1.5 p-6 bg-primary/5 mb-4 rounded-t-lg">
+        <article className="rounded-lg border bg-card text-card-foreground shadow-sm col-span-3">
+          <header className="flex flex-col space-y-1.5 p-6 bg-primary/5 mb-4 rounded-t-lg">
             <div className="text-2xl font-semibold leading-none tracking-tight">
               Recent Activity
             </div>
             <div className="text-sm text-muted-foreground">
               Latest 5 activities in the system
             </div>
-          </div>
-          <div className="p-6 pt-0">
+          </header>
+          <section className="p-6 pt-0">
             <div className="space-y-6">
               <ActivityLog
                 profileInitials="JD"
@@ -159,8 +159,8 @@ export default function DashBoardOverview({ hidden }) {
                 timeElapsed="Yesterday"
               />
             </div>
-          </div>
-        </div>
+          </section>
+        </article>
       </div>
     </section>
   );

@@ -2,20 +2,20 @@ import ActivityLog from "./ActivityLog.jsx";
 
 export default function DashBoardActivity({ hidden }) {
   return (
-    <div
+    <section
       className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4"
       hidden={hidden}
     >
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col space-y-1.5 p-6">
+        <header className="flex flex-col space-y-1.5 p-6">
           <div className="text-2xl font-semibold leading-none tracking-tight">
             Activity Log
           </div>
           <div className="text-sm text-muted-foreground">
             Recent activities across the system
           </div>
-        </div>
-        <div className="p-6 pt-0">
+        </header>
+        <section className="p-6 pt-0">
           <div className="space-y-6">
             <ActivityLog
               profileInitials="JD"
@@ -107,8 +107,8 @@ export default function DashBoardActivity({ hidden }) {
               timeElapsed="5 days ago"
             />
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </section>
   );
 }

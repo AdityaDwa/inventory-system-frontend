@@ -7,7 +7,7 @@ export default function ActivityLog({
   timeElapsed,
 }) {
   return (
-    <div className="flex items-start gap-4">
+    <article className="flex items-start gap-4">
       <span className="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9">
         <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
           {profileInitials}
@@ -22,6 +22,6 @@ export default function ActivityLog({
           In {faculty} • {timeElapsed}
         </p>
       </div>
-    </div>
+    </article>
   );
 }
