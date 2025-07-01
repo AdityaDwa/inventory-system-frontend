@@ -1,4 +1,4 @@
-export default function PlusIcon({ cssClass }) {
+export default function ArrowLeftIcon() {
   return (
     <svg
       width="24"
@@ -9,10 +9,10 @@ export default function PlusIcon({ cssClass }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cssClass}
+      className="h-4 w-4"
     >
-      <path d="M5 12h14"></path>
-      <path d="M12 5v14"></path>
+      <path d="m12 19-7-7 7-7"></path>
+      <path d="M19 12H5"></path>
     </svg>
   );
 }

@@ -1,4 +1,6 @@
 import PageHeader from "../../components/PageHeader.jsx";
+import ActionModal from "../../components/ActionModal.jsx";
+
 import BuildingIcon from "../../components/icons/BuildingIcon.jsx";
 import MoreOptionIcon from "../../components/icons/MoreOptionIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
@@ -11,7 +13,7 @@ export default function Departments() {
           className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
           href="/departments/add"
         >
-          <PlusIcon cssClass="mr-2" />
+          <PlusIcon cssClass="mr-2 h-4 w-4" />
           Add Department
         </a>
       </PageHeader>
@@ -29,7 +31,7 @@ export default function Departments() {
             <input
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm max-w-sm"
               placeholder="Search departments..."
-              value=""
+              // value=""
             />
           </div>
           <div className="relative w-full overflow-auto">
@@ -108,6 +110,7 @@ export default function Departments() {
           </div>
         </div>
       </div>
+      <ActionModal />
     </>
   );
 }

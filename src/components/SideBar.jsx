@@ -73,7 +73,7 @@ export default function SideBar() {
             className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
             href="/inventory"
           >
-            <PlusIcon />
+            <PlusIcon cssClass="h-4 w-4" />
             Add New Item
           </a>
         </nav>
