@@ -1,7 +1,10 @@
+import { Route, Routes, Navigate } from "react-router-dom";
+
 import SideBar from "./components/SideBar.jsx";
 import DashBoard from "./app/Dashboard/DashBoard.jsx";
 import Departments from "./app/Departments/Departments.jsx";
 import AddDepartment from "./app/Departments/AddDepartment.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
 
 function App() {
   return (
@@ -10,9 +13,16 @@ function App() {
         <SideBar />
         <main className="flex-1 overflow-auto">
           <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-            {/* <DashBoard /> */}
-            {/* <Departments /> */}
-            <AddDepartment />
+            <Routes>
+              <Route path="/" element={<DashBoard />} />
+              <Route path="/departments" element={<Departments />} />
+              <Route
+                path="/departments/add-department"
+                element={<AddDepartment />}
+              />
+
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
           </div>
         </main>
       </div>

@@ -1,3 +1,5 @@
+import { Link, useLocation } from "react-router-dom";
+
 import PackageIcon from "./icons/PackageIcon.jsx";
 import DashboardIcon from "./icons/DashboardIcon.jsx";
 import BuildingIcon from "./icons/BuildingIcon.jsx";
@@ -8,77 +10,93 @@ import ColumnChartIcon from "./icons/ColumnChartIcon.jsx";
 import PlusIcon from "./icons/PlusIcon.jsx";
 import LogoutIcon from "./icons/LogoutIcon.jsx";
 
+const NAV_LINKS = [
+  {
+    path: "/departments",
+    icon: <BuildingIcon cssClass="h-[1.2rem] w-[1.2rem]" />,
+    title: "Departments",
+  },
+  {
+    path: "/rooms",
+    icon: <HouseIcon />,
+    title: "Rooms",
+  },
+  {
+    path: "/inventory",
+    icon: <PackageIcon cssClass="h-[1.2rem] w-[1.2rem]" />,
+    title: "Inventory",
+  },
+  {
+    path: "/reports",
+    icon: <TextFileIcon />,
+    title: "Reports",
+  },
+  {
+    path: "/activity-log",
+    icon: <ClipboardIcon />,
+    title: "Activity Log",
+  },
+  {
+    path: "/analytics",
+    icon: <ColumnChartIcon />,
+    title: "Analytics",
+  },
+  {
+    path: "/items/add-item",
+    icon: <PlusIcon cssClass="h-4 w-4" />,
+    title: "Add New Item",
+  },
+];
+
 export default function SideBar() {
+  const pathLocation = useLocation();
+
+  const activeClass =
+    "bg-sidebar-foreground/20 text-sidebar-foreground font-medium";
+
   return (
     <aside className="flex sticky top-0 h-screen w-64 flex-col border-r bg-sidebar text-sidebar-foreground">
       <header className="flex h-16 items-center px-4">
-        <a className="flex items-center gap-2 text-2xl font-semibold" href="/">
+        <Link className="flex items-center gap-2 text-2xl font-semibold" to="/">
           <PackageIcon cssClass="h-8 w-8" />
           <span>Pulchowk IMS</span>
-        </a>
+        </Link>
       </header>
+
       <article className="shrink-0 bg-border w-[90%] h-[0.5px] mx-auto"></article>
+
       <section className="flex-1 overflow-auto py-4">
         <nav className="grid items-start px-2 space-y-1">
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground bg-sidebar-foreground/20 text-sidebar-foreground font-medium"
-            href="/"
+          <Link
+            className={`flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80 ${
+              pathLocation.pathname === "/" ? activeClass : ""
+            }`}
+            to="/"
           >
             <DashboardIcon />
             Dashboard
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/departments"
-          >
-            <BuildingIcon cssClass="h-[1.2rem] w-[1.2rem]" />
-            Departments
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/rooms"
-          >
-            <HouseIcon />
-            Rooms
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/inventory"
-          >
-            <PackageIcon cssClass="h-[1.2rem] w-[1.2rem]" />
-            Inventory
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/inventory"
-          >
-            <TextFileIcon />
-            Reports
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/inventory"
-          >
-            <ClipboardIcon />
-            Activity Log
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/inventory"
-          >
-            <ColumnChartIcon />
-            Analytics
-          </a>
-          <a
-            className="flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80"
-            href="/inventory"
-          >
-            <PlusIcon cssClass="h-4 w-4" />
-            Add New Item
-          </a>
+          </Link>
+
+          {NAV_LINKS.map((navlink) => {
+            return (
+              <Link
+                className={`flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80 ${
+                  pathLocation.pathname.includes(navlink.path)
+                    ? activeClass
+                    : ""
+                }`}
+                to={navlink.path}
+                key={navlink.title}
+              >
+                {navlink.icon}
+                {navlink.title}
+              </Link>
+            );
+          })}
         </nav>
       </section>
-      <section className="mt-auto p-4">
+
+      <footer className="mt-auto p-4">
         <article className="flex items-center gap-2 rounded-lg border border-sidebar-border p-4 bg-sidebar-foreground/5">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
             A
@@ -94,7 +112,7 @@ export default function SideBar() {
           <LogoutIcon />
           Log out
         </button>
-      </section>
+      </footer>
     </aside>
   );
 }

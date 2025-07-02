@@ -10,7 +10,7 @@ export default function ActionModal() {
         position: "fixed",
         left: "0px",
         top: "0px",
-        transform: "translate(1335.2px, 347.2px)",
+        transform: "translate(1335.2px, 331px)",
         minWidth: "max-content",
         zIndex: 50,
         "--radix-popper-transform-origin": "100% 0px",
@@ -37,11 +37,11 @@ export default function ActionModal() {
           pointerEvents: "auto",
         }}
       >
-        <div className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
+        <div className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent">
           <EditIcon />
           Edit
         </div>
-        <div className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-destructive focus:text-destructive">
+        <div className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-destructive focus:text-destructive hover:bg-accent">
           <DeleteIcon />
           Delete
         </div>

@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import PageHeader from "../../components/PageHeader.jsx";
 import ActionModal from "../../components/ActionModal.jsx";
 
@@ -6,16 +9,31 @@ import MoreOptionIcon from "../../components/icons/MoreOptionIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 
 export default function Departments() {
+  const [actionModal, setActionModal] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setActionModal(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <>
       <PageHeader title="Departments">
-        <a
+        <Link
           className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-          href="/departments/add"
+          to="/departments/add-department"
         >
           <PlusIcon cssClass="mr-2 h-4 w-4" />
           Add Department
-        </a>
+        </Link>
       </PageHeader>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div className="flex flex-col space-y-1.5 p-6 pb-3 bg-primary/5 rounded-t-lg">
@@ -31,7 +49,6 @@ export default function Departments() {
             <input
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm max-w-sm"
               placeholder="Search departments..."
-              // value=""
             />
           </div>
           <div className="relative w-full overflow-auto">
@@ -95,12 +112,8 @@ export default function Departments() {
                     <button
                       className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8 p-0"
                       type="button"
-                      id="radix-:r2j:"
-                      aria-haspopup="menu"
-                      aria-expanded="false"
-                      data-state="closed"
+                      onClick={() => setActionModal((prevState) => !prevState)}
                     >
-                      <span className="sr-only">Open menu</span>
                       <MoreOptionIcon />
                     </button>
                   </td>
@@ -110,7 +123,7 @@ export default function Departments() {
           </div>
         </div>
       </div>
-      <ActionModal />
+      {actionModal && <ActionModal />}
     </>
   );
 }
