@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
 import BuildingIcon from "../../components/icons/BuildingIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon";
-import Floor from "./Floor.jsx";
+import FloorField from "./FloorField.jsx";
 
 export default function AddDepartment() {
   const [numberOfFloors, setNumberOfFloors] = useState(1);
@@ -67,7 +67,7 @@ export default function AddDepartment() {
                 </button>
               </div>
               {Array.from({ length: numberOfFloors }, (_, index) => (
-                <Floor
+                <FloorField
                   key={index}
                   floorId={index + 1}
                   numberOfFloors={numberOfFloors}

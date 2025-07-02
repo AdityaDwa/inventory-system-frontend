@@ -4,7 +4,7 @@ import RoomDropdown from "./RoomDropdown.jsx";
 import ChevronDownIcon from "../../components/icons/ChevronDownIcon.jsx";
 import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
 
-export default function Room({
+export default function RoomField({
   roomId,
   floorId,
   numberOfRooms,

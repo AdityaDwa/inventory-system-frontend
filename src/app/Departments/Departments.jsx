@@ -76,7 +76,10 @@ export default function Departments() {
                 </tr>
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
-                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                <tr
+                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                  style={{ position: "relative", overflowY: "hidden" }}
+                >
                   <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
                     <div className="flex items-center gap-2">
                       <BuildingIcon cssClass="h-4 w-4 text-muted-foreground" />
@@ -117,13 +120,13 @@ export default function Departments() {
                       <MoreOptionIcon />
                     </button>
                   </td>
+                  {actionModal && <ActionModal />}
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      {actionModal && <ActionModal />}
     </>
   );
 }

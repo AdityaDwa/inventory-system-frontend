@@ -4,13 +4,10 @@ import EditIcon from "./icons/EditIcon.jsx";
 export default function ActionModal() {
   return (
     <div
-      data-radix-popper-content-wrapper=""
-      dir="ltr"
       style={{
-        position: "fixed",
-        left: "0px",
-        top: "0px",
-        transform: "translate(1335.2px, 331px)",
+        position: "absolute",
+        right: "1rem",
+        top: "0",
         minWidth: "max-content",
         zIndex: 50,
         "--radix-popper-transform-origin": "100% 0px",

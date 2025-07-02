@@ -4,6 +4,7 @@ import SideBar from "./components/SideBar.jsx";
 import DashBoard from "./app/Dashboard/DashBoard.jsx";
 import Departments from "./app/Departments/Departments.jsx";
 import AddDepartment from "./app/Departments/AddDepartment.jsx";
+import Rooms from "./app/Rooms/Rooms.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
                 path="/departments/add-department"
                 element={<AddDepartment />}
               />
-
+              <Route path="/rooms" element={<Rooms />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </div>

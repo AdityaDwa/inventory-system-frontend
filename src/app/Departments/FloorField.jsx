@@ -3,9 +3,13 @@ import { useState } from "react";
 import CloseIcon from "../../components/icons/CloseIcon.jsx";
 import FloorIcon from "../../components/icons/FloorIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon";
-import Room from "./Room.jsx";
+import RoomField from "./RoomField.jsx";
 
-export default function Floor({ floorId, numberOfFloors, handleFloorChange }) {
+export default function FloorField({
+  floorId,
+  numberOfFloors,
+  handleFloorChange,
+}) {
   const [numberOfRooms, setNumberOfRooms] = useState(1);
 
   function handleRoomChange(iterator) {
@@ -45,7 +49,7 @@ export default function Floor({ floorId, numberOfFloors, handleFloorChange }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {Array.from({ length: numberOfRooms }, (_, index) => (
-            <Room
+            <RoomField
               key={index}
               roomId={index + 1}
               floorId={floorId}
