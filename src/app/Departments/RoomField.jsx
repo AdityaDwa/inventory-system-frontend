@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import RoomDropdown from "./RoomDropdown.jsx";
 import ChevronDownIcon from "../../components/icons/ChevronDownIcon.jsx";
 import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
+import DropdownModal from "../../components/DropdownModal.jsx";
 
 export default function RoomField({
   roomId,
@@ -53,15 +53,25 @@ export default function RoomField({
         <button
           type="button"
           className="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1 h-7 text-xs"
-          onClick={() =>
-            handleDropdownChange(dropdownData.value, !dropdownData.open)
-          }
+          onClick={(event) => {
+            event.target.blur();
+            handleDropdownChange(dropdownData.value, !dropdownData.open);
+          }}
         >
           <span style={{ pointerEvents: "none" }}>{dropdownData.value}</span>
           <ChevronDownIcon />
         </button>
         {dropdownData.open && (
-          <RoomDropdown
+          <DropdownModal
+            customStyle={{ bottom: "2.15rem" }}
+            dropdownMenus={[
+              "Classroom",
+              "Lab",
+              "Office",
+              "Workshop",
+              "Conference",
+              "Storage",
+            ]}
             dropdownData={dropdownData}
             handleDropdownChange={handleDropdownChange}
           />
