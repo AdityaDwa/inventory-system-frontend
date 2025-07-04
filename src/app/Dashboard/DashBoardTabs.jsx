@@ -2,7 +2,7 @@ import TabButton from "./TabButton.jsx";
 
 export default function DashBoardTabs({ activeTabTitle, handleTabChange }) {
   return (
-    <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+    <aside className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
       <TabButton
         title="Overview"
         activeTabTitle={activeTabTitle}
@@ -18,6 +18,6 @@ export default function DashBoardTabs({ activeTabTitle, handleTabChange }) {
         activeTabTitle={activeTabTitle}
         handleTabChange={handleTabChange}
       />
-    </div>
+    </aside>
   );
 }

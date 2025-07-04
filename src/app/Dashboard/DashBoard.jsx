@@ -16,7 +16,7 @@ export default function DashBoard() {
   return (
     <>
       <PageHeader title="Dashboard" />
-      <div className="space-y-4">
+      <section className="space-y-4">
         <DashBoardTabs
           activeTabTitle={activeTabTitle}
           handleTabChange={handleTabChange}
@@ -24,7 +24,7 @@ export default function DashBoard() {
         <DashBoardOverview hidden={activeTabTitle !== "Overview"} />
         <DashboardDepartment hidden={activeTabTitle !== "Departments"} />
         <DashBoardActivity hidden={activeTabTitle !== "Activity"} />
-      </div>
+      </section>
     </>
   );
 }

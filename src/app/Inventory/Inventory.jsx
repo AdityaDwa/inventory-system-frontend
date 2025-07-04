@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import DownloadIcon from "../../components/icons/DownloadIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import PageHeader from "../../components/PageHeader.jsx";
-import ChevronDownIcon from "../../components/icons/ChevronDownIcon.jsx";
 import FilterIcon from "../../components/icons/FilterIcon.jsx";
+import SearchIcon from "../../components/icons/SearchIcon.jsx";
 
 import ItemData from "./ItemData.jsx";
 import NoTableData from "../../components/NoTableData.jsx";
@@ -93,7 +93,7 @@ export default function Inventory() {
                 widthSize="180px"
               />
               <div className="relative w-full md:w-auto md:flex-1">
-                <FilterIcon />
+                <SearchIcon customStyle={{ top: "0.75rem" }} />
                 <input
                   className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full pl-8"
                   placeholder="Search items..."

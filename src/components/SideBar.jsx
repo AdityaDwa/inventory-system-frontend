@@ -5,8 +5,8 @@ import DashboardIcon from "./icons/DashboardIcon.jsx";
 import BuildingIcon from "./icons/BuildingIcon.jsx";
 import HouseIcon from "./icons/HouseIcon.jsx";
 import TextFileIcon from "./icons/TextFileIcon.jsx";
-import ClipboardIcon from "./icons/ClipboardIcon.jsx";
-import ColumnChartIcon from "./icons/ColumnChartIcon.jsx";
+import CategoryIcon from "./icons/CategoryIcon.jsx";
+import UserIcon from "./icons/UserIcon.jsx";
 import PlusIcon from "./icons/PlusIcon.jsx";
 import LogoutIcon from "./icons/LogoutIcon.jsx";
 
@@ -31,15 +31,16 @@ const NAV_LINKS = [
     icon: <TextFileIcon />,
     title: "Reports",
   },
-  {
-    path: "/users",
-    icon: <ClipboardIcon />,
-    title: "Users",
-  },
+
   {
     path: "/categories",
-    icon: <ColumnChartIcon />,
+    icon: <CategoryIcon />,
     title: "Categories",
+  },
+  {
+    path: "/users",
+    icon: <UserIcon />,
+    title: "Users",
   },
   {
     path: "/inventory/add-item",

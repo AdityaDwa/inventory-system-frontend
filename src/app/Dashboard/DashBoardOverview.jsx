@@ -5,7 +5,7 @@ import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import CircleCheckIcon from "../../components/icons/CircleCheckIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
-import OverviewChart from "./OverviewChart.jsx";
+import OverviewChart from "../../components/OverviewChart.jsx";
 
 export default function DashBoardOverview({ hidden }) {
   return (
@@ -13,7 +13,7 @@ export default function DashBoardOverview({ hidden }) {
       className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4"
       hidden={hidden}
     >
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" hidden={hidden}>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <OverviewCard
           title="Total Items"
           overviewNum="10"
@@ -55,7 +55,17 @@ export default function DashBoardOverview({ hidden }) {
             </div>
           </header>
           <div className="p-6 pt-0 pl-2" style={{ height: "374px" }}>
-            <OverviewChart />
+            <OverviewChart
+              chartData={[
+                {
+                  name: "DoECE",
+                  Working: 7,
+                  Repairable: 2,
+                  "Out of Order": 1,
+                },
+              ]}
+              showLegend={false}
+            />
           </div>
         </article>
 

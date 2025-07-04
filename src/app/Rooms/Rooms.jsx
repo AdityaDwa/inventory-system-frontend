@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+import SearchIcon from "../../components/icons/SearchIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import PageHeader from "../../components/PageHeader.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
@@ -69,10 +70,13 @@ export default function Room() {
               isDisabled={isFloorSelectDisabled}
               widthSize="180px"
             />
-            <input
-              className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full md:w-auto md:flex-1"
-              placeholder="Search rooms..."
-            />
+            <div className="relative w-full md:w-auto md:flex-1">
+              <SearchIcon customStyle={{ top: "0.75rem" }} />
+              <input
+                className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full pl-8"
+                placeholder="Search rooms..."
+              />
+            </div>
           </div>
 
           <div className="relative w-full overflow-auto">

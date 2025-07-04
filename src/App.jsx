@@ -7,6 +7,7 @@ import AddDepartment from "./app/Departments/AddDepartment.jsx";
 import Rooms from "./app/Rooms/Rooms.jsx";
 import Inventory from "./app/Inventory/Inventory.jsx";
 import AddItem from "./app/Inventory/AddItem.jsx";
+import ReportsTab from "./app/ReportsTab/ReportsTab.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/rooms" element={<Rooms />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/inventory/add-item" element={<AddItem />} />
+              <Route path="/reports" element={<ReportsTab />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </div>
