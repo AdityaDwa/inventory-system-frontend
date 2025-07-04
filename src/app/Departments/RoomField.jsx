@@ -52,7 +52,7 @@ export default function RoomField({
       <div className="space-y-0" style={{ position: "relative" }}>
         <button
           type="button"
-          className="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1 h-7 text-xs"
+          className="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 ring-offset-background data-[placeholder]:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1 h-7 text-xs"
           onClick={(event) => {
             event.target.blur();
             handleDropdownChange(dropdownData.value, !dropdownData.open);
@@ -63,7 +63,7 @@ export default function RoomField({
         </button>
         {dropdownData.open && (
           <DropdownModal
-            customStyle={{ bottom: "2.15rem" }}
+            customStyle={{ bottom: "2rem" }}
             dropdownMenus={[
               "Classroom",
               "Lab",

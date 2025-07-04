@@ -1,10 +1,12 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import SideBar from "./components/SideBar.jsx";
 import DashBoard from "./app/Dashboard/DashBoard.jsx";
 import Departments from "./app/Departments/Departments.jsx";
 import AddDepartment from "./app/Departments/AddDepartment.jsx";
 import Rooms from "./app/Rooms/Rooms.jsx";
+import Inventory from "./app/Inventory/Inventory.jsx";
+import AddItem from "./app/Inventory/AddItem.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
                 element={<AddDepartment />}
               />
               <Route path="/rooms" element={<Rooms />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/inventory/add-item" element={<AddItem />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </div>

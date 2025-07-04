@@ -16,7 +16,7 @@ export default function DashBoardOverview({ hidden }) {
         <OverviewCard
           title="Total Items"
           overviewNum="10"
-          overviewInfo="+12 from last month"
+          overviewInfo="+10 from last month"
         >
           <PackageIcon cssClass="h-4 w-4 text-primary" />
         </OverviewCard>

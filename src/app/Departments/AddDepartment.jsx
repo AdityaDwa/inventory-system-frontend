@@ -26,7 +26,7 @@ export default function AddDepartment() {
           Add New Department
         </h2>
       </div>
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-6" onSubmit={(event) => event.preventDefault()}>
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
           <header className="flex flex-col space-y-1.5 bg-primary/5 p-5">
             <div className="text-2xl font-semibold leading-none tracking-tight">
