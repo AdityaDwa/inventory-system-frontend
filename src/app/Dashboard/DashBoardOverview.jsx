@@ -5,6 +5,7 @@ import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import CircleCheckIcon from "../../components/icons/CircleCheckIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
+import OverviewChart from "./OverviewChart.jsx";
 
 export default function DashBoardOverview({ hidden }) {
   return (
@@ -53,54 +54,8 @@ export default function DashBoardOverview({ hidden }) {
               Inventory Overview
             </div>
           </header>
-          <div className="p-6 pt-0 pl-2">
-            <div
-              className="recharts-responsive-container"
-              style={{ width: "100%", height: "350px", minWidth: "0px" }}
-            >
-              <div
-                className="recharts-wrapper"
-                style={{
-                  position: "relative",
-                  cursor: "default",
-                  width: "100%",
-                  height: "100%",
-                  maxHeight: "350px",
-                  maxWidth: "646px",
-                }}
-              >
-                <div
-                  tabIndex={-1}
-                  className="recharts-tooltip-wrapper recharts-tooltip-wrapper-right recharts-tooltip-wrapper-bottom"
-                  style={{
-                    visibility: "hidden",
-                    pointerEvents: "none",
-                    position: "absolute",
-                    top: "0px",
-                    left: "0px",
-                    transform: "translate(363px, 55.02px)",
-                  }}
-                >
-                  <div
-                    className="recharts-default-tooltip"
-                    style={{
-                      margin: "0px",
-                      padding: "10px",
-                      backgroundColor: "rgb(255, 255, 255)",
-                      border: "1px solid rgb(204, 204, 204)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <p
-                      className="recharts-tooltip-label"
-                      style={{ margin: "0px" }}
-                    >
-                      DoECE
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="p-6 pt-0 pl-2" style={{ height: "374px" }}>
+            <OverviewChart />
           </div>
         </article>
 
