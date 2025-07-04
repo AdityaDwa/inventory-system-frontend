@@ -7,6 +7,7 @@ import ActionModal from "../../components/ActionModal.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import DepartmentData from "./DepartmentData.jsx";
 import NoTableData from "../../components/NoTableData.jsx";
+import Pagination from "../../components/Pagination.jsx";
 
 const isDataAvailable = true;
 
@@ -47,7 +48,7 @@ export default function Departments() {
             All Departments
           </div>
           <div className="text-sm text-muted-foreground">
-            Manage departments, floors, and rooms across the college
+            Manage departments, floors and rooms across the college
           </div>
         </div>
         <div className="p-6 pt-0">
@@ -88,6 +89,8 @@ export default function Departments() {
                     <DepartmentData toggleActionModal={toggleActionModal} />
                     <DepartmentData toggleActionModal={toggleActionModal} />
                     <DepartmentData toggleActionModal={toggleActionModal} />
+                    <DepartmentData toggleActionModal={toggleActionModal} />
+                    <DepartmentData toggleActionModal={toggleActionModal} />
                   </>
                 ) : (
                   <NoTableData tableType="department" />
@@ -95,15 +98,15 @@ export default function Departments() {
               </tbody>
             </table>
           </div>
-        </div>
-        <div
-          style={{
-            position: "relative",
-            right: "1.5rem",
-            bottom: `${4.05 * 0 + 2.25}rem`,
-          }}
-        >
-          {actionModal && <ActionModal />}
+          <div
+            style={{
+              position: "relative",
+              bottom: `${4.05 * 5 + 0.75}rem`,
+            }}
+          >
+            {actionModal && <ActionModal />}
+          </div>
+          {isDataAvailable ? <Pagination tableType="departments" /> : ""}
         </div>
       </div>
     </>

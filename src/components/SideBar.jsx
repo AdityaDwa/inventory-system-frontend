@@ -32,17 +32,17 @@ const NAV_LINKS = [
     title: "Reports",
   },
   {
-    path: "/activity-log",
+    path: "/users",
     icon: <ClipboardIcon />,
-    title: "Activity Log",
+    title: "Users",
   },
   {
-    path: "/analytics",
+    path: "/categories",
     icon: <ColumnChartIcon />,
-    title: "Analytics",
+    title: "Categories",
   },
   {
-    path: "/items/add-item",
+    path: "/inventory/add-item",
     icon: <PlusIcon cssClass="h-4 w-4" />,
     title: "Add New Item",
   },
@@ -81,7 +81,8 @@ export default function SideBar() {
             return (
               <Link
                 className={`flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground text-sidebar-foreground/80 ${
-                  pathLocation.pathname.includes(navlink.path)
+                  pathLocation.pathname.includes(navlink.path) &&
+                  navlink.title !== "Add New Item"
                     ? activeClass
                     : ""
                 }`}

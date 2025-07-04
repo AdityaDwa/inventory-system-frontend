@@ -1,16 +1,19 @@
 import { useState } from "react";
 
-import ChevronDownIcon from "../../components/icons/ChevronDownIcon.jsx";
-import DropdownModal from "../../components/DropdownModal.jsx";
+import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
+import DropdownModal from "./DropdownModal.jsx";
 
-export default function RoomFilter({
-  dropdownInitalValue,
+export default function TableFilter({
+  dropdownInitialValue,
   dropdownMenus,
   isDisabled = false,
   onStateChange = () => {},
+  widthSize = "200px",
+  id = "",
+  customPlaceholderStyle = "",
 }) {
   const [dropdownData, setDropdownData] = useState({
-    value: dropdownInitalValue,
+    value: dropdownInitialValue,
     open: false,
   });
 
@@ -21,22 +24,31 @@ export default function RoomFilter({
       open: open,
     }));
 
-    onStateChange(value);
+    onStateChange(value, dropdownInitialValue);
   }
 
   return (
     <div style={{ position: "relative" }}>
       <button
         type="button"
-        className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1 w-full md:w-[200px]"
+        className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1 w-full"
+        style={{ width: widthSize }}
+        id={id}
         disabled={isDisabled}
         onClick={(event) => {
           event.target.blur();
           handleDropdownChange(dropdownData.value, !dropdownData.open);
         }}
       >
-        <span style={{ pointerEvents: "none" }}>
-          {isDisabled ? dropdownInitalValue : dropdownData.value}
+        <span
+          style={{ pointerEvents: "none" }}
+          className={
+            dropdownData.value === dropdownInitialValue
+              ? customPlaceholderStyle
+              : ""
+          }
+        >
+          {isDisabled ? dropdownInitialValue : dropdownData.value}
         </span>
         <ChevronDownIcon />
       </button>
