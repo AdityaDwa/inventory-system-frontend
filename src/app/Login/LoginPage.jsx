@@ -8,7 +8,7 @@ function validateLength(text) {
   return text.length === 0;
 }
 
-export default function LoginPage() {
+export default function LoginPage({ handleLogin }) {
   const username = useRef();
   const password = useRef();
 
@@ -33,26 +33,27 @@ export default function LoginPage() {
 
     async function postUserData(userData) {
       try {
-        const userInfo = new URLSearchParams();
-        userInfo.append("username", userData.username);
-        userInfo.append("password", userData.password);
-
-        const fetchUrl = getEndpoint("", "auth", "get_token");
-
-        const response = await fetch(fetchUrl, {
+        const response = await fetch("/api/v1/items/login", {
           method: "POST",
-          body: userInfo.toString(),
+
+          body: JSON.stringify(userData),
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
           },
         });
 
         if (response.ok) {
           const responseBody = await response.json();
-          const accessToken = responseBody.access_token;
-          handleLogin(accessToken);
+          handleLogin(
+            responseBody.data.accessToken,
+            responseBody.data.refreshToken,
+            responseBody.data.loggedInUser.role,
+            responseBody.data.loggedInUser._id,
+            responseBody.data.loggedInUser.username,
+            responseBody.data.loggedInUser.email
+          );
         } else {
-          handleNotificationAction(false, "Invalid Credentials");
+          // handleNotificationAction(false, "Invalid Credentials");
         }
       } catch (error) {
         console.log(error);

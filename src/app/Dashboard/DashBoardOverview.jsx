@@ -1,3 +1,5 @@
+import { useState, useEffect, useContext } from "react";
+
 import OverviewCard from "./OverviewCard.jsx";
 import ActivityLog from "./ActivityLog.jsx";
 
@@ -7,7 +9,41 @@ import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
 import OverviewChart from "../../components/OverviewChart.jsx";
 
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+
 export default function DashBoardOverview({ hidden }) {
+  const [inventoryItemStats, setInventoryItemStats] = useState({
+    inUse: 0,
+    underRepair: 0,
+    outOfOrder: 0,
+    totalItems: 0,
+  });
+
+  const { accessToken } = useContext(AuthProvider);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("api/v1/items/inventoryStats", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          console.log(responseBody);
+          setInventoryItemStats(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <section
       className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4"
@@ -16,7 +52,7 @@ export default function DashBoardOverview({ hidden }) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <OverviewCard
           title="Total Items"
-          overviewNum="10"
+          overviewNum={inventoryItemStats.totalItems}
           overviewInfo="+10 from last month"
         >
           <PackageIcon cssClass="h-4 w-4 text-primary" />
@@ -24,7 +60,7 @@ export default function DashBoardOverview({ hidden }) {
 
         <OverviewCard
           title="Working Items"
-          overviewNum="7"
+          overviewNum={inventoryItemStats.inUse}
           overviewInfo="70% of total inventory"
         >
           <CircleCheckIcon />
@@ -32,7 +68,7 @@ export default function DashBoardOverview({ hidden }) {
 
         <OverviewCard
           title="Repairable Items"
-          overviewNum="2"
+          overviewNum={inventoryItemStats.underRepair}
           overviewInfo="20% of total inventory"
         >
           <PenNibIcon />
@@ -40,7 +76,7 @@ export default function DashBoardOverview({ hidden }) {
 
         <OverviewCard
           title="Out of Order"
-          overviewNum="1"
+          overviewNum={inventoryItemStats.outOfOrder}
           overviewInfo="10% of total inventory"
         >
           <AlertIcon />

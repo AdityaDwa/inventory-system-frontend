@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import SaveIcon from "../../components/icons/SaveIcon.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
@@ -8,6 +8,36 @@ export default function AddItem() {
     floor: true,
     room: true,
   });
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    try {
+      const response = await fetch("/api/v1/items/addNewItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // <-- MISSING
+        },
+        body: JSON.stringify({
+          name: "check-computer",
+          category: "computer",
+          subCategory: "lenovo",
+          floor: "floor 1",
+          room: "room 1",
+          status: "In use",
+          source: "Purchase",
+          acquiredDate: "2025:07:01",
+          price: 5000,
+          description: "a computer",
+          count: 1,
+        }),
+      });
+      const json = await response.json();
+      console.log(json);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const [costValues, setCostValues] = useState({
     unitCost: 0,
@@ -54,7 +84,7 @@ export default function AddItem() {
   }
 
   return (
-    <form onSubmit={(event) => event.preventDefault()}>
+    <form onSubmit={handleSubmit}>
       <div className="grid gap-6">
         <section className="rounded-lg border bg-card text-card-foreground shadow-sm">
           <header className="flex flex-col space-y-1.5 p-6 bg-primary/5 rounded-t-lg">
