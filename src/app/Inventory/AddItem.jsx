@@ -1,9 +1,50 @@
 import { useState } from "react";
+import { BASE_URI } from "../../utils/envVars.js";
+import axios from "axios";
 
 import SaveIcon from "../../components/icons/SaveIcon.jsx";
-import TableFilter from "../../components/TableFilter.jsx";
 
 export default function AddItem() {
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Map form data to backend expected format
+    const itemData = {
+      name: data['item-name'],
+      category: data['item-category'],
+      subCategory: data['item-model'], // Using model as subCategory
+      floor: data['item-floor'],
+      room: data['item-room'],
+      status: 'In use', // Default status
+      acquiredDate: data['item-acquired-date'],
+      price: parseFloat(data['item-unit-cost']) || 0,
+      source: data['item-source'],
+      description: data['item-description'],
+      count: parseInt(data['item-working']) + parseInt(data['item-repairable']) + parseInt(data['item-out-of-order']) || 1,
+    };
+    console.log(itemData);
+
+    try {
+      const response = await axios.post(`${BASE_URI}/addNewItem`, itemData);
+      
+      console.log('Item added successfully:', response.data);
+      // Reset form or show success message
+      e.target.reset();
+      setCostValues({
+        unitCost: 0,
+        working: 0,
+        repairable: 0,
+        outOfOrder: 0,
+        totalCost: 0,
+      });
+    } catch (error) {
+      console.error('Error adding item:', error.response?.data?.message || error.message);
+    }
+  };
+
   const [isSelectDisabled, setIsSelectDisabled] = useState({
     floor: true,
     room: true,
@@ -54,7 +95,7 @@ export default function AddItem() {
   }
 
   return (
-    <form onSubmit={(event) => event.preventDefault()}>
+    <form onSubmit={handleSubmit}>
       <div className="grid gap-6">
         <section className="rounded-lg border bg-card text-card-foreground shadow-sm">
           <header className="flex flex-col space-y-1.5 p-6 bg-primary/5 rounded-t-lg">
@@ -80,6 +121,7 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. Dell XPS 15 Laptop"
                     id="item-name"
+                    name="item-name"
                   />
                 </div>
                 <div className="row-span-2">
@@ -94,6 +136,7 @@ export default function AddItem() {
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-32 min-h-32 max-h-32 resize-none"
                       placeholder="Enter a detailed description of the item"
                       id="item-description"
+                      name="item-description"
                     ></textarea>
                   </div>
                 </div>
@@ -108,6 +151,7 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. XPS 15 9500"
                     id="item-model"
+                    name="item-model"
                   />
                 </div>
               </section>
@@ -119,20 +163,19 @@ export default function AddItem() {
                   >
                     Category
                   </label>
-                  <TableFilter
-                    dropdownInitialValue="Select category"
-                    dropdownMenus={[
-                      "Computers",
-                      "Furniture",
-                      "Lab Equipment",
-                      "Electronics",
-                      "Stationery",
-                      "Tools",
-                    ]}
-                    widthSize="264px"
-                    customPlaceholderStyle="text-muted-foreground"
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-category"
-                  />
+                    name="item-category"
+                  >
+                    <option value="">Select category</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Lab Equipment">Lab Equipment</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Stationery">Stationery</option>
+                    <option value="Tools">Tools</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label
@@ -141,14 +184,15 @@ export default function AddItem() {
                   >
                     Department
                   </label>
-                  <TableFilter
-                    dropdownInitialValue="Select department"
-                    dropdownMenus={["DoECE"]}
-                    widthSize="264px"
-                    onStateChange={handleDisableFloorSelect}
-                    customPlaceholderStyle="text-muted-foreground"
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-department"
-                  />
+                    name="item-department"
+                    onChange={(e) => handleDisableFloorSelect(e.target.value, "")}
+                  >
+                    <option value="">Select department</option>
+                    <option value="DoECE">DoECE</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label
@@ -157,15 +201,18 @@ export default function AddItem() {
                   >
                     Floor
                   </label>
-                  <TableFilter
-                    dropdownInitialValue="Select floor"
-                    dropdownMenus={["Floor 1", "Floor 2", "Floor 3"]}
-                    widthSize="264px"
-                    onStateChange={handleDisableRoomSelect}
-                    isDisabled={isSelectDisabled.floor}
-                    customPlaceholderStyle="text-muted-foreground"
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-floor"
-                  />
+                    name="item-floor"
+                    disabled={isSelectDisabled.floor}
+                    onChange={(e) => handleDisableRoomSelect(e.target.value, "")}
+                  >
+                    <option value="">Select floor</option>
+                    <option value="Floor 1">Floor 1</option>
+                    <option value="Floor 2">Floor 2</option>
+                    <option value="Floor 3">Floor 3</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label
@@ -174,19 +221,18 @@ export default function AddItem() {
                   >
                     Room
                   </label>
-                  <TableFilter
-                    dropdownInitialValue="Select room"
-                    dropdownMenus={[
-                      "HOD Room (Office)",
-                      "DHOD Room (Office)",
-                      "Meeting Hall (Conference)",
-                      "B-308 (Classroom)",
-                    ]}
-                    widthSize="264px"
-                    isDisabled={isSelectDisabled.room}
-                    customPlaceholderStyle="text-muted-foreground"
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-room"
-                  />
+                    name="item-room"
+                    disabled={isSelectDisabled.room}
+                  >
+                    <option value="">Select room</option>
+                    <option value="HOD Room (Office)">HOD Room (Office)</option>
+                    <option value="DHOD Room (Office)">DHOD Room (Office)</option>
+                    <option value="Meeting Hall (Conference)">Meeting Hall (Conference)</option>
+                    <option value="B-308 (Classroom)">B-308 (Classroom)</option>
+                  </select>
                 </div>
               </section>
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
@@ -201,6 +247,7 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="e.g. 1200"
                     id="item-unit-cost"
+                    name="item-unit-cost"
                     type="number"
                     onChange={(event) =>
                       calculateTotalCost("unitCost", event.target.value)
@@ -217,6 +264,7 @@ export default function AddItem() {
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-acquired-date"
+                    name="item-acquired-date"
                     type="date"
                     defaultValue={todayDate}
                   />
@@ -228,12 +276,14 @@ export default function AddItem() {
                   >
                     Source
                   </label>
-                  <TableFilter
-                    dropdownInitialValue="Purchase"
-                    dropdownMenus={["Purchase", "Donation"]}
-                    widthSize="362.4px"
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-source"
-                  />
+                    name="item-source"
+                  >
+                    <option value="Purchase">Purchase</option>
+                    <option value="Donation">Donation</option>
+                  </select>
                 </div>
               </section>
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
@@ -249,6 +299,7 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="0"
                     id="item-working"
+                    name="item-working"
                     onChange={(event) =>
                       calculateTotalCost("working", event.target.value)
                     }
@@ -266,6 +317,7 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="0"
                     id="item-repairable"
+                    name="item-repairable"
                     onChange={(event) =>
                       calculateTotalCost("repairable", event.target.value)
                     }
@@ -283,6 +335,7 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="0"
                     id="item-out-of-order"
+                    name="item-out-of-order"
                     onChange={(event) =>
                       calculateTotalCost("outOfOrder", event.target.value)
                     }
