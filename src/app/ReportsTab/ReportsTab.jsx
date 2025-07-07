@@ -42,7 +42,8 @@ export default function ReportsTab() {
       <aside className="flex flex-col md:flex-row items-center gap-4">
         <TableFilter
           dropdownInitialValue="All Departments"
-          dropdownMenus={["All Departments", "DoECE"]}
+          endPointUrl=""
+          dropdownMenus={[{ name: "DoECE", id: 2 }]}
           onStateChange={handleDepartmentChange}
         />
         <div className="text-sm text-muted-foreground">

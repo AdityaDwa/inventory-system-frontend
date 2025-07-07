@@ -1,6 +1,42 @@
+import { useState, useEffect, useContext } from "react";
+
 import ProgressBar from "../../components/ProgressBar.jsx";
 
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+
 export default function DashboardDepartment({ hidden }) {
+  const [inventoryItemStats, setInventoryItemStats] = useState({
+    inUse: 0,
+    underRepair: 0,
+    outOfOrder: 0,
+    totalItems: 0,
+  });
+
+  const { accessToken } = useContext(AuthProvider);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("api/v1/items/inventoryStats", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          console.log(responseBody);
+          setInventoryItemStats(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <section
       className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4"
@@ -12,13 +48,33 @@ export default function DashboardDepartment({ hidden }) {
             <div className="text-2xl font-semibold leading-none tracking-tight">
               DoECE
             </div>
-            <div className="text-sm text-muted-foreground">10 total items</div>
+            <div className="text-sm text-muted-foreground">
+              {inventoryItemStats.totalItems} total items
+            </div>
           </header>
           <div className="p-6 pt-0">
             <div className="space-y-2">
-              <ProgressBar title="Working" percentage={70} />
-              <ProgressBar title="Repairable" percentage={20} />
-              <ProgressBar title="Out of Order" percentage={10} />
+              <ProgressBar
+                title="Working"
+                percentage={(
+                  (inventoryItemStats.inUse * 100) /
+                  inventoryItemStats.totalItems
+                ).toFixed(2)}
+              />
+              <ProgressBar
+                title="Repairable"
+                percentage={(
+                  (inventoryItemStats.underRepair * 100) /
+                  inventoryItemStats.totalItems
+                ).toFixed(2)}
+              />
+              <ProgressBar
+                title="Out of Order"
+                percentage={(
+                  (inventoryItemStats.outOfOrder * 100) /
+                  inventoryItemStats.totalItems
+                ).toFixed(2)}
+              />
             </div>
           </div>
         </article>

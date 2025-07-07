@@ -16,7 +16,8 @@ export default function AddItem() {
       const response = await fetch("/api/v1/items/addNewItem", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // <-- MISSING
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: "check-computer",
@@ -151,14 +152,7 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select category"
-                    dropdownMenus={[
-                      "Computers",
-                      "Furniture",
-                      "Lab Equipment",
-                      "Electronics",
-                      "Stationery",
-                      "Tools",
-                    ]}
+                    endPointUrl="categories"
                     widthSize="264px"
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-category"
@@ -173,7 +167,8 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select department"
-                    dropdownMenus={["DoECE"]}
+                    endPointUrl=""
+                    dropdownMenus={[{ name: "DoECE", id: 2 }]}
                     widthSize="264px"
                     onStateChange={handleDisableFloorSelect}
                     customPlaceholderStyle="text-muted-foreground"
@@ -189,7 +184,7 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select floor"
-                    dropdownMenus={["Floor 1", "Floor 2", "Floor 3"]}
+                    endPointUrl="floors"
                     widthSize="264px"
                     onStateChange={handleDisableRoomSelect}
                     isDisabled={isSelectDisabled.floor}
@@ -206,12 +201,7 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select room"
-                    dropdownMenus={[
-                      "HOD Room (Office)",
-                      "DHOD Room (Office)",
-                      "Meeting Hall (Conference)",
-                      "B-308 (Classroom)",
-                    ]}
+                    endPointUrl="categories"
                     widthSize="264px"
                     isDisabled={isSelectDisabled.room}
                     customPlaceholderStyle="text-muted-foreground"
@@ -260,7 +250,8 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Purchase"
-                    dropdownMenus={["Purchase", "Donation"]}
+                    endPointUrl=""
+                    dropdownMenus={[{ name: "Donation", id: 2 }]}
                     widthSize="362.4px"
                     id="item-source"
                   />

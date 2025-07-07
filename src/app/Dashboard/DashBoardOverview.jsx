@@ -19,10 +19,34 @@ export default function DashBoardOverview({ hidden }) {
     totalItems: 0,
   });
 
+  const [logData, setLogData] = useState(null);
+
   const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchActivityData() {
+      try {
+        const response = await fetch("api/v1/items/overallLogs", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setLogData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchActivityData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchItemData() {
       try {
         const response = await fetch("api/v1/items/inventoryStats", {
           method: "GET",
@@ -33,7 +57,6 @@ export default function DashBoardOverview({ hidden }) {
 
         if (response.ok) {
           const responseBody = await response.json();
-          console.log(responseBody);
           setInventoryItemStats(responseBody.data);
         }
       } catch (error) {
@@ -41,7 +64,7 @@ export default function DashBoardOverview({ hidden }) {
       }
     }
 
-    fetchData();
+    fetchItemData();
   }, []);
 
   return (
@@ -53,7 +76,9 @@ export default function DashBoardOverview({ hidden }) {
         <OverviewCard
           title="Total Items"
           overviewNum={inventoryItemStats.totalItems}
-          overviewInfo="+10 from last month"
+          overviewInfo={`+${
+            inventoryItemStats.totalItems - 15
+          } from last month`}
         >
           <PackageIcon cssClass="h-4 w-4 text-primary" />
         </OverviewCard>
@@ -61,7 +86,10 @@ export default function DashBoardOverview({ hidden }) {
         <OverviewCard
           title="Working Items"
           overviewNum={inventoryItemStats.inUse}
-          overviewInfo="70% of total inventory"
+          overviewInfo={`${(
+            (inventoryItemStats.inUse * 100) /
+            inventoryItemStats.totalItems
+          ).toFixed(2)}% of total inventory`}
         >
           <CircleCheckIcon />
         </OverviewCard>
@@ -69,7 +97,10 @@ export default function DashBoardOverview({ hidden }) {
         <OverviewCard
           title="Repairable Items"
           overviewNum={inventoryItemStats.underRepair}
-          overviewInfo="20% of total inventory"
+          overviewInfo={`${(
+            (inventoryItemStats.underRepair * 100) /
+            inventoryItemStats.totalItems
+          ).toFixed(2)}% of total inventory`}
         >
           <PenNibIcon />
         </OverviewCard>
@@ -77,7 +108,10 @@ export default function DashBoardOverview({ hidden }) {
         <OverviewCard
           title="Out of Order"
           overviewNum={inventoryItemStats.outOfOrder}
-          overviewInfo="10% of total inventory"
+          overviewInfo={`${(
+            (inventoryItemStats.outOfOrder * 100) /
+            inventoryItemStats.totalItems
+          ).toFixed(2)}% of total inventory`}
         >
           <AlertIcon />
         </OverviewCard>
@@ -95,9 +129,9 @@ export default function DashBoardOverview({ hidden }) {
               chartData={[
                 {
                   name: "DoECE",
-                  Working: 7,
-                  Repairable: 2,
-                  "Out of Order": 1,
+                  Working: inventoryItemStats.inUse,
+                  Repairable: inventoryItemStats.underRepair,
+                  "Out of Order": inventoryItemStats.outOfOrder,
                 },
               ]}
               showLegend={false}
@@ -116,50 +150,30 @@ export default function DashBoardOverview({ hidden }) {
           </header>
           <section className="p-6 pt-0">
             <div className="space-y-6">
-              <ActivityLog
-                profileInitials="JD"
-                userName="John Doe"
-                action="added"
-                item="Dell XPS 15 Laptop"
-                faculty="Computer Science"
-                timeElapsed="2 hours ago"
-              />
-
-              <ActivityLog
-                profileInitials="JS"
-                userName="Jane Smith"
-                action="updated status of"
-                item="Projector P3000"
-                faculty="Engineering"
-                timeElapsed="3 hours ago"
-              />
-
-              <ActivityLog
-                profileInitials="MJ"
-                userName="Mike Johnson"
-                action="moved"
-                item="Office Chair"
-                faculty="Business to Arts"
-                timeElapsed="5 hours ago"
-              />
-
-              <ActivityLog
-                profileInitials="SW"
-                userName="Sarah Williams"
-                action="marked as repairable"
-                item="HP Printer"
-                faculty="Administration"
-                timeElapsed="Yesterday"
-              />
-
-              <ActivityLog
-                profileInitials="RB"
-                userName="Robert Brown"
-                action="added"
-                item="Microscope M200"
-                faculty="Science"
-                timeElapsed="Yesterday"
-              />
+              {logData
+                ? logData.slice(0, 5).map((singleLog) => {
+                    const date = new Date(singleLog.createdAt);
+                    const options = {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    };
+                    const formattedDate = date.toLocaleDateString(
+                      "en-US",
+                      options
+                    );
+                    return (
+                      <ActivityLog
+                        profileInitials={singleLog.performedByName[0].toUpperCase()}
+                        userName={singleLog.performedByName}
+                        action={singleLog.action.toLowerCase()}
+                        item={singleLog.itemName}
+                        faculty={singleLog.toRoomName}
+                        timeElapsed={formattedDate}
+                      />
+                    );
+                  })
+                : ""}
             </div>
           </section>
         </article>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import SearchIcon from "../../components/icons/SearchIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
@@ -9,11 +9,38 @@ import NoTableData from "../../components/NoTableData.jsx";
 import Pagination from "../../components/Pagination.jsx";
 import RoomData from "./RoomData.jsx";
 
-const isDataAvailable = true;
+import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 export default function Room() {
   const [actionModal, setActionModal] = useState(false);
   const [isFloorSelectDisabled, setIsFloorSelectDisabled] = useState(true);
+
+  const [roomRowData, setRoomRowData] = useState([]);
+
+  const { accessToken } = useContext(AuthProvider);
+
+  useEffect(() => {
+    async function fetchRoomData() {
+      try {
+        const response = await fetch("api/v1/items/roomsDetails", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          console.log(responseBody.data);
+          setRoomRowData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchRoomData();
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -61,12 +88,13 @@ export default function Room() {
           <div className="flex flex-col md:flex-row items-center gap-4 py-4">
             <TableFilter
               dropdownInitialValue="All Departments"
-              dropdownMenus={["All Departments", "DoECE"]}
+              endPointUrl=""
+              dropdownMenus={[{ name: "DoECE", id: 2 }]}
               onStateChange={handleDisableSelect}
             />
             <TableFilter
               dropdownInitialValue="All Floors"
-              dropdownMenus={["All Floors", "Floor 1", "Floor 2", "Floor 3"]}
+              endPointUrl="floors"
               isDisabled={isFloorSelectDisabled}
               widthSize="180px"
             />
@@ -92,12 +120,12 @@ export default function Room() {
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                     Floor
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  {/* <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                     Type
-                  </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  </th> */}
+                  {/* <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                     Items
-                  </th>
+                  </th> */}
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                     Status
                   </th>
@@ -107,15 +135,18 @@ export default function Room() {
                 </tr>
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
-                {isDataAvailable ? (
-                  <>
-                    <RoomData toggleActionModal={toggleActionModal} />
-                    <RoomData toggleActionModal={toggleActionModal} />
-                    <RoomData toggleActionModal={toggleActionModal} />
-                    <RoomData toggleActionModal={toggleActionModal} />
-                    <RoomData toggleActionModal={toggleActionModal} />
-                    <RoomData toggleActionModal={toggleActionModal} />
-                  </>
+                {roomRowData.length !== 0 ? (
+                  roomRowData.map((eachRoom) => (
+                    <RoomData
+                      roomName={eachRoom.roomName}
+                      floorName={eachRoom.floorName}
+                      totalItems={eachRoom.totalItems}
+                      workingItems={0}
+                      repairableItems={0}
+                      outOfOrderItems={0}
+                      toggleActionModal={toggleActionModal}
+                    />
+                  ))
                 ) : (
                   <NoTableData tableType="room" />
                 )}
@@ -130,7 +161,11 @@ export default function Room() {
           >
             {actionModal && <ActionModal />}
           </div>
-          {isDataAvailable ? <Pagination tableType="rooms" /> : ""}
+          {roomRowData !== 0 ? (
+            <Pagination tableType="rooms" totalNum={roomRowData.length} />
+          ) : (
+            ""
+          )}
         </section>
       </section>
     </>

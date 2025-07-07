@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 import DropdownModal from "./DropdownModal.jsx";
 
+import { AuthProvider } from "../store/AuthProvider.jsx";
+
 export default function TableFilter({
   dropdownInitialValue,
-  dropdownMenus,
+  endPointUrl,
+  dropdownMenus = "",
   isDisabled = false,
   onStateChange = () => {},
   widthSize = "200px",
@@ -16,6 +19,37 @@ export default function TableFilter({
     value: dropdownInitialValue,
     open: false,
   });
+
+  const [dropdownOptions, setDropdownOptions] = useState(null);
+
+  const { accessToken } = useContext(AuthProvider);
+
+  useEffect(() => {
+    async function fetchDropdownData() {
+      if (dropdownMenus) {
+        setDropdownOptions(dropdownMenus);
+        return;
+      }
+
+      try {
+        const response = await fetch(`api/v1/items/${endPointUrl}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setDropdownOptions(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchDropdownData();
+  }, []);
 
   function handleDropdownChange(value, open) {
     setDropdownData((prev) => ({
@@ -55,8 +89,9 @@ export default function TableFilter({
       {dropdownData.open && (
         <DropdownModal
           customStyle={{ top: "2.75rem" }}
-          dropdownMenus={dropdownMenus}
+          dropdownMenus={dropdownOptions}
           dropdownData={dropdownData}
+          categoryType={dropdownInitialValue}
           handleDropdownChange={handleDropdownChange}
         />
       )}

@@ -87,11 +87,6 @@ export default function Departments() {
                 {isDataAvailable ? (
                   <>
                     <DepartmentData toggleActionModal={toggleActionModal} />
-                    <DepartmentData toggleActionModal={toggleActionModal} />
-                    <DepartmentData toggleActionModal={toggleActionModal} />
-                    <DepartmentData toggleActionModal={toggleActionModal} />
-                    <DepartmentData toggleActionModal={toggleActionModal} />
-                    <DepartmentData toggleActionModal={toggleActionModal} />
                   </>
                 ) : (
                   <NoTableData tableType="department" />
@@ -102,12 +97,16 @@ export default function Departments() {
           <div
             style={{
               position: "relative",
-              bottom: `${4.05 * 5 + 0.75}rem`,
+              bottom: `${4.05 * 0 + 0.75}rem`,
             }}
           >
             {actionModal && <ActionModal />}
           </div>
-          {isDataAvailable ? <Pagination tableType="departments" /> : ""}
+          {isDataAvailable ? (
+            <Pagination tableType="departments" totalNum={1} />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>

@@ -66,29 +66,22 @@ export default function Inventory() {
             <div className="flex flex-col md:flex-row items-center gap-4 py-4">
               <TableFilter
                 dropdownInitialValue="All Categories"
-                dropdownMenus={[
-                  "All Categories",
-                  "Computers",
-                  "Furniture",
-                  "Lab Equipment",
-                  "Electronics",
-                  "Stationery",
-                  "Tools",
-                ]}
+                endPointUrl="categories"
                 widthSize="180px"
               />
               <TableFilter
                 dropdownInitialValue="All Departments"
-                dropdownMenus={["All Departments", "DoECE"]}
+                endPointUrl=""
+                dropdownMenus={[{ name: "DoECE", id: 2 }]}
                 widthSize="180px"
               />
               <TableFilter
                 dropdownInitialValue="All Status"
+                endPointUrl=""
                 dropdownMenus={[
-                  "All Status",
-                  "Working",
-                  "Repairable",
-                  "Out of Order",
+                  { name: "Working", id: 2 },
+                  { name: "Repairable", id: 3 },
+                  { name: "Out of Order", id: 4 },
                 ]}
                 widthSize="180px"
               />

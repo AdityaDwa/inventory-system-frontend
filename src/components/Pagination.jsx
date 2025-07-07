@@ -1,13 +1,13 @@
 import ChevronLeftIcon from "./icons/ChevronLeftIcon.jsx";
 import ChevronRightIcon from "./icons/ChevronRightIcon.jsx";
 
-export default function Pagination({ tableType }) {
+export default function Pagination({ tableType, totalNum }) {
   return (
     <footer className="flex items-center justify-between space-x-2 py-4">
       <div className="text-sm text-muted-foreground">
         Showing <span className="font-medium">1</span> to
-        <span className="font-medium"> 6</span> of
-        <span className="font-medium"> 6</span> {tableType}
+        <span className="font-medium"> {totalNum}</span> of
+        <span className="font-medium"> {totalNum}</span> {tableType}
       </div>
       <div className="flex items-center space-x-2">
         <button
