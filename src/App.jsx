@@ -4,12 +4,10 @@ import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
 import SideBar from "./components/SideBar.jsx";
 import LoginPage from "./app/Login/LoginPage.jsx";
 import DashBoard from "./app/Dashboard/DashBoard.jsx";
-import Departments from "./app/Departments/Departments.jsx";
-import AddDepartment from "./app/Departments/AddDepartment.jsx";
 import Rooms from "./app/Rooms/Rooms.jsx";
 import Inventory from "./app/Inventory/Inventory.jsx";
 import AddItem from "./app/Inventory/AddItem.jsx";
-import ReportsTab from "./app/ReportsTab/ReportsTab.jsx";
+import Analytics from "./app/Analytics/Analytics.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
 import { AuthProvider } from "./store/AuthProvider.jsx";
@@ -81,26 +79,6 @@ function App() {
                   }
                 />
                 <Route
-                  path="/departments"
-                  element={
-                    loginCredential.isLoggedIn ? (
-                      <Departments />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-                <Route
-                  path="/departments/add-department"
-                  element={
-                    loginCredential.isLoggedIn ? (
-                      <AddDepartment />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-                <Route
                   path="/rooms"
                   element={
                     loginCredential.isLoggedIn ? (
@@ -131,10 +109,10 @@ function App() {
                   }
                 />
                 <Route
-                  path="/reports"
+                  path="/analytics"
                   element={
                     loginCredential.isLoggedIn ? (
-                      <ReportsTab />
+                      <Analytics />
                     ) : (
                       <Navigate to="/login" />
                     )

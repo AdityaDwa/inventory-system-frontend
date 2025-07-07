@@ -19,8 +19,8 @@ const customTooltipContent = ({ active, payload, label }) => {
         color: "#4ade80",
       },
       {
-        name: "Repairable",
-        value: payload.find((p) => p.name === "Repairable")?.value || 0,
+        name: "Under Repair",
+        value: payload.find((p) => p.name === "Under Repair")?.value || 0,
         color: "#facc15",
       },
       {
@@ -109,7 +109,7 @@ export default class OverviewChart extends PureComponent {
           />
           {showLegend && <Legend />}
           <Bar dataKey="Working" stackId="a" fill="#4ade80" />
-          <Bar dataKey="Repairable" stackId="a" fill="#facc15" />
+          <Bar dataKey="Under Repair" stackId="a" fill="#facc15" />
           <Bar dataKey="Out of Order" stackId="a" fill="#f87171" />
         </BarChart>
       </ResponsiveContainer>

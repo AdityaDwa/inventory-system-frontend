@@ -32,11 +32,10 @@ export default function TableFilter({
       }
 
       try {
-        const response = await fetch(`api/v1/items/${endPointUrl}`, {
+        const response = await fetch(`/api/v1/items/${endPointUrl}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            
           },
         });
 

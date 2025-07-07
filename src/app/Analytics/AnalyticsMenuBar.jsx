@@ -1,37 +1,37 @@
 import BarGraphIcon from "../../components/icons/BarGraphIcon.jsx";
 import PieChartIcon from "../../components/icons/PieChartIcon.jsx";
 import TextFileIcon from "../../components/icons/TextFileIcon.jsx";
-import ReportTabButton from "./ReportTabButton.jsx";
+import AnalyticsMenu from "./AnalyticsMenu.jsx";
 
-export default function ReportTabMenuBar({ activeTabTitle, handleTabChange }) {
+export default function AnalyticsMenuBar({ activeTabTitle, handleTabChange }) {
   return (
     <aside className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-      <ReportTabButton
-        title="Department-wise"
+      <AnalyticsMenu
+        title="Category-wise"
         activeTabTitle={activeTabTitle}
         onTabChange={handleTabChange}
       >
         <BarGraphIcon />
-        Department-wise
-      </ReportTabButton>
+        Category-wise
+      </AnalyticsMenu>
 
-      <ReportTabButton
+      <AnalyticsMenu
         title="Condition Breakdown"
         activeTabTitle={activeTabTitle}
         onTabChange={handleTabChange}
       >
         <PieChartIcon />
         Condition Breakdown
-      </ReportTabButton>
+      </AnalyticsMenu>
 
-      <ReportTabButton
+      <AnalyticsMenu
         title="Acquisition Source"
         activeTabTitle={activeTabTitle}
         onTabChange={handleTabChange}
       >
         <TextFileIcon cssClass="h-4 w-4" />
         Acquisition Source
-      </ReportTabButton>
+      </AnalyticsMenu>
     </aside>
   );
 }

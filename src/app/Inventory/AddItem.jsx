@@ -5,6 +5,7 @@ import SaveIcon from "../../components/icons/SaveIcon.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
+import { currencyFormatter } from "../../utils/formatter.js";
 
 export default function AddItem() {
   const navigate = useNavigate();
@@ -50,9 +51,7 @@ export default function AddItem() {
 
   const [costValues, setCostValues] = useState({
     unitCost: 0,
-    working: 0,
-    repairable: 0,
-    outOfOrder: 0,
+    count: 0,
     totalCost: 0,
   });
 
@@ -64,12 +63,7 @@ export default function AddItem() {
       [identifier]: value,
     };
 
-    const totalItems =
-      Number(updatedData.working) +
-      Number(updatedData.repairable) +
-      Number(updatedData.outOfOrder);
-
-    const sum = totalItems * Number(updatedData.unitCost);
+    const sum = Number(updatedData.count) * Number(updatedData.unitCost);
 
     setCostValues((prevValues) => ({
       ...prevValues,
@@ -106,7 +100,7 @@ export default function AddItem() {
           </header>
 
           <aside className="p-6">
-            <div className="grid gap-4 space-y-3">
+            <div className="grid gap-4">
               <section className="grid grid-cols-2 grid-rows-2 gap-4">
                 <div className="space-y-2">
                   <label
@@ -136,53 +130,43 @@ export default function AddItem() {
                     ></textarea>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-model"
-                  >
-                    Model
-                  </label>
-                  <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                    placeholder="e.g. XPS 15 9500"
-                    id="item-model"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="item-category"
+                    >
+                      Category
+                    </label>
+                    <TableFilter
+                      dropdownInitialValue="Select category"
+                      endPointUrl="categories"
+                      widthSize="275.8px"
+                      customPlaceholderStyle="text-muted-foreground"
+                      id="item-category"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="item-sub-category"
+                    >
+                      Sub Category
+                    </label>
+                    <TableFilter
+                      dropdownInitialValue="Select sub category"
+                      endPointUrl=""
+                      dropdownMenus={[{ name: "DoECE", id: 2 }]}
+                      widthSize="275.8px"
+                      onStateChange={handleDisableFloorSelect}
+                      customPlaceholderStyle="text-muted-foreground"
+                      id="item-sub-category"
+                    />
+                  </div>
                 </div>
               </section>
-              <section className="grid grid-cols-1 md:grid-cols-4 gap-x-8">
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-category"
-                  >
-                    Category
-                  </label>
-                  <TableFilter
-                    dropdownInitialValue="Select category"
-                    endPointUrl="categories"
-                    widthSize="264px"
-                    customPlaceholderStyle="text-muted-foreground"
-                    id="item-category"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-department"
-                  >
-                    Department
-                  </label>
-                  <TableFilter
-                    dropdownInitialValue="Select department"
-                    endPointUrl=""
-                    dropdownMenus={[{ name: "DoECE", id: 2 }]}
-                    widthSize="264px"
-                    onStateChange={handleDisableFloorSelect}
-                    customPlaceholderStyle="text-muted-foreground"
-                    id="item-department"
-                  />
-                </div>
+
+              <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
                 <div className="space-y-2">
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -193,7 +177,7 @@ export default function AddItem() {
                   <TableFilter
                     dropdownInitialValue="Select floor"
                     endPointUrl="categories"
-                    widthSize="264px"
+                    widthSize="362.4px"
                     onStateChange={handleDisableRoomSelect}
                     isDisabled={isSelectDisabled.floor}
                     customPlaceholderStyle="text-muted-foreground"
@@ -210,14 +194,43 @@ export default function AddItem() {
                   <TableFilter
                     dropdownInitialValue="Select room"
                     endPointUrl="categories"
-                    widthSize="264px"
+                    widthSize="362.4px"
                     isDisabled={isSelectDisabled.room}
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-room"
                   />
                 </div>
+                <div className="space-y-2">
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-acquired-date"
+                  >
+                    Date Acquired
+                  </label>
+                  <input
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    id="item-acquired-date"
+                    type="date"
+                    defaultValue={todayDate}
+                  />
+                </div>
               </section>
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+                <div className="space-y-2">
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-source"
+                  >
+                    Source
+                  </label>
+                  <TableFilter
+                    dropdownInitialValue="Purchase"
+                    endPointUrl=""
+                    dropdownMenus={[{ name: "Donation", id: 2 }]}
+                    widthSize="362.4px"
+                    id="item-source"
+                  />
+                </div>
                 <div className="space-y-2">
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -238,82 +251,17 @@ export default function AddItem() {
                 <div className="space-y-2">
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-acquired-date"
+                    htmlFor="item-count"
                   >
-                    Date Acquired
-                  </label>
-                  <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                    id="item-acquired-date"
-                    type="date"
-                    defaultValue={todayDate}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-source"
-                  >
-                    Source
-                  </label>
-                  <TableFilter
-                    dropdownInitialValue="Purchase"
-                    endPointUrl=""
-                    dropdownMenus={[{ name: "Donation", id: 2 }]}
-                    widthSize="362.4px"
-                    id="item-source"
-                  />
-                </div>
-              </section>
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-working"
-                  >
-                    Working
+                    Count
                   </label>
                   <input
                     type="number"
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="0"
-                    id="item-working"
+                    id="item-count"
                     onChange={(event) =>
-                      calculateTotalCost("working", event.target.value)
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-repairable"
-                  >
-                    Repairable
-                  </label>
-                  <input
-                    type="number"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
-                    placeholder="0"
-                    id="item-repairable"
-                    onChange={(event) =>
-                      calculateTotalCost("repairable", event.target.value)
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-out-of-order"
-                  >
-                    Out of Order
-                  </label>
-                  <input
-                    type="number"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
-                    placeholder="0"
-                    id="item-out-of-order"
-                    onChange={(event) =>
-                      calculateTotalCost("outOfOrder", event.target.value)
+                      calculateTotalCost("count", event.target.value)
                     }
                   />
                 </div>
@@ -327,7 +275,7 @@ export default function AddItem() {
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-sm font-medium">Total Cost</span>
                   <span className="text-sm font-bold">
-                    रु {costValues.totalCost}
+                    रु {currencyFormatter(costValues.totalCost)}
                   </span>
                 </div>
               </div>

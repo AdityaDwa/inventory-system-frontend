@@ -1,6 +1,6 @@
 import ConditionPieChart from "./ConditionPieChart.jsx";
 import ChartLegendPoint from "./ChartLegendPoint.jsx";
-import AcquisitionData from "./AcquisitionData.jsx";
+import AcquisitionRowData from "./AcquisitionRowData.jsx";
 
 export default function AcquisitionTab({ hidden }) {
   return (
@@ -14,7 +14,7 @@ export default function AcquisitionTab({ hidden }) {
             Acquisition Source
           </div>
           <div className="text-sm text-muted-foreground">
-            Items by acquisition source (Purchase vs. Donation)
+            Distribution of items by purchase or donation
           </div>
         </header>
         <div className="p-6 pt-0">
@@ -57,27 +57,27 @@ export default function AcquisitionTab({ hidden }) {
                   <table className="w-full caption-bottom text-sm">
                     <thead className="[&amp;_tr]:border-b">
                       <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                        <th className="h-12 px-4 font-medium text-muted-foreground text-left">
                           Category
                         </th>
-                        <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
+                        <th className="h-12 px-4 font-medium text-muted-foreground text-center">
                           Purchase
                         </th>
-                        <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
+                        <th className="h-12 px-4 font-medium text-muted-foreground text-center">
                           Donation
                         </th>
-                        <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
+                        <th className="h-12 px-4 font-medium text-muted-foreground text-center">
                           Total
                         </th>
                       </tr>
                     </thead>
                     <tbody className="[&amp;_tr:last-child]:border-0">
-                      <AcquisitionData />
-                      <AcquisitionData />
-                      <AcquisitionData />
-                      <AcquisitionData />
-                      <AcquisitionData />
-                      <AcquisitionData />
+                      <AcquisitionRowData />
+                      <AcquisitionRowData />
+                      <AcquisitionRowData />
+                      <AcquisitionRowData />
+                      <AcquisitionRowData />
+                      <AcquisitionRowData />
                     </tbody>
                   </table>
                 </div>

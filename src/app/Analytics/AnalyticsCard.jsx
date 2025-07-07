@@ -1,6 +1,6 @@
 import TextFileIcon from "../../components/icons/TextFileIcon.jsx";
 
-export default function ReportCard({ title, cardValue }) {
+export default function AnalyticsCard({ title, cardValue }) {
   return (
     <article className="rounded-lg border bg-card text-card-foreground shadow-sm">
       <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">

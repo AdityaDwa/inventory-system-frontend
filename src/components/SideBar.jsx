@@ -3,9 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 
 import PackageIcon from "./icons/PackageIcon.jsx";
 import DashboardIcon from "./icons/DashboardIcon.jsx";
-import BuildingIcon from "./icons/BuildingIcon.jsx";
 import HouseIcon from "./icons/HouseIcon.jsx";
-import TextFileIcon from "./icons/TextFileIcon.jsx";
+import ColumnChartIcon from "./icons/ColumnChartIcon.jsx";
+import ClipboardIcon from "./icons/ClipboardIcon.jsx";
 import CategoryIcon from "./icons/CategoryIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
 import PlusIcon from "./icons/PlusIcon.jsx";
@@ -14,11 +14,6 @@ import LogoutIcon from "./icons/LogoutIcon.jsx";
 import { AuthProvider } from "../store/AuthProvider.jsx";
 
 const NAV_LINKS = [
-  {
-    path: "/departments",
-    icon: <BuildingIcon cssClass="h-[1.2rem] w-[1.2rem]" />,
-    title: "Departments",
-  },
   {
     path: "/rooms",
     icon: <HouseIcon />,
@@ -30,11 +25,15 @@ const NAV_LINKS = [
     title: "Inventory",
   },
   {
-    path: "/reports",
-    icon: <TextFileIcon />,
-    title: "Reports",
+    path: "/analytics",
+    icon: <ColumnChartIcon />,
+    title: "Analytics",
   },
-
+  {
+    path: "/activity",
+    icon: <ClipboardIcon />,
+    title: "Activity Log",
+  },
   {
     path: "/categories",
     icon: <CategoryIcon />,
@@ -65,7 +64,7 @@ export default function SideBar() {
       <header className="flex h-16 items-center px-4">
         <Link className="flex items-center gap-2 text-2xl font-semibold" to="/">
           <PackageIcon cssClass="h-8 w-8" />
-          <span>Pulchowk IMS</span>
+          <span>DoECE IMS</span>
         </Link>
       </header>
 

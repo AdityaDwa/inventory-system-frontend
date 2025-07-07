@@ -1,4 +1,4 @@
-export default function ReportTabButton({
+export default function AnalyticsMenu({
   title,
   activeTabTitle,
   onTabChange,

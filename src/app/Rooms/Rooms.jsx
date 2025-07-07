@@ -2,9 +2,9 @@ import { useState, useEffect, useContext } from "react";
 
 import SearchIcon from "../../components/icons/SearchIcon.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
+
 import PageHeader from "../../components/PageHeader.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
-import ActionModal from "../../components/ActionModal.jsx";
 import NoTableData from "../../components/NoTableData.jsx";
 import Pagination from "../../components/Pagination.jsx";
 import RoomData from "./RoomData.jsx";
@@ -12,17 +12,13 @@ import RoomData from "./RoomData.jsx";
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 export default function Room() {
-  const [actionModal, setActionModal] = useState(false);
-  const [isFloorSelectDisabled, setIsFloorSelectDisabled] = useState(true);
-
   const [roomRowData, setRoomRowData] = useState([]);
-
   const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchRoomData() {
       try {
-        const response = await fetch("api/v1/items/roomsDetails", {
+        const response = await fetch("/api/v1/items/roomsDetails", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -41,27 +37,6 @@ export default function Room() {
     fetchRoomData();
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setActionModal(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
-  function toggleActionModal() {
-    setActionModal((prevState) => !prevState);
-  }
-
-  function handleDisableSelect(value, dropdownInitialValue) {
-    setIsFloorSelectDisabled(value === dropdownInitialValue);
-  }
-
   return (
     <>
       <PageHeader title="Rooms">
@@ -79,29 +54,22 @@ export default function Room() {
             All Rooms
           </div>
           <div className="text-sm text-muted-foreground">
-            View and manage rooms across departments and floors
+            View and manage rooms across different floors
           </div>
         </header>
 
         <section className="p-6 pt-0">
           <div className="flex flex-col md:flex-row items-center gap-4 py-4">
             <TableFilter
-              dropdownInitialValue="All Departments"
-              endPointUrl=""
-              dropdownMenus={[{ name: "DoECE", id: 2 }]}
-              onStateChange={handleDisableSelect}
-            />
-            <TableFilter
               dropdownInitialValue="All Floors"
               endPointUrl="floors"
-              isDisabled={isFloorSelectDisabled}
-              widthSize="180px"
+              widthSize="250px"
             />
             <div className="relative w-full md:w-auto md:flex-1">
               <SearchIcon customStyle={{ top: "0.75rem" }} />
               <input
                 className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full pl-8"
-                placeholder="Search rooms..."
+                placeholder="Search rooms"
               />
             </div>
           </div>
@@ -110,49 +78,29 @@ export default function Room() {
             <table className="w-full caption-bottom text-sm">
               <thead className="[&amp;_tr]:border-b">
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  <th className="h-12 px-4 text-left font-medium text-muted-foreground">
                     Room
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                    Department
+                  <th className="h-12 px-4 text-left font-medium text-muted-foreground">
+                    Type
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                  <th className="h-12 px-4 text-left font-medium text-muted-foreground">
                     Floor
                   </th>
-                  {/* <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                    Type
-                  </th> */}
-                  {/* <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                    Items
-                  </th> */}
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                    Status
+                  <th className="h-12 px-4 font-medium text-muted-foreground">
+                    Total Items
                   </th>
-                  <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
-                    Actions
-                  </th>
+                  <th className="h-12 px-4 font-medium text-muted-foreground"></th>
                 </tr>
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
                 {roomRowData.length !== 0 ? (
-                  roomRowData.map((eachRoom, index) => (
+                  roomRowData.map((eachRoom) => (
                     <RoomData
-                      key={index}
+                      key={eachRoom.roomId}
                       roomName={eachRoom.roomName}
                       floorName={eachRoom.floorName}
                       totalItems={eachRoom.totalItems}
-                      workingItems={eachRoom.statusCounts[0].count}
-                      repairableItems={
-                        eachRoom.statusCounts[1]
-                          ? eachRoom.statusCounts[1].count
-                          : 0
-                      }
-                      outOfOrderItems={
-                        eachRoom.statusCounts[2]
-                          ? eachRoom.statusCounts[2].count
-                          : 0
-                      }
-                      toggleActionModal={toggleActionModal}
                     />
                   ))
                 ) : (
@@ -160,14 +108,6 @@ export default function Room() {
                 )}
               </tbody>
             </table>
-          </div>
-          <div
-            style={{
-              position: "relative",
-              bottom: `${4.55 * 5 + 0.75}rem`,
-            }}
-          >
-            {actionModal && <ActionModal />}
           </div>
           {roomRowData !== 0 ? (
             <Pagination tableType="rooms" totalNum={roomRowData.length} />

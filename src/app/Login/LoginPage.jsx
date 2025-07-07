@@ -76,7 +76,7 @@ export default function LoginPage({ handleLogin }) {
         <header className="flex flex-col items-center px-4">
           <div className="flex items-center gap-2 text-2xl font-bold text-sidebar">
             <PackageIcon cssClass="h-9 w-9" />
-            <span>Pulchowk IMS</span>
+            <span>DoECE IMS</span>
           </div>
           <p className="my-4 font-bold text-[1.35rem] text-center">Login</p>
         </header>
