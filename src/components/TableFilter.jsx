@@ -36,6 +36,7 @@ export default function TableFilter({
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            
           },
         });
 

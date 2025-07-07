@@ -3,7 +3,15 @@ import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import ChevronRightIcon from "../../components/icons/ChevronRightIcon";
 import MoreOptionIcon from "../../components/icons/MoreOptionIcon.jsx";
 
-export default function ItemData({ toggleActionModal }) {
+export default function ItemData({
+  name,
+  subCategory,
+  cost,
+  dateAcquired,
+  source,
+  status,
+  toggleActionModal,
+}) {
   const customClass =
     "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 "; //For Purchase
   //   text-foreground For Donation
@@ -14,9 +22,9 @@ export default function ItemData({ toggleActionModal }) {
         <div className="flex flex-col">
           <div className="flex items-center gap-2 font-medium">
             <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
-            Officer Table
+            {name}
           </div>
-          <div className="text-xs text-muted-foreground">wooden table</div>
+          <div className="text-xs text-muted-foreground">{subCategory}</div>
         </div>
       </td>
       <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
@@ -24,18 +32,18 @@ export default function ItemData({ toggleActionModal }) {
       </td>
       <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
         <div className="flex flex-col">
-          <div>रु 5,000</div>
-          <div className="text-xs text-muted-foreground">Total: रु 5,000</div>
+          <div>रु {cost}</div>
+          <div className="text-xs text-muted-foreground">Total: रु {cost}</div>
         </div>
       </td>
       <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-        2/5/2025
+        {dateAcquired}
       </td>
       <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
         <div
           className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${customClass}`}
         >
-          Purchase
+          {source}
         </div>
       </td>
       <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">

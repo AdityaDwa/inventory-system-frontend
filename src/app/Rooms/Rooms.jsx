@@ -31,7 +31,6 @@ export default function Room() {
 
         if (response.ok) {
           const responseBody = await response.json();
-          console.log(responseBody.data);
           setRoomRowData(responseBody.data);
         }
       } catch (error) {
@@ -136,14 +135,23 @@ export default function Room() {
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
                 {roomRowData.length !== 0 ? (
-                  roomRowData.map((eachRoom) => (
+                  roomRowData.map((eachRoom, index) => (
                     <RoomData
+                      key={index}
                       roomName={eachRoom.roomName}
                       floorName={eachRoom.floorName}
                       totalItems={eachRoom.totalItems}
-                      workingItems={0}
-                      repairableItems={0}
-                      outOfOrderItems={0}
+                      workingItems={eachRoom.statusCounts[0].count}
+                      repairableItems={
+                        eachRoom.statusCounts[1]
+                          ? eachRoom.statusCounts[1].count
+                          : 0
+                      }
+                      outOfOrderItems={
+                        eachRoom.statusCounts[2]
+                          ? eachRoom.statusCounts[2].count
+                          : 0
+                      }
                       toggleActionModal={toggleActionModal}
                     />
                   ))

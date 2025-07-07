@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import DownloadIcon from "../../components/icons/DownloadIcon.jsx";
@@ -13,10 +13,13 @@ import ActionModal from "../../components/ActionModal.jsx";
 import Pagination from "../../components/Pagination.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
 
-const isDataAvailable = true;
+import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 export default function Inventory() {
   const [actionModal, setActionModal] = useState(false);
+  const [itemRowData, setItemRowData] = useState([]);
+
+  const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -29,6 +32,28 @@ export default function Inventory() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
+  }, []);
+
+  useEffect(() => {
+    async function fetchItemData() {
+      try {
+        const response = await fetch("api/v1/items/showAllItems", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setItemRowData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchItemData();
   }, []);
 
   function toggleActionModal() {
@@ -121,15 +146,25 @@ export default function Inventory() {
                   </tr>
                 </thead>
                 <tbody className="[&_tr:last-child]:border-0">
-                  {isDataAvailable ? (
-                    <>
-                      <ItemData toggleActionModal={toggleActionModal} />
-                      <ItemData toggleActionModal={toggleActionModal} />
-                      <ItemData toggleActionModal={toggleActionModal} />
-                      <ItemData toggleActionModal={toggleActionModal} />
-                      <ItemData toggleActionModal={toggleActionModal} />
-                      <ItemData toggleActionModal={toggleActionModal} />
-                    </>
+                  {itemRowData.length !== 0 ? (
+                    itemRowData.map((eachItem) => {
+                      const formattedDate = new Date(eachItem.createdAt)
+                        .toISOString()
+                        .split("T")[0];
+
+                      return (
+                        <ItemData
+                          key={eachItem._id}
+                          name={eachItem.name}
+                          subCategory={eachItem.subCategory.name}
+                          cost={eachItem.price}
+                          dateAcquired={formattedDate}
+                          source={eachItem.source}
+                          status={eachItem.status}
+                          toggleActionModal={toggleActionModal}
+                        />
+                      );
+                    })
                   ) : (
                     <NoTableData tableType="item" />
                   )}
@@ -145,7 +180,11 @@ export default function Inventory() {
           >
             {actionModal && <ActionModal />}
           </div>
-          {isDataAvailable ? <Pagination tableType="items" /> : ""}
+          {itemRowData !== 0 ? (
+            <Pagination tableType="items" totalNum={itemRowData.length} />
+          ) : (
+            ""
+          )}
         </section>
       </section>
     </>

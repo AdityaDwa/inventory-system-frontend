@@ -1,13 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SaveIcon from "../../components/icons/SaveIcon.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
 
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+
 export default function AddItem() {
+  const navigate = useNavigate();
+
   const [isSelectDisabled, setIsSelectDisabled] = useState({
     floor: true,
     room: true,
   });
+
+  const { accessToken } = useContext(AuthProvider);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -16,14 +23,14 @@ export default function AddItem() {
       const response = await fetch("/api/v1/items/addNewItem", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: "check-computer",
           category: "computer",
           subCategory: "lenovo",
-          floor: "floor 1",
+          floor: "Floor 1",
           room: "room 1",
           status: "In use",
           source: "Purchase",
@@ -33,8 +40,9 @@ export default function AddItem() {
           count: 1,
         }),
       });
-      const json = await response.json();
-      console.log(json);
+      const responseBody = await response.json();
+      console.log(responseBody);
+      navigate("/inventory");
     } catch (error) {
       console.log(error);
     }
@@ -184,7 +192,7 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select floor"
-                    endPointUrl="floors"
+                    endPointUrl="categories"
                     widthSize="264px"
                     onStateChange={handleDisableRoomSelect}
                     isDisabled={isSelectDisabled.floor}

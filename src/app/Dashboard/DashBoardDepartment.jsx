@@ -26,7 +26,6 @@ export default function DashboardDepartment({ hidden }) {
 
         if (response.ok) {
           const responseBody = await response.json();
-          console.log(responseBody);
           setInventoryItemStats(responseBody.data);
         }
       } catch (error) {

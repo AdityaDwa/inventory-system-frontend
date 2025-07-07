@@ -48,7 +48,7 @@ export default function DashBoardActivity({ hidden }) {
         <section className="p-6 pt-0">
           <div className="space-y-6">
             {logData
-              ? logData.map((singleLog) => {
+              ? logData.map((singleLog, index) => {
                   const date = new Date(singleLog.createdAt);
                   const options = {
                     year: "numeric",
@@ -61,6 +61,7 @@ export default function DashBoardActivity({ hidden }) {
                   );
                   return (
                     <ActivityLog
+                      key={index}
                       profileInitials={singleLog.performedByName[0].toUpperCase()}
                       userName={singleLog.performedByName}
                       action={singleLog.action.toLowerCase()}
