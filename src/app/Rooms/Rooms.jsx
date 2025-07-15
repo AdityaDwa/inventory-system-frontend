@@ -59,11 +59,10 @@ export default function Room() {
         </header>
 
         <section className="p-6 pt-0">
-          <div className="flex flex-col md:flex-row items-center gap-4 py-4">
+          <div className="flex flex-col md:flex-row items-center gap-4 py-4 pl-[37rem]">
             <TableFilter
               dropdownInitialValue="All Floors"
               endPointUrl="floors"
-              widthSize="250px"
             />
             <div className="relative w-full md:w-auto md:flex-1">
               <SearchIcon customStyle={{ top: "0.75rem" }} />
@@ -74,26 +73,28 @@ export default function Room() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <table className="w-full caption-bottom text-sm">
-              <thead className="[&amp;_tr]:border-b">
-                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                  <th className="h-12 px-4 text-left font-medium text-muted-foreground">
+          <div className="relative w-full overflow-auto rounded-t-md">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b transition-colors bg-primary/5">
+                  <th className="h-12 px-4 text-left font-bold text-sidebar/95">
                     Room
                   </th>
-                  <th className="h-12 px-4 text-left font-medium text-muted-foreground">
+                  <th className="h-12 px-4 text-left font-bold text-sidebar/95">
                     Type
                   </th>
-                  <th className="h-12 px-4 text-left font-medium text-muted-foreground">
+                  <th className="h-12 px-4 text-left font-bold text-sidebar/95">
                     Floor
                   </th>
-                  <th className="h-12 px-4 font-medium text-muted-foreground">
+                  <th className="h-12 px-4 font-bold text-sidebar/95">
                     Total Items
                   </th>
-                  <th className="h-12 px-4 font-medium text-muted-foreground"></th>
+                  <th className="h-12 px-4 font-bold text-sidebar/95">
+                    Action
+                  </th>
                 </tr>
               </thead>
-              <tbody className="[&_tr:last-child]:border-0">
+              <tbody className="[&_tr:last-child]:border-0 ">
                 {roomRowData.length !== 0 ? (
                   roomRowData.map((eachRoom) => (
                     <RoomData

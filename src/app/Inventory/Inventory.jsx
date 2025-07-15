@@ -91,9 +91,6 @@ export default function Inventory() {
                     <th className="h-12 px-4 text-left font-medium text-muted-foreground">
                       Room
                     </th>
-                    <th className="h-12 px-4 text-left font-medium text-muted-foreground">
-                      Cost
-                    </th>
                     <th className="h-12 px-4 text-center font-medium text-muted-foreground">
                       Date Acquired
                     </th>
@@ -113,7 +110,6 @@ export default function Inventory() {
                         key={eachItem._id}
                         name={eachItem.name}
                         subCategory={eachItem.subCategory.name}
-                        cost={eachItem.price}
                         dateAcquired={getDateWithoutTime(eachItem.createdAt)}
                         source={eachItem.source}
                         status={eachItem.status}

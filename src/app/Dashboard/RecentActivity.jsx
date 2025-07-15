@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
-import ActivityLog from "./ActivityLog.jsx";
+import LogData from "../../components/LogData.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 
@@ -48,7 +48,7 @@ export default function RecentActivity() {
             ? logData
                 .slice(0, 5)
                 .map((singleLog, index) => (
-                  <ActivityLog
+                  <LogData
                     key={index}
                     profileInitials={singleLog.performedByName[0].toUpperCase()}
                     userName={singleLog.performedByName}

@@ -1,4 +1,4 @@
-export default function ActivityLog({
+export default function LogData({
   profileInitials,
   userName,
   action,

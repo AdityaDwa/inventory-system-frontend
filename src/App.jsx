@@ -8,9 +8,11 @@ import Rooms from "./app/Rooms/Rooms.jsx";
 import Inventory from "./app/Inventory/Inventory.jsx";
 import AddItem from "./app/Inventory/AddItem.jsx";
 import Analytics from "./app/Analytics/Analytics.jsx";
+import ActivityLog from "./app/ActivityLog/ActivityLog.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
 import { AuthProvider } from "./store/AuthProvider.jsx";
+import Table from "./components/Table.jsx";
 
 function App() {
   const [loginCredential, setLoginCredential] = useState({
@@ -52,7 +54,7 @@ function App() {
 
   return (
     <>
-      <AuthProvider.Provider value={ctxValue}>
+      {/* <AuthProvider.Provider value={ctxValue}>
         <div className="flex min-h-screen">
           {loginCredential.isLoggedIn && <SideBar />}
           <main className="flex-1 overflow-auto">
@@ -118,12 +120,29 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/activity"
+                  element={
+                    loginCredential.isLoggedIn ? (
+                      <ActivityLog />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
                 <Route path="*" element={<ErrorPage />} />
               </Routes>
             </div>
           </main>
         </div>
-      </AuthProvider.Provider>
+      </AuthProvider.Provider> */}
+      <div className="flex min-h-screen">
+        <main className="flex-1 overflow-auto">
+          <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 h-full">
+            <Table tableName="room" />
+          </div>
+        </main>
+      </div>
     </>
   );
 }

@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import EditIcon from "./icons/EditIcon.jsx";
+import DeleteIcon from "./icons/DeleteIcon.jsx";
+import VisibilityIcon from "./icons/VisibilityIcon.jsx";
+import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 
-import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
-import EditIcon from "../../components/icons/EditIcon.jsx";
-
-export default function RoomData({ roomName, floorName, totalItems }) {
+export default function TableRow({}) {
   return (
     <tr className="border-b transition-colors text-slate-600">
       <td className="p-4 font-medium">{roomName}</td>

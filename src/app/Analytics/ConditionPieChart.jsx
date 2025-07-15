@@ -1,12 +1,5 @@
 import { PureComponent } from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 export default class ConditionPieChart extends PureComponent {
   renderCustomizedLabel = (props) => {
@@ -31,44 +24,6 @@ export default class ConditionPieChart extends PureComponent {
       >
         {`${name}: ${(percent * 100).toFixed(0)}%`}
       </text>
-    );
-  };
-
-  customLegendContent = () => {
-    const { chartData } = this.props;
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "10px",
-        }}
-      >
-        {chartData.map((item) => (
-          <div
-            key={item.name}
-            style={{ display: "flex", alignItems: "center", gap: "5px" }}
-          >
-            <div
-              style={{
-                width: "12px",
-                height: "12px",
-                backgroundColor: item.color,
-              }}
-            ></div>
-            <span
-              style={{
-                fontSize: "16px",
-                fontFamily: "Poppins",
-                color: item.color,
-              }}
-            >
-              {item.name}
-            </span>
-          </div>
-        ))}
-      </div>
     );
   };
 
@@ -101,7 +56,6 @@ export default class ConditionPieChart extends PureComponent {
               fontSize: "0.9rem",
             }}
           />
-          <Legend content={this.customLegendContent} />
         </PieChart>
       </ResponsiveContainer>
     );

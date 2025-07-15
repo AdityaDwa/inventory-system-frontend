@@ -1,4 +1,4 @@
-export default function DeleteIcon({ cssClass = "mr-2 h-4 w-4" }) {
+export default function DeleteIcon({ cssClass = "h-4 w-4" }) {
   return (
     <svg
       width="24"

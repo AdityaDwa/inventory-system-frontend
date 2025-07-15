@@ -44,11 +44,6 @@ const NAV_LINKS = [
     icon: <UserIcon />,
     title: "Users",
   },
-  {
-    path: "/inventory/add-item",
-    icon: <PlusIcon cssClass="h-4 w-4" />,
-    title: "Add New Item",
-  },
 ];
 
 export default function SideBar() {

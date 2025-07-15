@@ -17,7 +17,7 @@ export default function DashBoard() {
   const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
-    async function fetchInventoryData() {
+    async function fetchInventoryStatusData() {
       try {
         const response = await fetch("/api/v1/items/inventoryStats", {
           method: "GET",
@@ -35,7 +35,7 @@ export default function DashBoard() {
       }
     }
 
-    fetchInventoryData();
+    fetchInventoryStatusData();
   }, []);
 
   return (

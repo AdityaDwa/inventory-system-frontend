@@ -1,4 +1,6 @@
 import OverviewChart from "../../components/OverviewChart.jsx";
+import ConditionPieChart from "../Analytics/ConditionPieChart.jsx";
+import ChartLegendPoint from "../Analytics/ChartLegendPoint.jsx";
 
 export default function InventoryOverview({ inventoryStats }) {
   return (
@@ -8,18 +10,44 @@ export default function InventoryOverview({ inventoryStats }) {
           Inventory Overview
         </div>
       </header>
-      <div className="p-6 pt-0 pl-2" style={{ height: "374px" }}>
-        <OverviewChart
+      <div className="p-6 pt-0 pl-2" style={{ height: "275px" }}>
+        <ConditionPieChart
           chartData={[
             {
-              name: "DoECE",
-              Working: inventoryStats.inUse,
-              "Under Repair": inventoryStats.underRepair,
-              "Out of Order": inventoryStats.outOfOrder,
+              name: "Working",
+              value: inventoryStats.inUse,
+              color: "#4ade80",
+            },
+            {
+              name: "Under Repair",
+              value: inventoryStats.underRepair,
+              color: "#facc15",
+            },
+            {
+              name: "Out of Order",
+              value: inventoryStats.outOfOrder,
+              color: "#f87171",
             },
           ]}
-          showLegend={false}
         />
+        <aside className="grid grid-cols-3 gap-4 w-full max-w-md mx-auto mt-4">
+          <ChartLegendPoint
+            title="Working"
+            count={inventoryStats.inUse}
+            backgroundColor="rgb(74, 222, 128)"
+          />
+
+          <ChartLegendPoint
+            title="Under Repair"
+            count={inventoryStats.underRepair}
+            backgroundColor="rgb(250, 204, 21)"
+          />
+          <ChartLegendPoint
+            title="Out of Order"
+            count={inventoryStats.outOfOrder}
+            backgroundColor="rgb(248, 113, 113)"
+          />
+        </aside>
       </div>
     </article>
   );

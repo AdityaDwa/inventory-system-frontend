@@ -2,22 +2,19 @@ import { Link } from "react-router-dom";
 
 import ChevronRightIcon from "../../components/icons/ChevronRightIcon";
 
-import { currencyFormatter } from "../../utils/formatter.js";
-
 export default function ItemData({
   name,
   subCategory,
-  cost,
   dateAcquired,
   source,
   status,
 }) {
   const statusColor =
     status === "In use"
-      ? "green"
+      ? "text-green-600"
       : status === "Under repair"
-      ? "yellow"
-      : "red";
+      ? "text-yellow-600"
+      : "text-red-600";
 
   const customClass =
     source === "Purchase"
@@ -33,7 +30,6 @@ export default function ItemData({
         </div>
       </td>
       <td className="p-4">Room 101</td>
-      <td className="p-4">रु {currencyFormatter(cost)}</td>
       <td className="p-4 text-center">{dateAcquired}</td>
       <td className="p-4 text-center">
         <div
@@ -42,12 +38,12 @@ export default function ItemData({
           {source}
         </div>
       </td>
-      <td className={`p-4 text-center text-${statusColor}-600`}>
+      <td className={`p-4 text-center ${statusColor}`}>
         <div className={`inline-flex items-center text-xs font-semibold`}>
           {status}
         </div>
       </td>
-      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
+      <td className="p-4 text-right">
         <div className="flex justify-end gap-2">
           <button
             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-10 w-10"
