@@ -49,7 +49,7 @@ const NAV_LINKS = [
 export default function SideBar() {
   const pathLocation = useLocation();
 
-  const { username, email, handleLogin } = useContext(AuthProvider);
+  const { handleLogin } = useContext(AuthProvider);
 
   const activeClass =
     "bg-sidebar-foreground/20 text-sidebar-foreground font-medium";
@@ -100,17 +100,17 @@ export default function SideBar() {
       <footer className="mt-auto p-4">
         <article className="flex items-center gap-2 rounded-lg border border-sidebar-border p-4 bg-sidebar-foreground/5">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            {username[0].toUpperCase()}
+            A
           </div>
           <div>
-            <p className="text-xs font-medium">{username}</p>
-            <p className="text-xs text-sidebar-foreground/70">{email}</p>
+            <p className="text-xs font-medium">Admin</p>
+            <p className="text-xs text-sidebar-foreground/70">pcampus@edu.np</p>
           </div>
         </article>
         <Link
           className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border h-9 rounded-md px-3 mt-4 w-full gap-1 bg-sidebar-foreground/10 border-sidebar-border text-sidebar-foreground hover:bg-sidebar-foreground/20 hover:text-sidebar-foreground"
           to="/login"
-          onClick={() => handleLogin("", "", "", "", "", "")}
+          onClick={() => handleLogin("", "")}
         >
           <LogoutIcon />
           Log out

@@ -18,23 +18,15 @@ function App() {
   const [loginCredential, setLoginCredential] = useState({
     accessToken: "",
     refreshToken: "",
-    role: "",
-    id: "",
-    username: "",
-    email: "",
     isLoggedIn: false,
   });
 
   const navigate = useNavigate();
 
-  function handleLogin(accessToken, refreshToken, role, id, username, email) {
+  function handleLogin(accessToken, refreshToken) {
     setLoginCredential({
       accessToken: accessToken,
       refreshToken: refreshToken,
-      role: role,
-      id: id,
-      username: username,
-      email: email,
       isLoggedIn: !!refreshToken,
     });
 
@@ -44,17 +36,17 @@ function App() {
   const ctxValue = {
     accessToken: loginCredential.accessToken,
     refreshToken: loginCredential.refreshToken,
-    role: loginCredential.role,
-    id: loginCredential.id,
-    username: loginCredential.username,
-    email: loginCredential.email,
+    // role: loginCredential.role,
+    // id: loginCredential.id,
+    // username: loginCredential.username,
+    // email: loginCredential.email,
     isLoggedIn: loginCredential.isLoggedIn,
     handleLogin: handleLogin,
   };
 
   return (
     <>
-      {/* <AuthProvider.Provider value={ctxValue}>
+      <AuthProvider.Provider value={ctxValue}>
         <div className="flex min-h-screen">
           {loginCredential.isLoggedIn && <SideBar />}
           <main className="flex-1 overflow-auto">
@@ -135,14 +127,7 @@ function App() {
             </div>
           </main>
         </div>
-      </AuthProvider.Provider> */}
-      <div className="flex min-h-screen">
-        <main className="flex-1 overflow-auto">
-          <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 h-full">
-            <Table tableName="room" />
-          </div>
-        </main>
-      </div>
+      </AuthProvider.Provider>
     </>
   );
 }

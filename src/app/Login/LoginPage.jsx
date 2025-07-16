@@ -33,7 +33,7 @@ export default function LoginPage({ handleLogin }) {
 
     async function postUserData(userData) {
       try {
-        const response = await fetch("/api/v1/items/login", {
+        const response = await fetch("/api/v1/users/login", {
           method: "POST",
 
           body: JSON.stringify(userData),
@@ -46,11 +46,7 @@ export default function LoginPage({ handleLogin }) {
           const responseBody = await response.json();
           handleLogin(
             responseBody.data.accessToken,
-            responseBody.data.refreshToken,
-            responseBody.data.loggedInUser.role,
-            responseBody.data.loggedInUser._id,
-            responseBody.data.loggedInUser.username,
-            responseBody.data.loggedInUser.email
+            responseBody.data.refreshToken
           );
         } else {
           // handleNotificationAction(false, "Invalid Credentials");

@@ -1,7 +1,10 @@
-export default function VisibilityIcon({ isVisible }) {
+export default function VisibilityIcon({
+  isVisible,
+  cssClass = "fill-[#959595] hover:fill-[#363636]",
+}) {
   return (
     <svg
-      className="fill-[#959595] w-4 h-4 cursor-pointer transition-all duration-200 hover:fill-[#363636]"
+      className={`w-4 h-4 cursor-pointer transition-all duration-200 ${cssClass}`}
       viewBox="0 0 24 24"
     >
       {isVisible ? (
