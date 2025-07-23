@@ -49,7 +49,7 @@ export default function Room() {
           Add Room
         </button>
       </PageHeader>
-      <Table configKey="inventory" />
+      <Table configKey="room" />
     </>
   );
 }

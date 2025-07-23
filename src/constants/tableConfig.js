@@ -13,30 +13,30 @@ export const TABLE_CONFIG = {
     },
 
     columnHeaders: [
-      { label: "Room", additionalStyles: "text-left w-[31.25rem]" },
-      { label: "Type", additionalStyles: "text-left" },
-      { label: "Floor", additionalStyles: "text-left" },
-      { label: "Total Items", additionalStyles: "" },
-      { label: "Action", additionalStyles: "" },
+      { label: "Room", additionalStyles: "justify-start w-[31.25rem]" },
+      { label: "Type", additionalStyles: "justify-start w-40" },
+      { label: "Floor", additionalStyles: "justify-start w-24" },
+      { label: "Total Items", additionalStyles: "justify-center w-24" },
+      { label: "Action", additionalStyles: "justify-center w-24" },
     ],
 
     responseMapping: {
-      countKey: "total_rooms",
-      dataKey: "room_data",
-      idKey: "room_id",
+      countKey: "totalRooms",
+      dataKey: "rooms",
+      idKey: "_id",
       dataFields: [
         {
-          key: "room_name",
+          key: "roomName",
           label: "Room",
-          additionalStyles: "",
-          additionalDetail: "room_allot_to",
+          additionalStyles: "w-[31.25rem]",
+          additionalDetail: "allottedTo",
         },
-        { key: "room_type_name", label: "Type", additionalStyles: "" },
-        { key: "room_floor_name", label: "Floor", additionalStyles: "" },
+        { key: "roomTypeName", label: "Type", additionalStyles: "w-40" },
+        { key: "roomFloorName", label: "Floor", additionalStyles: "w-24" },
         {
-          key: "no_room_total_items",
+          key: "totalItems",
           label: "Total Items",
-          additionalStyles: "justify-center",
+          additionalStyles: "w-24 text-center",
         },
       ],
     },
@@ -57,13 +57,13 @@ export const TABLE_CONFIG = {
     },
 
     columnHeaders: [
-      { label: "Name", additionalStyles: "text-left" },
-      { label: "Item ID", additionalStyles: "text-left" },
-      { label: "Category", additionalStyles: "text-left" },
-      { label: "Make/Model No.", additionalStyles: "text-left" },
-      { label: "Location", additionalStyles: "text-left" },
-      { label: "Status", additionalStyles: "" },
-      { label: "Action", additionalStyles: "" },
+      { label: "Name", additionalStyles: "justify-start w-[8.25rem]" },
+      { label: "Item ID", additionalStyles: "justify-start w-24" },
+      { label: "Category", additionalStyles: "justify-start w-[6.75rem]" },
+      { label: "Make/Model No.", additionalStyles: "justify-start w-[7.5rem]" },
+      { label: "Location", additionalStyles: "justify-start w-[17.5rem]" },
+      { label: "Status", additionalStyles: "justify-center w-[5.75rem]" },
+      { label: "Action", additionalStyles: "justify-center w-24" },
     ],
 
     responseMapping: {
@@ -71,22 +71,42 @@ export const TABLE_CONFIG = {
       dataKey: "item_data",
       idKey: "item_id",
       dataFields: [
-        { key: "item_name", label: "Name", additionalStyles: "" },
-        { key: "item_serial_no", label: "Item ID", additionalStyles: "" },
-        { key: "item_category_name", label: "Floor", additionalStyles: "" },
+        { key: "item_name", label: "Name", additionalStyles: "w-[8.25rem]" },
+        { key: "item_serial_no", label: "Item ID", additionalStyles: "w-24" },
+        {
+          key: "item_category_name",
+          label: "Category",
+          additionalStyles: "w-[6.75rem]",
+        },
         {
           key: "item_make_or_model_no",
           label: "Make/Model No.",
-          additionalStyles: "",
+          additionalStyles: "w-[7.5rem]",
         },
-        { key: "item_room", label: "Location", additionalStyles: "" },
+        {
+          key: "item_room",
+          label: "Location",
+          additionalStyles: "w-[17.5rem]",
+          additionalDetail: "item_floor",
+        },
         {
           key: "item_status",
           label: "Status",
-          additionalStyles: "justify-center",
+          additionalStyles: "text-center w-[5.75rem] font-semibold",
         },
       ],
     },
     rowActions: { visible: true, view: true, edit: false, delete: false },
+  },
+};
+
+export const overviewConfig = {
+  responseMapping: {
+    totalItems: "no_total_items",
+    workingItems: "no_working",
+    repairableItems: "no_repairable",
+    notWorkingItems: "no_not_working",
+    totalInventoryValue: "inventory_total_value",
+    totalItemsTillLastMonth: "no_total_items_till_last_month",
   },
 };

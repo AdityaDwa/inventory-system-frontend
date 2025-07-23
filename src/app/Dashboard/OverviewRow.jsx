@@ -5,23 +5,38 @@ import AlertIcon from "../../components/icons/AlertIcon.jsx";
 
 import OverviewCard from "./OverviewCard.jsx";
 
+import { overviewConfig } from "../../constants/tableConfig.js";
+
 export default function OverviewRow({ inventoryStats }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <OverviewCard
         title="Total Items"
-        overviewNum={inventoryStats.totalItems}
-        overviewInfo={`+${inventoryStats.totalItems - 15} from last month`}
+        overviewNum={inventoryStats[overviewConfig.responseMapping.totalItems]}
+        overviewInfo={`${
+          inventoryStats[overviewConfig.responseMapping.totalItems] -
+            inventoryStats[
+              overviewConfig.responseMapping.totalItemsTillLastMonth
+            ] >=
+          0
+            ? "+"
+            : ""
+        }${
+          inventoryStats[overviewConfig.responseMapping.totalItems] -
+          inventoryStats[overviewConfig.responseMapping.totalItemsTillLastMonth]
+        } from last month`}
       >
         <PackageIcon cssClass="h-4 w-4 text-primary" />
       </OverviewCard>
 
       <OverviewCard
         title="Working Items"
-        overviewNum={inventoryStats.inUse}
+        overviewNum={
+          inventoryStats[overviewConfig.responseMapping.workingItems]
+        }
         overviewInfo={`${(
-          (inventoryStats.inUse * 100) /
-          inventoryStats.totalItems
+          (inventoryStats[overviewConfig.responseMapping.workingItems] * 100) /
+          inventoryStats[overviewConfig.responseMapping.totalItems]
         ).toFixed(2)}% of total inventory`}
       >
         <CircleCheckIcon />
@@ -29,10 +44,13 @@ export default function OverviewRow({ inventoryStats }) {
 
       <OverviewCard
         title="Under Repair"
-        overviewNum={inventoryStats.underRepair}
+        overviewNum={
+          inventoryStats[overviewConfig.responseMapping.repairableItems]
+        }
         overviewInfo={`${(
-          (inventoryStats.underRepair * 100) /
-          inventoryStats.totalItems
+          (inventoryStats[overviewConfig.responseMapping.repairableItems] *
+            100) /
+          inventoryStats[overviewConfig.responseMapping.totalItems]
         ).toFixed(2)}% of total inventory`}
       >
         <PenNibIcon />
@@ -40,10 +58,13 @@ export default function OverviewRow({ inventoryStats }) {
 
       <OverviewCard
         title="Out of Order"
-        overviewNum={inventoryStats.outOfOrder}
+        overviewNum={
+          inventoryStats[overviewConfig.responseMapping.notWorkingItems]
+        }
         overviewInfo={`${(
-          (inventoryStats.outOfOrder * 100) /
-          inventoryStats.totalItems
+          (inventoryStats[overviewConfig.responseMapping.notWorkingItems] *
+            100) /
+          inventoryStats[overviewConfig.responseMapping.totalItems]
         ).toFixed(2)}% of total inventory`}
       >
         <AlertIcon />

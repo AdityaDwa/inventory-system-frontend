@@ -11,20 +11,27 @@ export default function TableRow({ configKey, serialNo, rowData }) {
   const rowId = tableConfig.responseMapping.idKey;
 
   return (
-    <tr className="border-b transition-colors text-slate-600">
-      {/* <td className="py-4 text-center">{serialNo + 9990}.</td> */}
+    <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4">
+      <td className="text-center w-16">{serialNo}.</td>
       {dataFields.map((eachField) => {
+        let statusColor = "";
+        if (eachField.key === "item_status") {
+          statusColor =
+            rowData[eachField.key] === "Working"
+              ? "text-green-600"
+              : rowData[eachField.key] === "Repairable"
+              ? "text-yellow-600"
+              : "text-red-600";
+        }
         return (
-          <td key={eachField.key} className="py-4">
+          <td key={eachField.key}>
             <div className="flex flex-col">
-              <div
-                className={`flex items-center gap-2 font-medium ${eachField.additionalStyles}`}
-              >
+              <div className={`${eachField.additionalStyles} ${statusColor}`}>
                 {rowData[eachField.key]}
               </div>
               {eachField.additionalDetail && (
                 <div className="text-xs text-muted-foreground">
-                  {rowData[eachField.additionalDetail]}
+                  ({rowData[eachField.additionalDetail]})
                 </div>
               )}
             </div>
@@ -33,8 +40,8 @@ export default function TableRow({ configKey, serialNo, rowData }) {
       })}
 
       {tableConfig.rowActions.visible && (
-        <td className="py-4">
-          <div className="flex justify-center items-center gap-2">
+        <td className="">
+          <div className="flex justify-center items-center gap-2 w-24">
             {tableConfig.rowActions.view && (
               <button
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 h-9 w-9 border border-[#292929] text-[#565656] hover:bg-[#ebebeb]"

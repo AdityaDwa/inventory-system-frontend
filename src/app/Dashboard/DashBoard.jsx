@@ -8,18 +8,13 @@ import RecentActivity from "./RecentActivity.jsx";
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 export default function DashBoard() {
-  const [inventoryStats, setInventoryStats] = useState({
-    inUse: 0,
-    underRepair: 0,
-    outOfOrder: 0,
-    totalItems: 0,
-  });
+  const [inventoryStats, setInventoryStats] = useState({});
   const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchInventoryStatusData() {
       try {
-        const response = await fetch("/api/v1/items/inventoryStats", {
+        const response = await fetch("/api/v1/inventory/stats", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -29,6 +24,7 @@ export default function DashBoard() {
         if (response.ok) {
           const responseBody = await response.json();
           setInventoryStats(responseBody.data);
+          console.log(responseBody.data);
         }
       } catch (error) {
         console.log(error);
