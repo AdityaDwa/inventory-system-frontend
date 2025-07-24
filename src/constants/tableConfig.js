@@ -13,7 +13,7 @@ export const TABLE_CONFIG = {
     },
 
     columnHeaders: [
-      { label: "Room", additionalStyles: "justify-start w-[31.25rem]" },
+      { label: "Room", additionalStyles: "justify-start w-[25rem]" },
       { label: "Type", additionalStyles: "justify-start w-40" },
       { label: "Floor", additionalStyles: "justify-start w-24" },
       { label: "Total Items", additionalStyles: "justify-center w-24" },
@@ -28,7 +28,7 @@ export const TABLE_CONFIG = {
         {
           key: "roomName",
           label: "Room",
-          additionalStyles: "w-[31.25rem]",
+          additionalStyles: "w-[25rem]",
           additionalDetail: "allottedTo",
         },
         { key: "roomTypeName", label: "Type", additionalStyles: "w-40" },
@@ -40,10 +40,15 @@ export const TABLE_CONFIG = {
         },
       ],
     },
-    rowActions: { visible: true, view: true, edit: false, delete: false },
+    rowActions: {
+      visible: true,
+      view: { show: true, path: "/rooms/room/:room-id" },
+      edit: false,
+      delete: false,
+    },
   },
 
-  inventory: {
+  item: {
     header: {
       title: "All Items",
       subtitle: "View and manage all inventory items across the department",
@@ -53,50 +58,57 @@ export const TABLE_CONFIG = {
       visible: true,
       dropdown: { show: false },
       advancedFilter: { show: true },
-      searchBar: { show: true, value: "Search items by name" },
+      searchBar: { show: true, value: "Search items by name or id" },
     },
 
     columnHeaders: [
-      { label: "Name", additionalStyles: "justify-start w-[8.25rem]" },
+      {
+        label: "Name & Category",
+        additionalStyles: "justify-start w-[12rem]",
+      },
       { label: "Item ID", additionalStyles: "justify-start w-24" },
-      { label: "Category", additionalStyles: "justify-start w-[6.75rem]" },
-      { label: "Make/Model No.", additionalStyles: "justify-start w-[7.5rem]" },
+      { label: "Make/Model No.", additionalStyles: "justify-start w-[12rem]" },
       { label: "Location", additionalStyles: "justify-start w-[17.5rem]" },
       { label: "Status", additionalStyles: "justify-center w-[5.75rem]" },
       { label: "Action", additionalStyles: "justify-center w-24" },
     ],
 
     responseMapping: {
-      countKey: "total_items",
-      dataKey: "item_data",
-      idKey: "item_id",
+      countKey: "totalItems",
+      dataKey: "items",
+      idKey: "_id",
       dataFields: [
-        { key: "item_name", label: "Name", additionalStyles: "w-[8.25rem]" },
-        { key: "item_serial_no", label: "Item ID", additionalStyles: "w-24" },
         {
-          key: "item_category_name",
-          label: "Category",
-          additionalStyles: "w-[6.75rem]",
+          key: "itemName",
+          label: "Name",
+          additionalStyles: "w-[12rem]",
+          additionalDetail: "itemDescription",
         },
+        { key: "itemSerialNumber", label: "Item ID", additionalStyles: "w-24" },
         {
-          key: "item_make_or_model_no",
+          key: "itemModelNumberOrMake",
           label: "Make/Model No.",
-          additionalStyles: "w-[7.5rem]",
+          additionalStyles: "w-[12rem]",
         },
         {
-          key: "item_room",
+          key: "itemRoom",
           label: "Location",
           additionalStyles: "w-[17.5rem]",
-          additionalDetail: "item_floor",
+          additionalDetail: "itemFloor",
         },
         {
-          key: "item_status",
+          key: "itemStatus",
           label: "Status",
           additionalStyles: "text-center w-[5.75rem] font-semibold",
         },
       ],
     },
-    rowActions: { visible: true, view: true, edit: false, delete: false },
+    rowActions: {
+      visible: true,
+      view: { show: true, path: "/inventory/item/" },
+      edit: false,
+      delete: false,
+    },
   },
 };
 

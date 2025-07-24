@@ -1,4 +1,6 @@
-export default function FloorIcon() {
+export default function FloorIcon({
+  cssClass = "h-5 w-5 text-muted-foreground",
+}) {
   return (
     <svg
       width="24"
@@ -9,7 +11,7 @@ export default function FloorIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-5 w-5 text-muted-foreground"
+      className={cssClass}
     >
       <rect x="3" y="8" width="18" height="4" rx="1"></rect>
       <rect x="3" y="16" width="18" height="4" rx="1"></rect>

@@ -29,9 +29,9 @@ export default function TableFilter({
   useEffect(() => {
     async function fetchDropdownData() {
       try {
-        const apiURL = API_ENDPOINTS[dropdownConfigKey].getAllData;
+        const fetchUrl = API_ENDPOINTS[dropdownConfigKey].getAllData;
 
-        const response = await fetch(apiURL, {
+        const response = await fetch(fetchUrl, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,

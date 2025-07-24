@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import EditIcon from "./icons/EditIcon.jsx";
 import DeleteIcon from "./icons/DeleteIcon.jsx";
 import VisibilityIcon from "./icons/VisibilityIcon.jsx";
@@ -8,14 +10,13 @@ import { TABLE_CONFIG } from "../constants/tableConfig.js";
 export default function TableRow({ configKey, serialNo, rowData }) {
   const tableConfig = TABLE_CONFIG[configKey];
   const dataFields = tableConfig.responseMapping.dataFields;
-  const rowId = tableConfig.responseMapping.idKey;
-
+  const rowId = rowData[tableConfig.responseMapping.idKey];
   return (
     <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4">
       <td className="text-center w-16">{serialNo}.</td>
       {dataFields.map((eachField) => {
         let statusColor = "";
-        if (eachField.key === "item_status") {
+        if (eachField.key === "itemStatus") {
           statusColor =
             rowData[eachField.key] === "Working"
               ? "text-green-600"
@@ -42,16 +43,17 @@ export default function TableRow({ configKey, serialNo, rowData }) {
       {tableConfig.rowActions.visible && (
         <td className="">
           <div className="flex justify-center items-center gap-2 w-24">
-            {tableConfig.rowActions.view && (
-              <button
+            {tableConfig.rowActions.view.show && (
+              <Link
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 h-9 w-9 border border-[#292929] text-[#565656] hover:bg-[#ebebeb]"
-                type="button"
+                to={`${tableConfig.rowActions.view.path}${rowId}`}
+                state={{ rowData }}
               >
                 <VisibilityIcon
                   isVisible={true}
                   cssClass="fill-[#565656] hover:fill-[#565656]"
                 />
-              </button>
+              </Link>
             )}
             {tableConfig.rowActions.edit && (
               <button

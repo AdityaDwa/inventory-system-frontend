@@ -1,4 +1,6 @@
-export default function RoomIcon() {
+export default function RoomIcon({
+  cssClass = "h-4 w-4 text-muted-foreground",
+}) {
   return (
     <svg
       width="24"
@@ -9,7 +11,7 @@ export default function RoomIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 text-muted-foreground"
+      className={cssClass}
     >
       <path d="M13 4h3a2 2 0 0 1 2 2v14"></path>
       <path d="M2 20h3"></path>

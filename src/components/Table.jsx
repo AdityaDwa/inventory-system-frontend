@@ -10,69 +10,7 @@ import Pagination from "./Pagination.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
 import { TABLE_CONFIG } from "../constants/tableConfig.js";
-
-const itemss = [
-  {
-    item_id: 1,
-    item_name: "Officer table",
-    item_serial_no: "999TBL9999",
-    item_category_name: "Table",
-    item_make_or_model_no: "Wooden",
-    item_room: "Teacher's Room No. 2 : Cubical Room 1",
-    item_floor: "(Floor 1)",
-    item_status: "Not-working",
-  },
-  {
-    item_id: 2,
-    item_name: "Sofa Set",
-    item_serial_no: "999FRN9999",
-    item_category_name: "Furniture",
-    item_make_or_model_no: "Wooden",
-    item_room: "Teacher's Room No. 2 : Cubical Room 1",
-    item_floor: "(Floor 1)",
-    item_status: "Working",
-  },
-  {
-    item_id: 3,
-    item_name: "Chair-Cushion",
-    item_serial_no: "999CHR9999",
-    item_category_name: "Chair",
-    item_make_or_model_no: "Wooden",
-    item_room: "Teacher's Room No. 2 : Cubical Room 1",
-    item_floor: "(Floor 1)",
-    item_status: "Repairable",
-  },
-  {
-    item_id: 4,
-    item_name: "Printer Brother",
-    item_serial_no: "999PRN9999",
-    item_category_name: "Printer",
-    item_make_or_model_no: "MFC-9970CDW.1",
-    item_room: "Teacher's Room No. 2 : Cubical Room 1",
-    item_floor: "(Floor 1)",
-    item_status: "Not-working",
-  },
-  {
-    item_id: 5,
-    item_name: "Telephone Internal",
-    item_serial_no: "999ELE9999",
-    item_category_name: "Electronics",
-    item_make_or_model_no: "Alcatel",
-    item_room: "Teacher's Room No. 2 : Cubical Room 1",
-    item_floor: "(Floor 1)",
-    item_status: "Not-working",
-  },
-  {
-    item_id: 6,
-    item_name: "Air Conditioner",
-    item_serial_no: "999ELE9999",
-    item_category_name: "Electronics",
-    item_make_or_model_no: "Panasonic",
-    item_room: "Teacher's Room No. 2 : Cubical Room 1",
-    item_floor: "(Floor 1)",
-    item_status: "Not-working",
-  },
-];
+import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
 
 export default function Table({ configKey }) {
   const { accessToken } = useContext(AuthProvider);
@@ -82,10 +20,17 @@ export default function Table({ configKey }) {
     rows: [],
   });
 
+  const [pagination, setPagination] = useState({
+    offset: 0,
+    currentPage: 1,
+  });
+
   useEffect(() => {
     async function fetchTableData() {
       try {
-        const response = await fetch("/api/v1/rooms/1", {
+        const fetchUrl = `${API_ENDPOINTS[configKey].getAllData}${pagination.currentPage}`;
+        console.log(fetchUrl);
+        const response = await fetch(fetchUrl, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -105,7 +50,11 @@ export default function Table({ configKey }) {
     }
 
     fetchTableData();
-  }, [configKey]);
+  }, [configKey, pagination]);
+
+  function handlePageChange(page) {
+    setPagination({ offset: 2 * (page - 1), currentPage: page });
+  }
 
   function renderTableHeader() {
     return (
@@ -202,9 +151,9 @@ export default function Table({ configKey }) {
       tableData.count > 0 && (
         <Pagination
           totalCount={tableData.count}
-          noOfDataPerPage={6}
-          currentPage={1}
-          handlePageChange={() => {}}
+          noOfDataPerPage={2}
+          currentPage={pagination.currentPage}
+          handlePageChange={handlePageChange}
         />
       )
     );

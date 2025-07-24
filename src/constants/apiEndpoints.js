@@ -4,7 +4,11 @@ export const API_ENDPOINTS = {
   },
 
   room: {
-    getAllData: "/api/v1/rooms",
+    getAllData: "/api/v1/rooms/",
+  },
+
+  item: {
+    getAllData: "/api/v1/items/all/",
   },
 
   floor: {
