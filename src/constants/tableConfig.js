@@ -7,7 +7,7 @@ export const TABLE_CONFIG = {
 
     filterOptions: {
       visible: true,
-      dropdown: { show: true, value: "All floors" },
+      dropdown: { show: true, value: "All floors", endPointKey: "floor" },
       advancedFilter: { show: false },
       searchBar: { show: true, value: "Search rooms by name" },
     },
@@ -51,7 +51,7 @@ export const TABLE_CONFIG = {
 
     filterOptions: {
       visible: true,
-      dropdown: { show: false, value: "" },
+      dropdown: { show: false },
       advancedFilter: { show: true },
       searchBar: { show: true, value: "Search items by name" },
     },
@@ -108,5 +108,16 @@ export const overviewConfig = {
     notWorkingItems: "no_not_working",
     totalInventoryValue: "inventory_total_value",
     totalItemsTillLastMonth: "no_total_items_till_last_month",
+  },
+};
+
+export const RESPONSE_MAPPING = {
+  floor: {
+    idKey: "_id",
+    dataKey: "floorName",
+  },
+  roomType: {
+    idKey: "_id",
+    dataKey: "roomTypeName",
   },
 };

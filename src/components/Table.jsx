@@ -94,7 +94,6 @@ export default function Table({ configKey }) {
 
         if (response.ok) {
           const responseBody = await response.json();
-          console.log(responseBody.data);
           setTableData({
             count: responseBody.data[tableConfig.responseMapping.countKey],
             rows: responseBody.data[tableConfig.responseMapping.dataKey],
@@ -124,8 +123,10 @@ export default function Table({ configKey }) {
   function renderTableFilter() {
     const dropdownFilter = (
       <TableFilter
+        dropdownConfigKey={tableConfig.filterOptions.dropdown.endPointKey}
         dropdownInitialValue={tableConfig.filterOptions.dropdown.value}
-        endPointUrl="floors"
+        isInitialValueAnOption={true}
+        widthSize="180px"
       />
     );
 
@@ -215,7 +216,7 @@ export default function Table({ configKey }) {
       <section className="p-6 pt-0">
         {renderTableFilter()}
 
-        <div className="relative w-full overflow-auto rounded-t-md">
+        <div className="relative w-full rounded-t-md">
           <table className="w-full text-sm">
             {renderTableCaption()}
             {renderTableData()}

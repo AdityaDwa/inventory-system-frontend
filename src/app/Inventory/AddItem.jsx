@@ -138,13 +138,13 @@ export default function AddItem() {
                     >
                       Category
                     </label>
-                    <TableFilter
+                    {/* <TableFilter
                       dropdownInitialValue="Select category"
                       endPointUrl="categories"
                       widthSize="275.8px"
                       customPlaceholderStyle="text-muted-foreground"
                       id="item-category"
-                    />
+                    /> */}
                   </div>
                   <div className="space-y-2">
                     <label
@@ -153,7 +153,7 @@ export default function AddItem() {
                     >
                       Sub Category
                     </label>
-                    <TableFilter
+                    {/* <TableFilter
                       dropdownInitialValue="Select sub category"
                       endPointUrl=""
                       dropdownMenus={[{ name: "DoECE", id: 2 }]}
@@ -161,7 +161,7 @@ export default function AddItem() {
                       onStateChange={handleDisableFloorSelect}
                       customPlaceholderStyle="text-muted-foreground"
                       id="item-sub-category"
-                    />
+                    /> */}
                   </div>
                 </div>
               </section>
@@ -174,7 +174,7 @@ export default function AddItem() {
                   >
                     Floor
                   </label>
-                  <TableFilter
+                  {/* <TableFilter
                     dropdownInitialValue="Select floor"
                     endPointUrl="categories"
                     widthSize="362.4px"
@@ -182,7 +182,7 @@ export default function AddItem() {
                     isDisabled={isSelectDisabled.floor}
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-floor"
-                  />
+                  /> */}
                 </div>
                 <div className="space-y-2">
                   <label
@@ -191,14 +191,14 @@ export default function AddItem() {
                   >
                     Room
                   </label>
-                  <TableFilter
+                  {/* <TableFilter
                     dropdownInitialValue="Select room"
                     endPointUrl="categories"
                     widthSize="362.4px"
                     isDisabled={isSelectDisabled.room}
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-room"
-                  />
+                  /> */}
                 </div>
                 <div className="space-y-2">
                   <label
@@ -223,13 +223,13 @@ export default function AddItem() {
                   >
                     Source
                   </label>
-                  <TableFilter
+                  {/* <TableFilter
                     dropdownInitialValue="Purchase"
                     endPointUrl=""
                     dropdownMenus={[{ name: "Donation", id: 2 }]}
                     widthSize="362.4px"
                     id="item-source"
-                  />
+                  /> */}
                 </div>
                 <div className="space-y-2">
                   <label
@@ -282,7 +282,7 @@ export default function AddItem() {
             </div>
             <div className="flex col-span-1 col-start-6 gap-4 h-full">
               <button
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 mt-2 h-16 text-base [&amp;_svg]:size-5"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 mt-2 h-16 text-base [&_svg]:size-5"
                 type="submit"
               >
                 <SaveIcon />

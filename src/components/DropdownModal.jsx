@@ -1,11 +1,15 @@
 import CheckIcon from "./icons/CheckIcon.jsx";
 
+import { RESPONSE_MAPPING } from "../constants/tableConfig.js";
+
 export default function DropdownModal({
-  customStyle,
-  dropdownMenus,
+  customStyle = { top: "2.75rem" },
+  dropdownConfigKey,
   dropdownData,
-  categoryType,
-  handleDropdownChange,
+  dropdownInitialValue,
+  isInitialValueAnOption,
+  dropdownMenus,
+  onDropdownChange,
 }) {
   return (
     <div
@@ -39,31 +43,51 @@ export default function DropdownModal({
           pointerEvents: "auto",
         }}
       >
-        <div
-          className={`relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent  data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground ${
-            dropdownData.value === categoryType
-              ? "bg-accent text-accent-foreground"
-              : ""
-          }`}
-          onClick={() => handleDropdownChange(categoryType, false)}
-        >
-          <CheckIcon isSelected={dropdownData.value === categoryType} />
-          {categoryType}
-        </div>
+        {isInitialValueAnOption && (
+          <div
+            className={`relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent  data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground ${
+              dropdownData.value === dropdownInitialValue
+                ? "bg-accent text-accent-foreground"
+                : ""
+            }`}
+            onClick={() =>
+              onDropdownChange({
+                id: 0,
+                value: dropdownInitialValue,
+              })
+            }
+          >
+            <CheckIcon
+              isSelected={dropdownData.value === dropdownInitialValue}
+            />
+            {dropdownInitialValue}
+          </div>
+        )}
 
-        {dropdownMenus.map((item, index) => {
+        {dropdownMenus.map((item) => {
           return (
             <div
               className={`relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent  data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground ${
-                dropdownData.value === item
+                dropdownData.id ===
+                item[RESPONSE_MAPPING[dropdownConfigKey].idKey]
                   ? "bg-accent text-accent-foreground"
                   : ""
               }`}
-              key={index}
-              onClick={() => handleDropdownChange(item.name, false)}
+              key={item[RESPONSE_MAPPING[dropdownConfigKey].idKey]}
+              onClick={() =>
+                onDropdownChange({
+                  id: item[RESPONSE_MAPPING[dropdownConfigKey].idKey],
+                  value: item[RESPONSE_MAPPING[dropdownConfigKey].dataKey],
+                })
+              }
             >
-              <CheckIcon isSelected={dropdownData.value === item} />
-              {item.name}
+              <CheckIcon
+                isSelected={
+                  dropdownData.id ===
+                  item[RESPONSE_MAPPING[dropdownConfigKey].idKey]
+                }
+              />
+              {item[RESPONSE_MAPPING[dropdownConfigKey].dataKey]}
             </div>
           );
         })}

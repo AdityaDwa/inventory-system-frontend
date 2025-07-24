@@ -24,7 +24,6 @@ export default function DashBoard() {
         if (response.ok) {
           const responseBody = await response.json();
           setInventoryStats(responseBody.data);
-          console.log(responseBody.data);
         }
       } catch (error) {
         console.log(error);

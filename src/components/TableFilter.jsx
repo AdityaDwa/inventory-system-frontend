@@ -4,11 +4,12 @@ import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 import DropdownModal from "./DropdownModal.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
+import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
 
 export default function TableFilter({
   dropdownInitialValue,
-  endPointUrl,
-  dropdownMenus = "",
+  dropdownConfigKey,
+  isInitialValueAnOption = false,
   isDisabled = false,
   onStateChange = () => {},
   widthSize = "200px",
@@ -16,23 +17,21 @@ export default function TableFilter({
   customPlaceholderStyle = "",
 }) {
   const [dropdownData, setDropdownData] = useState({
+    id: 0,
     value: dropdownInitialValue,
-    open: false,
   });
 
-  const [dropdownOptions, setDropdownOptions] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownOptions, setDropdownOptions] = useState([]);
 
   const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchDropdownData() {
-      if (dropdownMenus) {
-        setDropdownOptions(dropdownMenus);
-        return;
-      }
-
       try {
-        const response = await fetch(`/api/v1/items/${endPointUrl}`, {
+        const apiURL = API_ENDPOINTS[dropdownConfigKey].getAllData;
+
+        const response = await fetch(apiURL, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -51,27 +50,23 @@ export default function TableFilter({
     fetchDropdownData();
   }, []);
 
-  function handleDropdownChange(value, open) {
-    setDropdownData((prev) => ({
-      ...prev,
-      value: value,
-      open: open,
-    }));
-
-    onStateChange(value, dropdownInitialValue);
+  function handleDropdownChange(dataObject) {
+    setIsDropdownOpen((prev) => !prev);
+    setDropdownData(dataObject);
+    onStateChange(dataObject, dropdownInitialValue);
   }
 
   return (
     <div style={{ position: "relative" }}>
       <button
         type="button"
-        className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1 w-full"
+        className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 w-full"
         style={{ width: widthSize }}
         id={id}
         disabled={isDisabled}
         onClick={(event) => {
           event.target.blur();
-          handleDropdownChange(dropdownData.value, !dropdownData.open);
+          handleDropdownChange(dropdownData);
         }}
       >
         <span
@@ -86,13 +81,14 @@ export default function TableFilter({
         </span>
         <ChevronDownIcon />
       </button>
-      {dropdownData.open && (
+      {isDropdownOpen && (
         <DropdownModal
-          customStyle={{ top: "2.75rem" }}
-          dropdownMenus={dropdownOptions}
+          dropdownConfigKey={dropdownConfigKey}
           dropdownData={dropdownData}
-          categoryType={dropdownInitialValue}
-          handleDropdownChange={handleDropdownChange}
+          dropdownInitialValue={dropdownInitialValue}
+          isInitialValueAnOption={isInitialValueAnOption}
+          dropdownMenus={dropdownOptions}
+          onDropdownChange={handleDropdownChange}
         />
       )}
     </div>

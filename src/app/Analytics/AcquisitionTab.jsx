@@ -55,7 +55,7 @@ export default function AcquisitionTab({ hidden }) {
               <div className="p-6 pt-0">
                 <div className="relative w-full overflow-auto">
                   <table className="w-full caption-bottom text-sm">
-                    <thead className="[&amp;_tr]:border-b">
+                    <thead className="[&_tr]:border-b">
                       <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                         <th className="h-12 px-4 font-medium text-muted-foreground text-left">
                           Category
@@ -71,7 +71,7 @@ export default function AcquisitionTab({ hidden }) {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="[&amp;_tr:last-child]:border-0">
+                    <tbody className="[&_tr:last-child]:border-0">
                       <AcquisitionRowData />
                       <AcquisitionRowData />
                       <AcquisitionRowData />
