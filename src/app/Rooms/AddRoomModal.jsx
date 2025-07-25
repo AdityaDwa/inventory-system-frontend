@@ -3,14 +3,89 @@ import ReactDOM from "react-dom";
 import RoomIcon from "../../components/icons/RoomIcon";
 import TableFilter from "../../components/TableFilter.jsx";
 
+import { useState, useRef, useContext } from "react";
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+
+function validateLength(text) {
+  return text.length === 0;
+}
+
 export default function AddRoomModal({ isModalVisible, onClose }) {
+  const roomName = useRef();
+  const roomAllottedTo = useRef();
+
+  const [selectedFloorId, setSelectedFloorId] = useState(null);
+  const [selectedRoomTypeId, setSelectedRoomTypeId] = useState(null);
+  const [isEmpty, setIsEmpty] = useState({
+    roomName: false,
+    roomTypeId: false,
+    floorId: false,
+    roomAllottedTo: false,
+  });
+
+  const { accessToken } = useContext(AuthProvider);
+
   if (!isModalVisible) {
     return null;
   }
 
+  function handleFloorSelection(selectedFloorOption, initValue) {
+    setSelectedFloorId(selectedFloorOption.id);
+  }
+  function handleRoomTypeSelection(selectedRoomTypeOption, initValue) {
+    setSelectedRoomTypeId(selectedRoomTypeOption.id);
+  }
+
+  console.log(selectedFloorId, selectedRoomTypeId);
+
   function handleSubmit(event) {
     event.preventDefault();
-    onClose(false);
+    const enteredRoomName = roomName.current?.value;
+    const enteredRoomAllottedTo = roomAllottedTo.current?.value;
+
+    const isEmptyCheck = {
+      roomName: validateLength(enteredRoomName),
+      roomTypeId: selectedRoomTypeId === null,
+      floorId: selectedFloorId === null,
+    };
+    setIsEmpty(isEmptyCheck);
+
+    async function postRoomData(roomData) {
+      try {
+        const response = await fetch("/api/v1/rooms", {
+          method: "POST",
+
+          body: JSON.stringify(roomData),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log(responseData);
+          onClose(false);
+        } else {
+          console.log("Error while saving room");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (
+      !isEmptyCheck.roomName &&
+      !isEmptyCheck.roomTypeId &&
+      !isEmptyCheck.floorId
+    ) {
+      const roomData = {
+        room_name: enteredRoomName,
+        room_floor_id: selectedFloorId,
+        room_type_id: selectedRoomTypeId,
+        allotted_to: enteredRoomAllottedTo,
+      };
+      postRoomData(roomData);
+    }
   }
 
   return ReactDOM.createPortal(
@@ -33,6 +108,7 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
             <div className="flex items-center gap-2 mt-2">
               <RoomIcon />
               <input
+                ref={roomName}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 id="room-name"
                 placeholder="e.g. Lecture Room 305"
@@ -48,6 +124,7 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
             </label>
             <div className="flex items-center gap-2 mt-2">
               <input
+                ref={roomAllottedTo}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 id="room-allotted-to"
               />
@@ -65,6 +142,7 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
               dropdownConfigKey="floor"
               widthSize="100%"
               customPlaceholderStyle="text-muted-foreground"
+              onStateChange={handleFloorSelection}
               id="room-floor"
             />
           </div>
@@ -80,6 +158,7 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
               dropdownConfigKey="roomType"
               widthSize="100%"
               customPlaceholderStyle="text-muted-foreground"
+              onStateChange={handleRoomTypeSelection}
               id="room-type"
             />
           </div>
