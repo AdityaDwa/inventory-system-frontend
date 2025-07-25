@@ -40,14 +40,14 @@ export const API_ENDPOINTS = {
   },
 
   floor: {
-    getAllData: "/api/v1/floors",
+    getDropdownData: "/api/v1/floors",
   },
 
   roomType: {
-    getAllData: "/api/v1/room-types",
+    getDropdownData: "/api/v1/room-types",
   },
 
   category: {
-    getAllData: "/api/v1/categories",
+    getDropdownData: "/api/v1/categories",
   },
 };

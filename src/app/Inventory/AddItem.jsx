@@ -9,13 +9,21 @@ import { currencyFormatter } from "../../utils/formatter.js";
 
 export default function AddItem() {
   const navigate = useNavigate();
+  const { accessToken } = useContext(AuthProvider);
+  const todayDate = new Date().toISOString().split("T")[0];
 
-  const [isSelectDisabled, setIsSelectDisabled] = useState({
-    floor: true,
-    room: true,
+  const [dropdownInfo, setDropdownInfo] = useState({
+    category: 0,
+    floor: 0,
+    room: 0,
+    source: 0,
   });
 
-  const { accessToken } = useContext(AuthProvider);
+  const [costValues, setCostValues] = useState({
+    unitCost: 0,
+    count: 1,
+    totalCost: 0,
+  });
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -49,14 +57,6 @@ export default function AddItem() {
     }
   }
 
-  const [costValues, setCostValues] = useState({
-    unitCost: 0,
-    count: 1,
-    totalCost: 0,
-  });
-
-  const todayDate = new Date().toISOString().split("T")[0];
-
   function calculateTotalCost(identifier, value) {
     const updatedData = {
       ...costValues,
@@ -72,19 +72,14 @@ export default function AddItem() {
     }));
   }
 
-  function handleDisableFloorSelect(value, dropdownInitialValue) {
-    setIsSelectDisabled((prev) => ({
+  function handleDropdownChange(identifier, payload) {
+    setDropdownInfo((prev) => ({
       ...prev,
-      floor: value === dropdownInitialValue,
+      [identifier]: payload.id,
     }));
   }
 
-  function handleDisableRoomSelect(value, dropdownInitialValue) {
-    setIsSelectDisabled((prev) => ({
-      ...prev,
-      room: value === dropdownInitialValue,
-    }));
-  }
+  console.log(dropdownInfo);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -154,6 +149,7 @@ export default function AddItem() {
                     <TableFilter
                       dropdownInitialValue="Select category"
                       dropdownConfigKey="category"
+                      onStateChange={handleDropdownChange}
                       widthSize="275.8px"
                       customPlaceholderStyle="text-muted-foreground"
                       id="item-category"
@@ -173,6 +169,7 @@ export default function AddItem() {
                   <TableFilter
                     dropdownInitialValue="Select floor"
                     dropdownConfigKey="floor"
+                    onStateChange={handleDropdownChange}
                     widthSize="362.4px"
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-floor"
@@ -185,14 +182,16 @@ export default function AddItem() {
                   >
                     Room
                   </label>
-                  {/* <TableFilter
+                  <TableFilter
                     dropdownInitialValue="Select room"
-                    endPointUrl="categories"
+                    dropdownConfigKey="room"
                     widthSize="362.4px"
-                    isDisabled={isSelectDisabled.room}
+                    onStateChange={handleDropdownChange}
+                    isDisabled={dropdownInfo.floor === 0}
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-room"
-                  /> */}
+                    apiPayload={dropdownInfo.floor}
+                  />
                 </div>
                 <div className="space-y-2">
                   <label
@@ -217,13 +216,13 @@ export default function AddItem() {
                   >
                     Source
                   </label>
-                  {/* <TableFilter
+                  <TableFilter
                     dropdownInitialValue="Purchase"
-                    endPointUrl=""
-                    dropdownMenus={[{ name: "Donation", id: 2 }]}
+                    dropdownConfigKey="floor"
+                    onStateChange={handleDropdownChange}
                     widthSize="362.4px"
                     id="item-source"
-                  /> */}
+                  />
                 </div>
                 <div className="space-y-2">
                   <label

@@ -29,14 +29,12 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
     return null;
   }
 
-  function handleFloorSelection(selectedFloorOption, initValue) {
+  function handleFloorSelection(identifier, selectedFloorOption) {
     setSelectedFloorId(selectedFloorOption.id);
   }
-  function handleRoomTypeSelection(selectedRoomTypeOption, initValue) {
+  function handleRoomTypeSelection(identifier, selectedRoomTypeOption) {
     setSelectedRoomTypeId(selectedRoomTypeOption.id);
   }
-
-  console.log(selectedFloorId, selectedRoomTypeId);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -64,10 +62,8 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
 
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
+          // console.log(responseData);
           onClose(false);
-        } else {
-          console.log("Error while saving room");
         }
       } catch (error) {
         console.log(error);

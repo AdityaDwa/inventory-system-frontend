@@ -4,7 +4,8 @@ import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 import DropdownModal from "./DropdownModal.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
-import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
+// import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
+import getEndpoint from "../constants/apiEndpoints.js";
 
 export default function TableFilter({
   dropdownInitialValue,
@@ -15,6 +16,7 @@ export default function TableFilter({
   widthSize = "200px",
   id = "",
   customPlaceholderStyle = "",
+  apiPayload = "",
 }) {
   const [dropdownData, setDropdownData] = useState({
     id: 0,
@@ -29,7 +31,12 @@ export default function TableFilter({
   useEffect(() => {
     async function fetchDropdownData() {
       try {
-        const fetchUrl = API_ENDPOINTS[dropdownConfigKey].getAllData;
+        const fetchUrl = getEndpoint(
+          dropdownConfigKey,
+          "getDropdownData",
+          apiPayload,
+          ""
+        );
 
         const response = await fetch(fetchUrl, {
           method: "GET",
@@ -48,12 +55,12 @@ export default function TableFilter({
     }
 
     fetchDropdownData();
-  }, []);
+  }, [apiPayload]);
 
   function handleDropdownChange(dataObject) {
     setIsDropdownOpen((prev) => !prev);
     setDropdownData(dataObject);
-    onStateChange(dataObject);
+    onStateChange(dropdownConfigKey, dataObject);
   }
 
   return (

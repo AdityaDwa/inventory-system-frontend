@@ -12,6 +12,8 @@ import { AuthProvider } from "../store/AuthProvider.jsx";
 import { TABLE_CONFIG } from "../constants/tableConfig.js";
 import getEndpoint from "../constants/apiEndpoints.js";
 
+const NO_OF_DATA_PER_PAGE = 6;
+
 export default function Table({ configKey }) {
   const { accessToken } = useContext(AuthProvider);
   const tableConfig = TABLE_CONFIG[configKey];
@@ -97,7 +99,7 @@ export default function Table({ configKey }) {
     setPagination(page);
   }
 
-  function handleDropdownSelect(dataObject) {
+  function handleDropdownSelect(identifier, dataObject) {
     setDropdownSelect(dataObject);
   }
 
@@ -199,7 +201,7 @@ export default function Table({ configKey }) {
       tableData.count > 0 && (
         <Pagination
           totalCount={tableData.count}
-          noOfDataPerPage={2}
+          noOfDataPerPage={NO_OF_DATA_PER_PAGE}
           currentPage={pagination}
           handlePageChange={handlePageChange}
         />

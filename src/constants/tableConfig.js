@@ -135,6 +135,10 @@ export const DROPDOWN_RESPONSE_MAPPING = {
     idKey: "_id",
     dataKey: "roomTypeName",
   },
+  room: {
+    idKey: "_id",
+    dataKey: "roomName",
+  },
   category: {
     idKey: "_id",
     dataKey: "categoryName",

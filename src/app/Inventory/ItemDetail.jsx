@@ -11,7 +11,10 @@ import ShoppingCartIcon from "../../components/icons/ShoppingCartIcon.jsx";
 import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
 import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
 
-import { getDateWithoutTime } from "../../utils/formatter.js";
+import {
+  currencyFormatter,
+  getDateWithoutTime,
+} from "../../utils/formatter.js";
 
 export default function ItemDetail() {
   const { state } = useLocation();
@@ -113,7 +116,7 @@ export default function ItemDetail() {
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground font-bold">रु</span>
                     <span className="font-medium pl-1">Cost:</span>रु{" "}
-                    {item.itemCost}
+                    {currencyFormatter(item.itemCost)}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <ShoppingCartIcon />
