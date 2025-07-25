@@ -10,26 +10,45 @@ import Pagination from "./Pagination.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
 import { TABLE_CONFIG } from "../constants/tableConfig.js";
-import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
+import getEndpoint from "../constants/apiEndpoints.js";
 
 export default function Table({ configKey }) {
   const { accessToken } = useContext(AuthProvider);
   const tableConfig = TABLE_CONFIG[configKey];
+
   const [tableData, setTableData] = useState({
     count: 0,
     rows: [],
   });
-
-  const [pagination, setPagination] = useState({
-    offset: 0,
-    currentPage: 1,
+  const [pagination, setPagination] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dropdownSelect, setDropdownSelect] = useState({
+    id: 0,
+    value: tableConfig.filterOptions.dropdown.value,
   });
 
   useEffect(() => {
     async function fetchTableData() {
       try {
-        const fetchUrl = `${API_ENDPOINTS[configKey].getAllData}${pagination.currentPage}`;
-        console.log(fetchUrl);
+        let fetchAction = "getAllData";
+        let apiPayload = "";
+
+        if (dropdownSelect.id !== 0) {
+          fetchAction = "getFilteredData";
+          apiPayload = dropdownSelect.id;
+        }
+        if (searchTerm !== "") {
+          fetchAction = "getSearchedData";
+          apiPayload = searchTerm;
+        }
+
+        const fetchUrl = getEndpoint(
+          configKey,
+          fetchAction,
+          apiPayload,
+          pagination
+        );
+
         const response = await fetch(fetchUrl, {
           method: "GET",
           headers: {
@@ -50,10 +69,36 @@ export default function Table({ configKey }) {
     }
 
     fetchTableData();
-  }, [configKey, pagination]);
+  }, [configKey, pagination, searchTerm, dropdownSelect]);
+
+  useEffect(() => {
+    const searchTimer = setTimeout(() => {
+      setPagination(1);
+    }, 300);
+
+    return () => clearTimeout(searchTimer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setSearchTerm("");
+    setPagination(1);
+  }, [dropdownSelect]);
+
+  useEffect(() => {
+    setDropdownSelect({
+      id: 0,
+      value: tableConfig.filterOptions.dropdown.value,
+    });
+    setSearchTerm("");
+    setPagination(1);
+  }, [configKey]);
 
   function handlePageChange(page) {
-    setPagination({ offset: 2 * (page - 1), currentPage: page });
+    setPagination(page);
+  }
+
+  function handleDropdownSelect(dataObject) {
+    setDropdownSelect(dataObject);
   }
 
   function renderTableHeader() {
@@ -74,6 +119,7 @@ export default function Table({ configKey }) {
       <TableFilter
         dropdownConfigKey={tableConfig.filterOptions.dropdown.endPointKey}
         dropdownInitialValue={tableConfig.filterOptions.dropdown.value}
+        onStateChange={handleDropdownSelect}
         isInitialValueAnOption={true}
         widthSize="180px"
       />
@@ -92,6 +138,8 @@ export default function Table({ configKey }) {
         <input
           className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full pl-8"
           placeholder={tableConfig.filterOptions.searchBar.value}
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
         />
       </div>
     );
@@ -110,7 +158,7 @@ export default function Table({ configKey }) {
   function renderTableCaption() {
     return (
       <thead>
-        <tr className="bg-primary/5 border-b transition-colors flex justify-between items-center gap-4 px-4">
+        <tr className="bg-primary/5 border-b transition-colors rounded-t-md flex justify-between items-center gap-4 px-4">
           <th className="h-12 font-bold text-sidebar/95 w-16 flex justify-center items-center">
             S.N
           </th>
@@ -140,7 +188,7 @@ export default function Table({ configKey }) {
             />
           ))
         ) : (
-          <NoTableData tableType={tableConfig.columnHeaders[0].label} />
+          <NoTableData tableType={tableConfig.noData} />
         )}
       </tbody>
     );
@@ -152,7 +200,7 @@ export default function Table({ configKey }) {
         <Pagination
           totalCount={tableData.count}
           noOfDataPerPage={2}
-          currentPage={pagination.currentPage}
+          currentPage={pagination}
           handlePageChange={handlePageChange}
         />
       )

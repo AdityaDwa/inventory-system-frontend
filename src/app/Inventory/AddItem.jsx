@@ -134,34 +134,30 @@ export default function AddItem() {
                   <div className="space-y-2">
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      htmlFor="item-category"
+                      htmlFor="item-make-or-model-no"
                     >
-                      Category
+                      Make/Model No.
                     </label>
-                    {/* <TableFilter
-                      dropdownInitialValue="Select category"
-                      endPointUrl="categories"
-                      widthSize="275.8px"
-                      customPlaceholderStyle="text-muted-foreground"
-                      id="item-category"
-                    /> */}
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                      placeholder="e.g. RDC7000"
+                      id="item-make-or-model-no"
+                    />
                   </div>
                   <div className="space-y-2">
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      htmlFor="item-sub-category"
+                      htmlFor="item-category"
                     >
-                      Sub Category
+                      Category
                     </label>
-                    {/* <TableFilter
-                      dropdownInitialValue="Select sub category"
-                      endPointUrl=""
-                      dropdownMenus={[{ name: "DoECE", id: 2 }]}
+                    <TableFilter
+                      dropdownInitialValue="Select category"
+                      dropdownConfigKey="category"
                       widthSize="275.8px"
-                      onStateChange={handleDisableFloorSelect}
                       customPlaceholderStyle="text-muted-foreground"
-                      id="item-sub-category"
-                    /> */}
+                      id="item-category"
+                    />
                   </div>
                 </div>
               </section>
@@ -174,15 +170,13 @@ export default function AddItem() {
                   >
                     Floor
                   </label>
-                  {/* <TableFilter
+                  <TableFilter
                     dropdownInitialValue="Select floor"
-                    endPointUrl="categories"
+                    dropdownConfigKey="floor"
                     widthSize="362.4px"
-                    onStateChange={handleDisableRoomSelect}
-                    isDisabled={isSelectDisabled.floor}
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-floor"
-                  /> */}
+                  />
                 </div>
                 <div className="space-y-2">
                   <label

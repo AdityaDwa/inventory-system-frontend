@@ -42,10 +42,12 @@ export const TABLE_CONFIG = {
     },
     rowActions: {
       visible: true,
-      view: { show: true, path: "/rooms/room/:room-id" },
+      view: { show: true, path: "/rooms/room/" },
       edit: false,
       delete: false,
     },
+
+    noData: "room",
   },
 
   item: {
@@ -109,6 +111,7 @@ export const TABLE_CONFIG = {
       edit: false,
       delete: false,
     },
+    noData: "item",
   },
 };
 
@@ -123,7 +126,7 @@ export const overviewConfig = {
   },
 };
 
-export const RESPONSE_MAPPING = {
+export const DROPDOWN_RESPONSE_MAPPING = {
   floor: {
     idKey: "_id",
     dataKey: "floorName",
@@ -131,5 +134,9 @@ export const RESPONSE_MAPPING = {
   roomType: {
     idKey: "_id",
     dataKey: "roomTypeName",
+  },
+  category: {
+    idKey: "_id",
+    dataKey: "categoryName",
   },
 };

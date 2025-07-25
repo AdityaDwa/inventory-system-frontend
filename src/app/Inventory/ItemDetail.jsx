@@ -11,14 +11,14 @@ import ShoppingCartIcon from "../../components/icons/ShoppingCartIcon.jsx";
 import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
 import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
 
+import { getDateWithoutTime } from "../../utils/formatter.js";
+
 export default function ItemDetail() {
   const { state } = useLocation();
   const { itemId } = useParams();
 
   const item = state?.rowData;
   if (!item) {
-    // fallback: fetch by itemId if state is not available
-    // (e.g., user came directly via URL)
   }
 
   const customClass =
@@ -86,21 +86,34 @@ export default function ItemDetail() {
                     {item.itemFloor}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="text-muted-foreground font-bold">रु</span>
-                    <span className="font-medium pl-1">Cost:</span>रु{" "}
-                    {item.itemCost}
+                    <ClipboardIcon cssClass="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">Status:</span>
+                    <span className={`font-semibold ${statusColor}`}>
+                      {item.itemStatus}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm">
+                    <CalenderIcon />
+                    <span className="font-medium">Date Acquired:</span>
+                    {getDateWithoutTime(item.itemAcquiredDate)}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <HashtagIcon />
+                    <span className="font-medium">Item ID:</span>
+                    {item.itemSerialNumber}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <RoomIcon />
                     <span className="font-medium">Room:</span>
                     {item.itemRoom}
                   </div>
-                </div>
-                <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
-                    <CalenderIcon />
-                    <span className="font-medium">Date Acquired:</span>
-                    {item.itemAcquiredDate}
+                    <span className="text-muted-foreground font-bold">रु</span>
+                    <span className="font-medium pl-1">Cost:</span>रु{" "}
+                    {item.itemCost}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <ShoppingCartIcon />
@@ -110,18 +123,6 @@ export default function ItemDetail() {
                     >
                       {item.itemSource}
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <ClipboardIcon cssClass="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">Status:</span>
-                    <span className={`font-semibold ${statusColor}`}>
-                      {item.itemStatus}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <HashtagIcon />
-                    <span className="font-medium">Item ID:</span>
-                    {item.itemSerialNumber}
                   </div>
                 </div>
               </div>
@@ -149,7 +150,7 @@ export default function ItemDetail() {
                 <div className="relative w-full rounded-t-md">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-primary/5 border-b transition-colors flex justify-between items-center gap-4 px-4">
+                      <tr className="bg-primary/5 border-b transition-colors flex justify-between items-center gap-4 px-4 rounded-t-md">
                         <th className="h-12 font-bold text-sidebar/95 flex justify-start items-center w-24">
                           Date
                         </th>
@@ -169,8 +170,10 @@ export default function ItemDetail() {
                     </thead>
 
                     <tbody className="[&_tr:last-child]:border-0">
-                      <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4">
-                        <td className="text-left w-24">3/22/2025</td>
+                      <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
+                        <td className="text-left w-24">
+                          {getDateWithoutTime(item.itemAcquiredDate)}
+                        </td>
                         <td className="text-left w-[7.5rem]">Added</td>
                         <td
                           className={`text-center w-[5.75rem] font-semibold text-green-600`}
@@ -192,7 +195,9 @@ export default function ItemDetail() {
                       </tr>
 
                       <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4">
-                        <td className="text-left w-24">3/22/2025</td>
+                        <td className="text-left w-24">
+                          {getDateWithoutTime(item.itemAcquiredDate)}
+                        </td>
                         <td className="text-left w-[7.5rem]">Added</td>
                         <td className="text-center w-[5.75rem] font-semibold text-green-600">
                           Working

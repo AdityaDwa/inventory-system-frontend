@@ -1,6 +1,6 @@
 import CheckIcon from "./icons/CheckIcon.jsx";
 
-import { RESPONSE_MAPPING } from "../constants/tableConfig.js";
+import { DROPDOWN_RESPONSE_MAPPING } from "../constants/tableConfig.js";
 
 export default function DropdownModal({
   customStyle = { top: "2.75rem" },
@@ -69,25 +69,26 @@ export default function DropdownModal({
             <div
               className={`relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent  data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground ${
                 dropdownData.id ===
-                item[RESPONSE_MAPPING[dropdownConfigKey].idKey]
+                item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey]
                   ? "bg-accent text-accent-foreground"
                   : ""
               }`}
-              key={item[RESPONSE_MAPPING[dropdownConfigKey].idKey]}
+              key={item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey]}
               onClick={() =>
                 onDropdownChange({
-                  id: item[RESPONSE_MAPPING[dropdownConfigKey].idKey],
-                  value: item[RESPONSE_MAPPING[dropdownConfigKey].dataKey],
+                  id: item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey],
+                  value:
+                    item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].dataKey],
                 })
               }
             >
               <CheckIcon
                 isSelected={
                   dropdownData.id ===
-                  item[RESPONSE_MAPPING[dropdownConfigKey].idKey]
+                  item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey]
                 }
               />
-              {item[RESPONSE_MAPPING[dropdownConfigKey].dataKey]}
+              {item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].dataKey]}
             </div>
           );
         })}

@@ -12,7 +12,7 @@ export default function TableRow({ configKey, serialNo, rowData }) {
   const dataFields = tableConfig.responseMapping.dataFields;
   const rowId = rowData[tableConfig.responseMapping.idKey];
   return (
-    <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4">
+    <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
       <td className="text-center w-16">{serialNo}.</td>
       {dataFields.map((eachField) => {
         let statusColor = "";
@@ -41,7 +41,7 @@ export default function TableRow({ configKey, serialNo, rowData }) {
       })}
 
       {tableConfig.rowActions.visible && (
-        <td className="">
+        <td>
           <div className="flex justify-center items-center gap-2 w-24">
             {tableConfig.rowActions.view.show && (
               <Link

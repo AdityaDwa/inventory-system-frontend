@@ -53,7 +53,7 @@ export default function TableFilter({
   function handleDropdownChange(dataObject) {
     setIsDropdownOpen((prev) => !prev);
     setDropdownData(dataObject);
-    onStateChange(dataObject, dropdownInitialValue);
+    onStateChange(dataObject);
   }
 
   return (

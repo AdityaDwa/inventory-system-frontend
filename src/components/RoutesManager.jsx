@@ -5,6 +5,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import LoginPage from "../app/Login/LoginPage.jsx";
 import DashBoard from "../app/Dashboard/DashBoard.jsx";
 import Rooms from "../app/Rooms/Rooms.jsx";
+import RoomDetail from "../app/Rooms/RoomDetail.jsx";
 import Inventory from "../app/Inventory/Inventory.jsx";
 import AddItem from "../app/Inventory/AddItem.jsx";
 import ItemDetail from "../app/Inventory/ItemDetail.jsx";
@@ -20,7 +21,7 @@ export default function RoutesManager() {
   const ROUTES_CONFIG = [
     { path: "/", component: <DashBoard /> },
     { path: "/rooms", component: <Rooms /> },
-    // { path: "/rooms/room/:roomId", component: <AddItem /> },
+    { path: "/rooms/room/:roomId", component: <RoomDetail /> },
     { path: "/inventory", component: <Inventory /> },
     { path: "/inventory/add-item", component: <AddItem /> },
     { path: "/inventory/item/:itemId", component: <ItemDetail /> },
