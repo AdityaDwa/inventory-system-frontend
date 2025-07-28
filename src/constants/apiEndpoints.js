@@ -44,6 +44,11 @@ export const API_ENDPOINTS = {
     getAllData: "/api/v1/inventory/logs/",
   },
 
+  user: {
+    getAllData: "/api/v1/users/active/",
+    getCurrentUserData: "/api/v1/users/current-user",
+  },
+
   floor: {
     getDropdownData: "/api/v1/floors",
   },

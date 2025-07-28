@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import PackageIcon from "./icons/PackageIcon.jsx";
@@ -8,10 +8,10 @@ import ColumnChartIcon from "./icons/ColumnChartIcon.jsx";
 import ClipboardIcon from "./icons/ClipboardIcon.jsx";
 import CategoryIcon from "./icons/CategoryIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
-import PlusIcon from "./icons/PlusIcon.jsx";
 import LogoutIcon from "./icons/LogoutIcon.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
+import getEndpoint from "../constants/apiEndpoints.js";
 
 const NAV_LINKS = [
   {
@@ -48,8 +48,32 @@ const NAV_LINKS = [
 
 export default function SideBar() {
   const pathLocation = useLocation();
+  const [userData, setUserData] = useState({});
+  const { accessToken, handleLogin } = useContext(AuthProvider);
 
-  const { handleLogin } = useContext(AuthProvider);
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const fetchUrl = getEndpoint("user", "getCurrentUserData");
+
+        const response = await fetch(fetchUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setUserData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchUserData();
+  }, []);
 
   const activeClass =
     "bg-sidebar-foreground/20 text-sidebar-foreground font-medium";
@@ -100,11 +124,15 @@ export default function SideBar() {
       <footer className="mt-auto p-4">
         <article className="flex items-center gap-2 rounded-lg border border-sidebar-border p-4 bg-sidebar-foreground/5">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            A
+            {userData.username !== undefined
+              ? userData.username[0].toUpperCase()
+              : ""}
           </div>
           <div>
-            <p className="text-xs font-medium">Admin</p>
-            <p className="text-xs text-sidebar-foreground/70">pcampus@edu.np</p>
+            <p className="text-xs font-medium">{userData.username}</p>
+            <p className="text-xs text-sidebar-foreground/70">
+              {userData.email}
+            </p>
           </div>
         </article>
         <Link

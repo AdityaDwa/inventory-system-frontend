@@ -44,7 +44,7 @@ export const TABLE_CONFIG = {
         {
           key: "totalItems",
           label: "Total Items",
-          additionalStyles: "w-24 text-center",
+          additionalStyles: "text-center w-24",
         },
       ],
     },
@@ -74,10 +74,10 @@ export const TABLE_CONFIG = {
     columnHeaders: [
       {
         label: "Name & Category",
-        additionalStyles: "justify-start w-[12rem]",
+        additionalStyles: "justify-start w-48",
       },
       { label: "Item ID", additionalStyles: "justify-start w-24" },
-      { label: "Make/Model No.", additionalStyles: "justify-start w-[12rem]" },
+      { label: "Make/Model No.", additionalStyles: "justify-start w-48" },
       { label: "Location", additionalStyles: "justify-start w-[17.5rem]" },
       { label: "Status", additionalStyles: "justify-center w-[5.75rem]" },
       { label: "Action", additionalStyles: "justify-center w-24" },
@@ -91,7 +91,7 @@ export const TABLE_CONFIG = {
         {
           key: "itemName",
           label: "Name",
-          additionalStyles: "text-left w-[12rem]",
+          additionalStyles: "text-left w-48",
           additionalDetail: "itemDescription",
         },
         {
@@ -102,7 +102,7 @@ export const TABLE_CONFIG = {
         {
           key: "itemModelNumberOrMake",
           label: "Make/Model No.",
-          additionalStyles: "text-left w-[12rem]",
+          additionalStyles: "text-left w-48",
         },
         {
           key: "itemRoom",
@@ -193,7 +193,7 @@ export const TABLE_CONFIG = {
     columnHeaders: [
       {
         label: "Name",
-        additionalStyles: "justify-start w-[15rem]",
+        additionalStyles: "justify-start w-60",
       },
       { label: "Category Symbol", additionalStyles: "justify-center w-36" },
       { label: "Total Items", additionalStyles: "justify-center w-24" },
@@ -208,7 +208,7 @@ export const TABLE_CONFIG = {
         {
           key: "categoryName",
           label: "Name",
-          additionalStyles: "text-left w-[15rem]",
+          additionalStyles: "text-left w-60",
         },
         {
           key: "categoryAbbreviation",
@@ -229,6 +229,66 @@ export const TABLE_CONFIG = {
       delete: true,
     },
     noData: "category",
+  },
+
+  user: {
+    header: {
+      title: "All Users",
+      subtitle: "View and manage users across the system",
+    },
+
+    filterOptions: {
+      visible: true,
+      dropdown: { show: false },
+      advancedFilter: { show: false },
+      searchBar: { show: true, value: "Search user by name" },
+    },
+
+    columnHeaders: [
+      {
+        label: "Name",
+        additionalStyles: "justify-start w-40",
+      },
+      { label: "Email", additionalStyles: "justify-start w-60" },
+      { label: "Phone Number", additionalStyles: "justify-start w-32" },
+      { label: "Role", additionalStyles: "justify-center w-24" },
+      { label: "Action", additionalStyles: "justify-center w-24" },
+    ],
+
+    responseMapping: {
+      countKey: "totalUsers",
+      dataKey: "users",
+      idKey: "_id",
+      dataFields: [
+        {
+          key: "username",
+          label: "Name",
+          additionalStyles: "text-left w-40",
+        },
+        {
+          key: "email",
+          label: "Email",
+          additionalStyles: "text-start w-60",
+        },
+        {
+          key: "phone_number",
+          label: "Phone Number",
+          additionalStyles: "text-start w-32",
+        },
+        {
+          key: "role",
+          label: "Role",
+          additionalStyles: "text-center w-24 font-semibold",
+        },
+      ],
+    },
+    rowActions: {
+      visible: true,
+      view: { show: false },
+      edit: true,
+      delete: true,
+    },
+    noData: "user",
   },
 };
 

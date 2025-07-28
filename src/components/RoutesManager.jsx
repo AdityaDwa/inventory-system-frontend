@@ -12,6 +12,7 @@ import ItemDetail from "../app/Inventory/ItemDetail.jsx";
 import Analytics from "../app/Analytics/Analytics.jsx";
 import ActivityLog from "../app/ActivityLog/ActivityLog.jsx";
 import Categories from "../app/Categories/Categories.jsx";
+import Users from "../app/Users/Users.jsx";
 import ErrorPage from "./ErrorPage.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
@@ -29,7 +30,7 @@ export default function RoutesManager() {
     { path: "/analytics", component: <Analytics /> },
     { path: "/activity", component: <ActivityLog /> },
     { path: "/categories", component: <Categories /> },
-    // { path: "/users", component: <ActivityLog /> },
+    { path: "/users", component: <Users /> },
   ];
 
   return (
