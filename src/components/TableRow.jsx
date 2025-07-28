@@ -6,6 +6,12 @@ import VisibilityIcon from "./icons/VisibilityIcon.jsx";
 import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 
 import { TABLE_CONFIG } from "../constants/tableConfig.js";
+import { getDateWithoutTime, getTime } from "../utils/formatter.js";
+
+const formatters = {
+  Date: getDateWithoutTime,
+  Time: getTime,
+};
 
 export default function TableRow({ configKey, serialNo, rowData }) {
   const tableConfig = TABLE_CONFIG[configKey];
@@ -24,15 +30,25 @@ export default function TableRow({ configKey, serialNo, rowData }) {
               ? "text-yellow-600"
               : "text-red-600";
         }
+
+        const tableValue = formatters[eachField.label]
+          ? formatters[eachField.label](rowData[eachField.key])
+          : rowData[eachField.key];
+
+        const additionalValue =
+          eachField?.additionalDetail && rowData[eachField.additionalDetail]
+            ? `(${rowData[eachField.additionalDetail]})`
+            : null;
+
         return (
           <td key={eachField.key}>
             <div className="flex flex-col">
               <div className={`${eachField.additionalStyles} ${statusColor}`}>
-                {rowData[eachField.key]}
+                {tableValue}
               </div>
               {eachField.additionalDetail && (
                 <div className="text-xs text-muted-foreground">
-                  ({rowData[eachField.additionalDetail]})
+                  {additionalValue}
                 </div>
               )}
             </div>
