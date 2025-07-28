@@ -1,4 +1,5 @@
 import { Link, useLocation, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 
 import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
 import EditIcon from "../../components/icons/EditIcon.jsx";
@@ -12,13 +13,42 @@ import CircleCheckIcon from "../../components/icons/CircleCheckIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
 
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+
 export default function RoomDetail() {
+  const [itemTableData, setitemTableData] = useState([]);
+  const { accessToken } = useContext(AuthProvider);
+
   const { state } = useLocation();
   const { roomId } = useParams();
-  const room = state?.rowData;
 
+  const room = state?.rowData;
   if (!room) {
   }
+
+  useEffect(() => {
+    async function fetchItemData() {
+      try {
+        const fetchUrl = `/api/v1/rooms/${roomId}/item-details`;
+
+        const response = await fetch(fetchUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setitemTableData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchItemData();
+  }, []);
 
   return (
     <>
@@ -47,7 +77,7 @@ export default function RoomDetail() {
                     <EditIcon cssClass="mr-2 h-4 w-4" />
                     Edit
                   </button>
-                  <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3">
+                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3">
                     <DeleteIcon cssClass="mr-2 h-4 w-4" />
                     Delete
                   </button>
@@ -164,58 +194,63 @@ export default function RoomDetail() {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-              <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
-                <td className="text-center w-16">1.</td>
-                <td>
-                  <div className="flex flex-col">
-                    <div className="justify-start w-80">EDXY Robot Trainer</div>
+              {itemTableData.length !== 0 ? (
+                itemTableData.map((item, index) => {
+                  console.log(item);
+                  const additionalValue =
+                    item.itemDescription !== ""
+                      ? `(${item.itemDescription})`
+                      : null;
 
-                    <div className="text-xs text-muted-foreground">
-                      (micro kit)
-                    </div>
-                  </div>
-                </td>
-                <td className="text-left w-56">RD7000</td>
-                <td className="text-center w-[8.5rem]">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
-                      <div className="h-2.5 w-2.5 rounded-full bg-green-500 ring-1 ring-green-500/30 ring-offset-1"></div>
-                      <span className="text-xs">999</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2.5 w-2.5 rounded-full bg-yellow-500 ring-1 ring-yellow-500/30 ring-offset-1"></div>
-                      <span className="text-xs">999</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2.5 w-2.5 rounded-full bg-red-500 ring-1 ring-red-500/30 ring-offset-1"></div>
-                      <span className="text-xs">999</span>
-                    </div>
-                  </div>
-                </td>
-                <td className="text-center w-28">33</td>
-              </tr>
-              <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
-                <td className="text-center w-16">1.</td>
-                <td className="text-left w-80">EDXY Robot Trainer</td>
-                <td className="text-left w-56">RD7000</td>
-                <td className="text-center w-[8.5rem]">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
-                      <div className="h-2.5 w-2.5 rounded-full bg-green-500 ring-1 ring-green-500/30 ring-offset-1"></div>
-                      <span className="text-xs">999</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2.5 w-2.5 rounded-full bg-yellow-500 ring-1 ring-yellow-500/30 ring-offset-1"></div>
-                      <span className="text-xs">999</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2.5 w-2.5 rounded-full bg-red-500 ring-1 ring-red-500/30 ring-offset-1"></div>
-                      <span className="text-xs">999</span>
-                    </div>
-                  </div>
-                </td>
-                <td className="text-center w-28">33</td>
-              </tr>
+                  return (
+                    <tr
+                      className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
+                      key={index}
+                    >
+                      <td className="text-center w-16">{index + 1}</td>
+                      <td>
+                        <div className="flex flex-col">
+                          <div className="justify-start w-80">
+                            {item.itemName}
+                          </div>
+
+                          <div className="text-xs text-muted-foreground">
+                            {additionalValue}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="text-left w-56">{item.itemModel}</td>
+                      <td className="text-center w-[8.5rem]">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="h-2.5 w-2.5 rounded-full bg-green-500 ring-1 ring-green-500/30 ring-offset-1"></div>
+                            <span className="text-xs">{item.workingCount}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="h-2.5 w-2.5 rounded-full bg-yellow-500 ring-1 ring-yellow-500/30 ring-offset-1"></div>
+                            <span className="text-xs">
+                              {item.repairableCount}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="h-2.5 w-2.5 rounded-full bg-red-500 ring-1 ring-red-500/30 ring-offset-1"></div>
+                            <span className="text-xs">
+                              {item.notWorkingCount}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="text-center w-28">{item.totalCount}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr className="border-b transition-colors hover:bg-muted/50">
+                  <td className="p-4 h-24 text-center" colSpan="10">
+                    No item in this room.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

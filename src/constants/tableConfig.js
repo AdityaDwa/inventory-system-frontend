@@ -92,7 +92,7 @@ export const TABLE_CONFIG = {
           key: "itemName",
           label: "Name",
           additionalStyles: "text-left w-48",
-          additionalDetail: "itemDescription",
+          additionalDetail: "itemCategory",
         },
         {
           key: "itemSerialNumber",
@@ -319,5 +319,9 @@ export const DROPDOWN_RESPONSE_MAPPING = {
   category: {
     idKey: "_id",
     dataKey: "categoryName",
+  },
+  item: {
+    idKey: "sourceId",
+    dataKey: "sourceName",
   },
 };

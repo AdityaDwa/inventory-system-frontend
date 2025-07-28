@@ -112,7 +112,7 @@ export default function ItemDetail() {
                   <div className="flex items-center gap-2 text-sm">
                     <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Category:</span>
-                    {item.itemDescription}
+                    {item.itemCategory}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <FloorIcon cssClass="h-4 w-4 text-muted-foreground" />
@@ -164,7 +164,11 @@ export default function ItemDetail() {
               <div>
                 <h3 className="font-medium mb-2">Description</h3>
                 <p className="text-sm text-muted-foreground">
-                  {item.itemDescription}
+                  {item.itemDescription !== "" ? (
+                    item.itemDescription
+                  ) : (
+                    <span className="italic">No description added</span>
+                  )}
                 </p>
               </div>
             </article>

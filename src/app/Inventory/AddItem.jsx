@@ -16,7 +16,7 @@ export default function AddItem() {
     category: 0,
     floor: 0,
     room: 0,
-    source: 0,
+    item: 0,
   });
 
   const [costValues, setCostValues] = useState({
@@ -78,8 +78,6 @@ export default function AddItem() {
       [identifier]: payload.id,
     }));
   }
-
-  console.log(dropdownInfo);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -183,6 +181,7 @@ export default function AddItem() {
                     Room
                   </label>
                   <TableFilter
+                    key={dropdownInfo.floor}
                     dropdownInitialValue="Select room"
                     dropdownConfigKey="room"
                     widthSize="362.4px"
@@ -218,7 +217,7 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     dropdownInitialValue="Purchase"
-                    dropdownConfigKey="floor"
+                    dropdownConfigKey="item"
                     onStateChange={handleDropdownChange}
                     widthSize="362.4px"
                     id="item-source"

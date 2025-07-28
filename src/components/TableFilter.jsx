@@ -4,7 +4,6 @@ import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 import DropdownModal from "./DropdownModal.jsx";
 
 import { AuthProvider } from "../store/AuthProvider.jsx";
-// import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
 import getEndpoint from "../constants/apiEndpoints.js";
 
 export default function TableFilter({
