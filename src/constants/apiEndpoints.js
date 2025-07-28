@@ -24,6 +24,7 @@ export default function getEndpoint(
 export const API_ENDPOINTS = {
   dashboard: {
     getInventoryStats: "/api/v1/inventory/stats",
+    getRecentActivities: "/api/v1/inventory/recent_logs",
   },
 
   room: {
@@ -39,6 +40,10 @@ export const API_ENDPOINTS = {
     getSearchedData: "/api/v1/items/name-search/",
   },
 
+  activity: {
+    getAllData: "/api/v1/inventory/logs/",
+  },
+
   floor: {
     getDropdownData: "/api/v1/floors",
   },
@@ -48,6 +53,7 @@ export const API_ENDPOINTS = {
   },
 
   category: {
+    getAllData: "/api/v1/categories/description/",
     getDropdownData: "/api/v1/categories",
   },
 };

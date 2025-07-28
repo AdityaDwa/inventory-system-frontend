@@ -43,7 +43,7 @@ export default function OverviewRow({ inventoryStats }) {
       </OverviewCard>
 
       <OverviewCard
-        title="Under Repair"
+        title="Repairable Items"
         overviewNum={
           inventoryStats[overviewConfig.responseMapping.repairableItems]
         }
@@ -57,7 +57,7 @@ export default function OverviewRow({ inventoryStats }) {
       </OverviewCard>
 
       <OverviewCard
-        title="Out of Order"
+        title="Not-working Items"
         overviewNum={
           inventoryStats[overviewConfig.responseMapping.notWorkingItems]
         }

@@ -1,4 +1,5 @@
 import { Link, useLocation, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 
 import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
 import EditIcon from "../../components/icons/EditIcon.jsx";
@@ -11,18 +12,48 @@ import ShoppingCartIcon from "../../components/icons/ShoppingCartIcon.jsx";
 import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
 import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
 
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+
 import {
   currencyFormatter,
+  dateFormatter,
   getDateWithoutTime,
 } from "../../utils/formatter.js";
 
 export default function ItemDetail() {
+  const [historyTableData, setHistoryTableData] = useState([]);
+  const { accessToken } = useContext(AuthProvider);
+
   const { state } = useLocation();
   const { itemId } = useParams();
 
   const item = state?.rowData;
   if (!item) {
   }
+
+  useEffect(() => {
+    async function fetchHistoryTableData() {
+      try {
+        const fetchUrl = `/api/v1/items/${itemId}/history`;
+
+        const response = await fetch(fetchUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setHistoryTableData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchHistoryTableData();
+  }, []);
 
   const customClass =
     item.itemSource !== "Purchase"
@@ -99,7 +130,7 @@ export default function ItemDetail() {
                   <div className="flex items-center gap-2 text-sm">
                     <CalenderIcon />
                     <span className="font-medium">Date Acquired:</span>
-                    {getDateWithoutTime(item.itemAcquiredDate)}
+                    {dateFormatter(item.itemAcquiredDate)}
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -115,7 +146,7 @@ export default function ItemDetail() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground font-bold">रु</span>
-                    <span className="font-medium pl-1">Cost:</span>रु{" "}
+                    <span className="font-medium pl-1">Cost:</span>Rs.{" "}
                     {currencyFormatter(item.itemCost)}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
@@ -173,51 +204,47 @@ export default function ItemDetail() {
                     </thead>
 
                     <tbody className="[&_tr:last-child]:border-0">
-                      <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
-                        <td className="text-left w-24">
-                          {getDateWithoutTime(item.itemAcquiredDate)}
-                        </td>
-                        <td className="text-left w-[7.5rem]">Added</td>
-                        <td
-                          className={`text-center w-[5.75rem] font-semibold text-green-600`}
-                        >
-                          Working
-                        </td>
-                        <td>
-                          <div className="flex flex-col">
-                            <div className="justify-start w-[17.5rem]">
-                              Teacher's Room No. 1 : Cubical Room 3
-                            </div>
+                      {historyTableData.length !== 0
+                        ? historyTableData.map((historyLog) => {
+                            const status = historyLog.changes.status.to;
 
-                            <div className="text-xs text-muted-foreground">
-                              (Floor 2)
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-left w-[4.8rem]">admin</td>
-                      </tr>
+                            const statusColor =
+                              status === "Working"
+                                ? "text-green-600"
+                                : status === "Repairable"
+                                ? "text-yellow-600"
+                                : "text-red-600";
+                            return (
+                              <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
+                                <td className="text-left w-24">
+                                  {getDateWithoutTime(historyLog.createdAt)}
+                                </td>
+                                <td className="text-left w-[7.5rem] capitalize">
+                                  {historyLog.action}
+                                </td>
+                                <td
+                                  className={`text-center w-[5.75rem] font-semibold ${statusColor}`}
+                                >
+                                  {historyLog.changes.status.to}
+                                </td>
+                                <td>
+                                  <div className="flex flex-col">
+                                    <div className="justify-start w-[17.5rem]">
+                                      {historyLog.changes.room.to}
+                                    </div>
 
-                      <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4">
-                        <td className="text-left w-24">
-                          {getDateWithoutTime(item.itemAcquiredDate)}
-                        </td>
-                        <td className="text-left w-[7.5rem]">Added</td>
-                        <td className="text-center w-[5.75rem] font-semibold text-green-600">
-                          Working
-                        </td>
-                        <td>
-                          <div className="flex flex-col">
-                            <div className="justify-start w-[17.5rem]">
-                              Teacher's Room No. 1 : Cubical Room 3
-                            </div>
-
-                            <div className="text-xs text-muted-foreground">
-                              (Floor 2)
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-left w-[4.8rem]">admin</td>
-                      </tr>
+                                    <div className="text-xs text-muted-foreground">
+                                      ({historyLog.changes.floor.to})
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="text-left w-[4.8rem]">
+                                  {historyLog.performedByName}
+                                </td>
+                              </tr>
+                            );
+                          })
+                        : ""}
                     </tbody>
                   </table>
                 </div>

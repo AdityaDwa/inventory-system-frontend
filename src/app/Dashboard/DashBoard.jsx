@@ -6,6 +6,7 @@ import InventoryOverview from "./InventoryOverview.jsx";
 import RecentActivity from "./RecentActivity.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function DashBoard() {
   const [inventoryStats, setInventoryStats] = useState({});
@@ -14,7 +15,9 @@ export default function DashBoard() {
   useEffect(() => {
     async function fetchInventoryStatusData() {
       try {
-        const response = await fetch("/api/v1/inventory/stats", {
+        const fetchUrl = getEndpoint("dashboard", "getInventoryStats");
+
+        const response = await fetch(fetchUrl, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,

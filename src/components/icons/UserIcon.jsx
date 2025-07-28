@@ -1,4 +1,4 @@
-export default function UserIcon() {
+export default function UserIcon({ cssClass = "h-[1.2rem] w-[1.2rem]" }) {
   return (
     <svg
       width="24"
@@ -9,7 +9,7 @@ export default function UserIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-[1.2rem] w-[1.2rem]"
+      className={cssClass}
     >
       <rect width="18" height="18" x="3" y="3" rx="2" />
       <circle cx="12" cy="10" r="3" />

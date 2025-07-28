@@ -28,11 +28,19 @@ export const TABLE_CONFIG = {
         {
           key: "roomName",
           label: "Room",
-          additionalStyles: "w-[25rem]",
+          additionalStyles: "text-left w-[25rem]",
           additionalDetail: "allottedTo",
         },
-        { key: "roomTypeName", label: "Type", additionalStyles: "w-40" },
-        { key: "roomFloorName", label: "Floor", additionalStyles: "w-24" },
+        {
+          key: "roomTypeName",
+          label: "Type",
+          additionalStyles: "text-left w-40",
+        },
+        {
+          key: "roomFloorName",
+          label: "Floor",
+          additionalStyles: "text-left w-24",
+        },
         {
           key: "totalItems",
           label: "Total Items",
@@ -83,19 +91,23 @@ export const TABLE_CONFIG = {
         {
           key: "itemName",
           label: "Name",
-          additionalStyles: "w-[12rem]",
+          additionalStyles: "text-left w-[12rem]",
           additionalDetail: "itemDescription",
         },
-        { key: "itemSerialNumber", label: "Item ID", additionalStyles: "w-24" },
+        {
+          key: "itemSerialNumber",
+          label: "Item ID",
+          additionalStyles: "text-left w-24",
+        },
         {
           key: "itemModelNumberOrMake",
           label: "Make/Model No.",
-          additionalStyles: "w-[12rem]",
+          additionalStyles: "text-left w-[12rem]",
         },
         {
           key: "itemRoom",
           label: "Location",
-          additionalStyles: "w-[17.5rem]",
+          additionalStyles: "text-left w-[17.5rem]",
           additionalDetail: "itemFloor",
         },
         {
@@ -112,6 +124,111 @@ export const TABLE_CONFIG = {
       delete: false,
     },
     noData: "item",
+  },
+
+  activity: {
+    header: {
+      title: "Recent Activities",
+      subtitle: "View recent activities across the system",
+    },
+
+    filterOptions: {
+      visible: true,
+      dropdown: { show: false },
+      advancedFilter: { show: false },
+      searchBar: { show: true, value: "Search rooms by name" },
+    },
+
+    columnHeaders: [
+      {
+        label: "Date",
+        additionalStyles: "justify-start w-24",
+      },
+      { label: "Time", additionalStyles: "justify-start w-24" },
+      { label: "User", additionalStyles: "justify-start w-40" },
+      { label: "Action", additionalStyles: "justify-start w-[27rem]" },
+    ],
+
+    responseMapping: {
+      countKey: "totalLogs",
+      dataKey: "logs",
+      idKey: "_id",
+      dataFields: [
+        { key: "createdAt", label: "Date", additionalStyles: "text-left w-24" },
+        { key: "createdAt", label: "Time", additionalStyles: "text-left w-24" },
+        {
+          key: "performedByName",
+          label: "User",
+          additionalStyles: "text-left w-40",
+        },
+        {
+          key: "description",
+          label: "Action",
+          additionalStyles: "text-left w-[27rem]",
+        },
+      ],
+    },
+    rowActions: {
+      visible: false,
+      view: { show: false },
+      edit: false,
+      delete: false,
+    },
+    noData: "activity",
+  },
+
+  category: {
+    header: {
+      title: "All Categories",
+      subtitle: "View and manage categories for different items",
+    },
+
+    filterOptions: {
+      visible: true,
+      dropdown: { show: false },
+      advancedFilter: { show: false },
+      searchBar: { show: true, value: "Search category by name" },
+    },
+
+    columnHeaders: [
+      {
+        label: "Name",
+        additionalStyles: "justify-start w-[15rem]",
+      },
+      { label: "Category Symbol", additionalStyles: "justify-center w-36" },
+      { label: "Total Items", additionalStyles: "justify-center w-24" },
+      { label: "Action", additionalStyles: "justify-center w-24" },
+    ],
+
+    responseMapping: {
+      countKey: "totalCategories",
+      dataKey: "categories",
+      idKey: "_id",
+      dataFields: [
+        {
+          key: "categoryName",
+          label: "Name",
+          additionalStyles: "text-left w-[15rem]",
+        },
+        {
+          key: "categoryAbbreviation",
+          label: "Category Symbol",
+          additionalStyles: "text-center w-36",
+        },
+        {
+          key: "totalItems",
+          label: "Total Items",
+          additionalStyles: "text-center w-24",
+        },
+      ],
+    },
+    rowActions: {
+      visible: true,
+      view: { show: false },
+      edit: false,
+      delete: true,
+    },
+    noData: "category",
   },
 };
 

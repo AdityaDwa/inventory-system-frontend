@@ -29,6 +29,8 @@ export default function Table({ configKey }) {
     value: tableConfig.filterOptions.dropdown.value,
   });
 
+  const [resetKey, setResetKey] = useState(0);
+
   useEffect(() => {
     async function fetchTableData() {
       try {
@@ -74,6 +76,7 @@ export default function Table({ configKey }) {
   }, [configKey, pagination, searchTerm, dropdownSelect]);
 
   useEffect(() => {
+    setResetKey((prevKey) => prevKey + 1);
     const searchTimer = setTimeout(() => {
       setPagination(1);
     }, 300);
@@ -87,13 +90,18 @@ export default function Table({ configKey }) {
   }, [dropdownSelect]);
 
   useEffect(() => {
+    resetFilters();
+  }, [configKey]);
+
+  function resetFilters() {
     setDropdownSelect({
       id: 0,
       value: tableConfig.filterOptions.dropdown.value,
     });
     setSearchTerm("");
     setPagination(1);
-  }, [configKey]);
+    setResetKey((prevKey) => prevKey + 1);
+  }
 
   function handlePageChange(page) {
     setPagination(page);
@@ -119,6 +127,7 @@ export default function Table({ configKey }) {
   function renderTableFilter() {
     const dropdownFilter = (
       <TableFilter
+        key={resetKey}
         dropdownConfigKey={tableConfig.filterOptions.dropdown.endPointKey}
         dropdownInitialValue={tableConfig.filterOptions.dropdown.value}
         onStateChange={handleDropdownSelect}
@@ -152,6 +161,12 @@ export default function Table({ configKey }) {
           {tableConfig.filterOptions.dropdown.show && dropdownFilter}
           {tableConfig.filterOptions.advancedFilter.show && advancedFilterBtn}
           {tableConfig.filterOptions.searchBar.show && searchBar}
+          <button
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            onClick={resetFilters}
+          >
+            Reset
+          </button>
         </div>
       )
     );

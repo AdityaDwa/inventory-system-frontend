@@ -5,7 +5,6 @@ import PlusIcon from "../../components/icons/PlusIcon.jsx";
 
 import PageHeader from "../../components/PageHeader.jsx";
 import Table from "../../components/Table.jsx";
-import { getDateWithoutTime } from "../../utils/formatter.js";
 
 export default function Inventory() {
   return (

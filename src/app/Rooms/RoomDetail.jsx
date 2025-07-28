@@ -4,13 +4,10 @@ import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
 import EditIcon from "../../components/icons/EditIcon.jsx";
 import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
 
-import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import FloorIcon from "../../components/icons/FloorIcon.jsx";
+import UserIcon from "../../components/icons/UserIcon.jsx";
 import RoomIcon from "../../components/icons/RoomIcon.jsx";
-import CalenderIcon from "../../components/icons/CalenderIcon.jsx";
-import ShoppingCartIcon from "../../components/icons/ShoppingCartIcon.jsx";
-import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
-import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
+import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import CircleCheckIcon from "../../components/icons/CircleCheckIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
@@ -19,7 +16,7 @@ export default function RoomDetail() {
   const { state } = useLocation();
   const { roomId } = useParams();
   const room = state?.rowData;
-  console.log(room);
+
   if (!room) {
   }
 
@@ -42,8 +39,7 @@ export default function RoomDetail() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-semibold tracking-tight text-2xl">
-                    {/* {room.roomName} */}
-                    Teacher's Room No. 2 : Cubical Room 4
+                    {room.roomName}
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -63,20 +59,24 @@ export default function RoomDetail() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
+                    <FloorIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Floor:</span>
                     {room.roomFloorName}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
+                    <UserIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Allotted To:</span>
-                    {room.allottedTo}
+                    {room.allottedTo === undefined ? " - " : room.allottedTo}
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
+                    <RoomIcon />
                     <span className="font-medium">Room Type:</span>
                     {room.roomTypeName}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
+                    <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Total Items:</span>
                     {room.totalItems}
                   </div>
