@@ -27,7 +27,19 @@ export function dateFormatter(inputDate) {
 }
 
 export function getDateWithoutTime(inputDate) {
-  const formattedDate = new Date(inputDate).toISOString().split("T")[0];
+  const dateObj = new Date(inputDate);
+  const formattedDate = dateObj.toLocaleDateString("en-CA");
 
   return formattedDate;
+}
+
+export function getTime(inputDate) {
+  const dateObj = new Date(inputDate);
+  const formattedTime = dateObj.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  return formattedTime;
 }

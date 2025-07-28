@@ -2,9 +2,8 @@ export default function LogData({
   profileInitials,
   userName,
   action,
-  item,
-  faculty,
-  timeElapsed,
+  date,
+  time,
 }) {
   return (
     <article className="flex items-start gap-4">
@@ -16,10 +15,9 @@ export default function LogData({
       <div className="space-y-1">
         <p className="text-sm font-medium leading-none">
           {userName} <span className="text-muted-foreground">{action} </span>
-          <span className="font-semibold">{item}</span>
         </p>
         <p className="text-sm text-muted-foreground">
-          In {faculty} • {timeElapsed}
+          {date} • {time}
         </p>
       </div>
     </article>
