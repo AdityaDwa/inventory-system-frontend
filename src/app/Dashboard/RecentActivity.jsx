@@ -4,7 +4,8 @@ import LogData from "../../components/LogData.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 
-import { dateFormatter } from "../../utils/formatter.js";
+import { dateFormatter, getTime } from "../../utils/formatter.js";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function RecentActivity() {
   const [logData, setLogData] = useState([]);
@@ -13,7 +14,9 @@ export default function RecentActivity() {
   useEffect(() => {
     async function fetchActivityData() {
       try {
-        const response = await fetch("/api/v1/items/overallLogs", {
+        const fetchUrl = getEndpoint("dashboard", "getRecentActivities");
+
+        const response = await fetch(fetchUrl, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -45,19 +48,16 @@ export default function RecentActivity() {
       <section className="p-6 pt-0">
         <div className="space-y-6">
           {logData.length !== 0
-            ? logData
-                .slice(0, 5)
-                .map((singleLog, index) => (
-                  <LogData
-                    key={index}
-                    profileInitials={singleLog.performedByName[0].toUpperCase()}
-                    userName={singleLog.performedByName}
-                    action={singleLog.action.toLowerCase()}
-                    item={singleLog.itemName}
-                    faculty={singleLog.toRoomName}
-                    timeElapsed={dateFormatter(singleLog.createdAt)}
-                  />
-                ))
+            ? logData.map((singleLog) => (
+                <LogData
+                  key={singleLog._id}
+                  profileInitials={singleLog.performedByName[0].toUpperCase()}
+                  userName={singleLog.performedByName}
+                  action={singleLog.description}
+                  date={dateFormatter(singleLog.createdAt)}
+                  time={getTime(singleLog.createdAt)}
+                />
+              ))
             : ""}
         </div>
       </section>

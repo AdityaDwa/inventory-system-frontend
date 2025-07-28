@@ -1,4 +1,3 @@
-import OverviewChart from "../../components/OverviewChart.jsx";
 import ConditionPieChart from "../Analytics/ConditionPieChart.jsx";
 import ChartLegendPoint from "../Analytics/ChartLegendPoint.jsx";
 
