@@ -5,26 +5,23 @@ import DownloadIcon from "../../components/icons/DownloadIcon.jsx";
 import PageHeader from "../../components/PageHeader.jsx";
 import AnalyticsCardRow from "./AnalyticsCardRow.jsx";
 import AnalyticsMenuBar from "./AnalyticsMenuBar.jsx";
-import CategoriesDistribution from "./CategoriesDistribution.jsx";
 import ItemConditionTab from "./ItemConditionTab.jsx";
 import AcquisitionTab from "./AcquisitionTab.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function Analytics() {
-  const [activeTabTitle, setActiveTabTitle] = useState("Category-wise");
-  const [inventoryStats, setInventoryStats] = useState({
-    inUse: 0,
-    underRepair: 0,
-    outOfOrder: 0,
-    totalItems: 0,
-  });
+  const [activeTabTitle, setActiveTabTitle] = useState("Condition Breakdown");
+  const [inventoryStats, setInventoryStats] = useState({});
   const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
-    async function fetchInventoryData() {
+    async function fetchInventoryStatusData() {
       try {
-        const response = await fetch("/api/v1/items/inventoryStats", {
+        const fetchUrl = getEndpoint("dashboard", "getInventoryStats");
+
+        const response = await fetch(fetchUrl, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -40,7 +37,7 @@ export default function Analytics() {
       }
     }
 
-    fetchInventoryData();
+    fetchInventoryStatusData();
   }, []);
 
   function handleTabChange(title) {
@@ -63,7 +60,6 @@ export default function Analytics() {
           activeTabTitle={activeTabTitle}
           handleTabChange={handleTabChange}
         />
-        <CategoriesDistribution hidden={activeTabTitle !== "Category-wise"} />
         <ItemConditionTab
           hidden={activeTabTitle !== "Condition Breakdown"}
           inventoryStats={inventoryStats}
