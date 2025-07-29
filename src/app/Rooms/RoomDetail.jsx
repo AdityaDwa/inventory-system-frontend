@@ -221,7 +221,7 @@ export default function RoomDetail() {
                       </td>
                       <td className="text-left w-56">{item.itemModel}</td>
                       <td className="text-center w-[8.5rem]">
-                        <div className="flex items-center gap-2">
+                        <div className="flex justify-center items-center gap-2">
                           <div className="flex items-center gap-1">
                             <div className="h-2.5 w-2.5 rounded-full bg-green-500 ring-1 ring-green-500/30 ring-offset-1"></div>
                             <span className="text-xs">{item.workingCount}</span>

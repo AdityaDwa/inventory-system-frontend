@@ -200,7 +200,7 @@ export default function Table({ configKey }) {
             <TableRow
               key={eachData[tableConfig.responseMapping.idKey]}
               configKey={configKey}
-              serialNo={0 + index + 1}
+              serialNo={(pagination - 1) * NO_OF_DATA_PER_PAGE + index + 1}
               rowData={eachData}
             />
           ))

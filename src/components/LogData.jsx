@@ -14,7 +14,7 @@ export default function LogData({
       </span>
       <div className="space-y-1">
         <p className="text-sm font-medium leading-none">
-          {userName} <span className="text-muted-foreground">{action} </span>
+          {userName} <span className="text-muted-foreground">{action}</span>
         </p>
         <p className="text-sm text-muted-foreground">
           {date} • {time}

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SaveIcon from "../../components/icons/SaveIcon.jsx";
@@ -6,6 +6,7 @@ import TableFilter from "../../components/TableFilter.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import { currencyFormatter } from "../../utils/formatter.js";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function AddItem() {
   const navigate = useNavigate();
@@ -25,32 +26,62 @@ export default function AddItem() {
     totalCost: 0,
   });
 
+  const enteredItemName = useRef();
+  const enteredItemDescription = useRef();
+  const enteredItemMakeModelNo = useRef();
+  const enteredItemDateAcquired = useRef();
+
+  useEffect(() => {
+    setDropdownInfo((prev) => ({
+      ...prev,
+      room: 0,
+    }));
+  }, [dropdownInfo.floor]);
+
   async function handleSubmit(event) {
     event.preventDefault();
 
+    const submittedItemName = enteredItemName.current.value;
+    const submittedItemDescription = enteredItemDescription.current.value;
+    const submittedItemMakeModelNo = enteredItemMakeModelNo.current.value;
+    const submittedItemDateAcquired = enteredItemDateAcquired.current.value;
+
+    const submittedItemSourceId =
+      dropdownInfo.item === 0 ? "1357" : dropdownInfo.item;
+
     try {
-      const response = await fetch("/api/v1/items/addNewItem", {
+      const payloadBody = {
+        item_name: submittedItemName,
+        item_description: submittedItemDescription,
+        item_make_or_model_no: submittedItemMakeModelNo,
+        item_category_id: dropdownInfo.category,
+        item_floor_id: dropdownInfo.floor,
+        item_room_id: dropdownInfo.room,
+        item_acquired_date: submittedItemDateAcquired,
+        item_source: submittedItemSourceId,
+        item_cost: +costValues.unitCost,
+        item_create_count: +costValues.count,
+        item_status: "Working",
+      };
+
+      const fetchUrl = getEndpoint("item", "addData");
+
+      const response = await fetch(fetchUrl, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: "check-computer",
-          category: "computer",
-          subCategory: "lenovo",
-          floor: "Floor 1",
-          room: "room 1",
-          status: "In use",
-          source: "Purchase",
-          acquiredDate: "2025:07:01",
-          price: 5000,
-          description: "a computer",
-          count: 1,
-        }),
+        body: JSON.stringify(payloadBody),
       });
-      const responseBody = await response.json();
-      console.log(responseBody);
+
+      if (response.ok) {
+        // handleNotificationAction(true, `Amount deposited successfully.`);
+      } else {
+        const errorDetails = await response.json();
+        console.log("Conflict error details:", errorDetails);
+      }
+
       navigate("/inventory");
     } catch (error) {
       console.log(error);
@@ -63,7 +94,7 @@ export default function AddItem() {
       [identifier]: value,
     };
 
-    const sum = Number(updatedData.count) * Number(updatedData.unitCost);
+    const sum = +updatedData.count * +updatedData.unitCost;
 
     setCostValues((prevValues) => ({
       ...prevValues,
@@ -100,12 +131,13 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-name"
                   >
-                    Item Name
+                    Item Name <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. Dell XPS 15 Laptop"
                     id="item-name"
+                    ref={enteredItemName}
                   />
                 </div>
                 <div className="row-span-2">
@@ -120,6 +152,7 @@ export default function AddItem() {
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-32 min-h-32 max-h-32 resize-none"
                       placeholder="Enter a detailed description of the item"
                       id="item-description"
+                      ref={enteredItemDescription}
                     ></textarea>
                   </div>
                 </div>
@@ -135,6 +168,7 @@ export default function AddItem() {
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       placeholder="e.g. RDC7000"
                       id="item-make-or-model-no"
+                      ref={enteredItemMakeModelNo}
                     />
                   </div>
                   <div className="space-y-2">
@@ -142,13 +176,13 @@ export default function AddItem() {
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-category"
                     >
-                      Category
+                      Category <span className="text-[#ff6365]">*</span>
                     </label>
                     <TableFilter
                       dropdownInitialValue="Select category"
                       dropdownConfigKey="category"
                       onStateChange={handleDropdownChange}
-                      widthSize="275.8px"
+                      widthSize="100%"
                       customPlaceholderStyle="text-muted-foreground"
                       id="item-category"
                     />
@@ -162,13 +196,13 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-floor"
                   >
-                    Floor
+                    Floor <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select floor"
                     dropdownConfigKey="floor"
                     onStateChange={handleDropdownChange}
-                    widthSize="362.4px"
+                    widthSize="100%"
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-floor"
                   />
@@ -178,13 +212,13 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-room"
                   >
-                    Room
+                    Room <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
                     key={dropdownInfo.floor}
                     dropdownInitialValue="Select room"
                     dropdownConfigKey="room"
-                    widthSize="362.4px"
+                    widthSize="100%"
                     onStateChange={handleDropdownChange}
                     isDisabled={dropdownInfo.floor === 0}
                     customPlaceholderStyle="text-muted-foreground"
@@ -197,13 +231,14 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-acquired-date"
                   >
-                    Date Acquired
+                    Date Acquired <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-acquired-date"
                     type="date"
                     defaultValue={todayDate}
+                    ref={enteredItemDateAcquired}
                   />
                 </div>
               </section>
@@ -213,13 +248,13 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-source"
                   >
-                    Source
+                    Source <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
                     dropdownInitialValue="Purchase"
                     dropdownConfigKey="item"
                     onStateChange={handleDropdownChange}
-                    widthSize="362.4px"
+                    widthSize="100%"
                     id="item-source"
                   />
                 </div>
@@ -228,7 +263,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-unit-cost"
                   >
-                    Unit Cost (Rs.)
+                    Unit Cost (Rs.) <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
@@ -245,7 +280,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-count"
                   >
-                    Count
+                    Count <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     type="number"

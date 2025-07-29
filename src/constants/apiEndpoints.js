@@ -39,6 +39,7 @@ export const API_ENDPOINTS = {
     getFilteredData: "/api/v1/rooms/floor-filter/",
     getSearchedData: "/api/v1/items/search/",
     getDropdownData: "/api/v1/items/item_source",
+    addData: "/api/v1/items",
   },
 
   activity: {
@@ -47,6 +48,7 @@ export const API_ENDPOINTS = {
 
   user: {
     getAllData: "/api/v1/users/active/",
+    getSearchedData: "/api/v1/users/",
     getCurrentUserData: "/api/v1/users/current-user",
   },
 
