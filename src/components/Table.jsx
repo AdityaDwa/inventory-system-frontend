@@ -25,7 +25,7 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
   const [pagination, setPagination] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownSelect, setDropdownSelect] = useState({
-    id: 0,
+    id: "0",
     value: tableConfig.filterOptions.dropdown.value,
   });
 
@@ -37,7 +37,7 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
         let fetchAction = "getAllData";
         let apiPayload = "";
 
-        if (dropdownSelect.id !== 0) {
+        if (dropdownSelect.id !== "0") {
           fetchAction = "getFilteredData";
           apiPayload = dropdownSelect.id;
         }
@@ -95,7 +95,7 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
 
   function resetFilters() {
     setDropdownSelect({
-      id: 0,
+      id: "0",
       value: tableConfig.filterOptions.dropdown.value,
     });
     setSearchTerm("");

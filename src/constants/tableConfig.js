@@ -303,6 +303,19 @@ export const overviewConfig = {
   },
 };
 
+export const PIE_CHART_RESPONSE_MAPPING = {
+  status: {
+    workingItems: "no_category_working_items",
+    repairableItems: "no_category_repairable_items",
+    notWorkingItems: "no_category_not_working_items",
+  },
+
+  source: {
+    purchaseItems: "no_category_purchase_items",
+    donationItems: "no_category_donated_items",
+  },
+};
+
 export const DROPDOWN_RESPONSE_MAPPING = {
   floor: {
     idKey: "_id",

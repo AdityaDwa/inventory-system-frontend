@@ -28,7 +28,7 @@ export default class ConditionPieChart extends PureComponent {
   };
 
   render() {
-    const { chartData } = this.props;
+    const { chartData, isLabelRequired = true } = this.props;
 
     return (
       <ResponsiveContainer width="100%" height="100%">
@@ -38,7 +38,7 @@ export default class ConditionPieChart extends PureComponent {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={this.renderCustomizedLabel}
+            label={isLabelRequired ? this.renderCustomizedLabel : false}
             outerRadius={100}
             fill="#8884d8"
             dataKey="value"

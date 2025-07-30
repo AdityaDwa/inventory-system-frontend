@@ -14,10 +14,10 @@ export default function AddItem() {
   const todayDate = new Date().toISOString().split("T")[0];
 
   const [dropdownInfo, setDropdownInfo] = useState({
-    category: 0,
-    floor: 0,
-    room: 0,
-    item: 0,
+    category: "0",
+    floor: "0",
+    room: "0",
+    item: "0",
   });
 
   const [costValues, setCostValues] = useState({
@@ -34,7 +34,7 @@ export default function AddItem() {
   useEffect(() => {
     setDropdownInfo((prev) => ({
       ...prev,
-      room: 0,
+      room: "0",
     }));
   }, [dropdownInfo.floor]);
 
@@ -47,7 +47,7 @@ export default function AddItem() {
     const submittedItemDateAcquired = itemDateAcquiredRef.current.value;
 
     const submittedItemSourceId =
-      dropdownInfo.item === 0 ? "1357" : dropdownInfo.item;
+      dropdownInfo.item === "0" ? "1357" : dropdownInfo.item;
 
     try {
       const payloadBody = {
@@ -220,7 +220,7 @@ export default function AddItem() {
                     dropdownConfigKey="room"
                     widthSize="100%"
                     onStateChange={handleDropdownChange}
-                    isDisabled={dropdownInfo.floor === 0}
+                    isDisabled={dropdownInfo.floor === "0"}
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-room"
                     apiPayload={dropdownInfo.floor}

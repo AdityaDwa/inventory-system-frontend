@@ -1,15 +1,87 @@
+import { useEffect, useState, useContext } from "react";
+
 import TableFilter from "../../components/TableFilter.jsx";
 import ConditionPieChart from "./ConditionPieChart.jsx";
 import ChartLegendPoint from "./ChartLegendPoint.jsx";
 
-import { overviewConfig } from "../../constants/tableConfig.js";
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+import {
+  overviewConfig,
+  PIE_CHART_RESPONSE_MAPPING,
+} from "../../constants/tableConfig.js";
 
 export default function ItemConditionTab({ hidden, inventoryStats }) {
+  const [statusBreakdown, setStatusBreakdown] = useState({
+    working: 0,
+    repairable: 0,
+    notWorking: 0,
+  });
+
+  const [categoryId, setCategoryId] = useState("0");
+  const { accessToken } = useContext(AuthProvider);
+
+  useEffect(() => {
+    if (!inventoryStats) return;
+
+    if (categoryId === "0") {
+      setStatusBreakdown({
+        working:
+          inventoryStats[overviewConfig.responseMapping.workingItems] || 0,
+        repairable:
+          inventoryStats[overviewConfig.responseMapping.repairableItems] || 0,
+        notWorking:
+          inventoryStats[overviewConfig.responseMapping.notWorkingItems] || 0,
+      });
+      return;
+    }
+
+    async function fetchItemStatusData() {
+      try {
+        const fetchUrl = `/api/v1/categories/${categoryId}/item-status-stats`;
+
+        const response = await fetch(fetchUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+
+          setStatusBreakdown({
+            working:
+              responseBody.data[
+                PIE_CHART_RESPONSE_MAPPING.status.workingItems
+              ] || 0,
+            repairable:
+              responseBody.data[
+                PIE_CHART_RESPONSE_MAPPING.status.repairableItems
+              ] || 0,
+            notWorking:
+              responseBody.data[
+                PIE_CHART_RESPONSE_MAPPING.status.notWorkingItems
+              ] || 0,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchItemStatusData();
+  }, [categoryId, inventoryStats]);
+
+  function handleDropdownChange(identifier, payload) {
+    setCategoryId(payload.id);
+  }
+
+  if (hidden) {
+    return null;
+  }
+
   return (
-    <section
-      className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4"
-      hidden={hidden}
-    >
+    <section className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 space-y-4">
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
         <header className="flex justify-between items-center space-y-1.5 p-6">
           <div className="flex flex-col">
@@ -24,7 +96,7 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
             dropdownInitialValue="All categories"
             dropdownConfigKey="category"
             isInitialValueAnOption={true}
-            // onStateChange={handleDropdownChange}
+            onStateChange={handleDropdownChange}
             widthSize="230px"
           />
         </header>
@@ -37,49 +109,37 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
               chartData={[
                 {
                   name: "Working",
-                  value:
-                    inventoryStats[overviewConfig.responseMapping.workingItems],
+                  value: statusBreakdown.working,
                   color: "#4ade80",
                 },
                 {
                   name: "Repairable",
-                  value:
-                    inventoryStats[
-                      overviewConfig.responseMapping.repairableItems
-                    ],
+                  value: statusBreakdown.repairable,
                   color: "#facc15",
                 },
                 {
                   name: "Not-working",
-                  value:
-                    inventoryStats[
-                      overviewConfig.responseMapping.notWorkingItems
-                    ],
+                  value: statusBreakdown.notWorking,
                   color: "#f87171",
                 },
               ]}
+              isLabelRequired={true}
             />
             <aside className="grid grid-cols-3 gap-4 w-full max-w-md mt-4">
               <ChartLegendPoint
                 title="Working"
-                count={
-                  inventoryStats[overviewConfig.responseMapping.workingItems]
-                }
+                count={statusBreakdown.working}
                 backgroundColor="rgb(74, 222, 128)"
               />
 
               <ChartLegendPoint
                 title="Repairable"
-                count={
-                  inventoryStats[overviewConfig.responseMapping.repairableItems]
-                }
+                count={statusBreakdown.repairable}
                 backgroundColor="rgb(250, 204, 21)"
               />
               <ChartLegendPoint
                 title="Not-working"
-                count={
-                  inventoryStats[overviewConfig.responseMapping.notWorkingItems]
-                }
+                count={statusBreakdown.notWorking}
                 backgroundColor="rgb(248, 113, 113)"
               />
             </aside>

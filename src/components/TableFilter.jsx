@@ -18,7 +18,7 @@ export default function TableFilter({
   apiPayload = "",
 }) {
   const [dropdownData, setDropdownData] = useState({
-    id: 0,
+    id: "0",
     value: dropdownInitialValue,
   });
 

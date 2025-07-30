@@ -1,7 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 
-import DownloadIcon from "../../components/icons/DownloadIcon.jsx";
-
 import PageHeader from "../../components/PageHeader.jsx";
 import AnalyticsCardRow from "./AnalyticsCardRow.jsx";
 import AnalyticsMenuBar from "./AnalyticsMenuBar.jsx";
@@ -46,13 +44,7 @@ export default function Analytics() {
 
   return (
     <>
-      <PageHeader title="Analytics">
-        {/* <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-          <DownloadIcon />
-          Export
-        </button> */}
-      </PageHeader>
-
+      <PageHeader title="Analytics"></PageHeader>
       <AnalyticsCardRow inventoryStats={inventoryStats} />
 
       <section className="space-y-4">
@@ -61,10 +53,14 @@ export default function Analytics() {
           handleTabChange={handleTabChange}
         />
         <ItemConditionTab
+          key={`${activeTabTitle}${Math.random()}`}
           hidden={activeTabTitle !== "Condition Breakdown"}
           inventoryStats={inventoryStats}
         />
-        <AcquisitionTab hidden={activeTabTitle !== "Acquisition Source"} />
+        <AcquisitionTab
+          key={`${activeTabTitle}${Math.random()}`}
+          hidden={activeTabTitle !== "Acquisition Source"}
+        />
       </section>
     </>
   );

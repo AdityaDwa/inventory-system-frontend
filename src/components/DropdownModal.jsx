@@ -52,7 +52,7 @@ export default function DropdownModal({
             }`}
             onClick={() =>
               onDropdownChange({
-                id: 0,
+                id: "0",
                 value: dropdownInitialValue,
               })
             }
