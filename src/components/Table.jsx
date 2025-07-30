@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import SearchIcon from "./icons/SearchIcon.jsx";
 import FilterIcon from "./icons/FilterIcon.jsx";
@@ -14,7 +14,7 @@ import getEndpoint from "../constants/apiEndpoints.js";
 
 const NO_OF_DATA_PER_PAGE = 6;
 
-export default function Table({ configKey }) {
+export default function Table({ configKey, onModalToggle = () => {} }) {
   const { accessToken } = useContext(AuthProvider);
   const tableConfig = TABLE_CONFIG[configKey];
 
@@ -137,7 +137,10 @@ export default function Table({ configKey }) {
     );
 
     const advancedFilterBtn = (
-      <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+      <button
+        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+        onClick={() => onModalToggle(true)}
+      >
         <FilterIcon />
         Advanced Filter
       </button>

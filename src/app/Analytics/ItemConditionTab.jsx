@@ -23,6 +23,7 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
           <TableFilter
             dropdownInitialValue="All categories"
             dropdownConfigKey="category"
+            isInitialValueAnOption={true}
             // onStateChange={handleDropdownChange}
             widthSize="230px"
           />

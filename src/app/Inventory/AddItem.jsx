@@ -26,10 +26,10 @@ export default function AddItem() {
     totalCost: 0,
   });
 
-  const enteredItemName = useRef();
-  const enteredItemDescription = useRef();
-  const enteredItemMakeModelNo = useRef();
-  const enteredItemDateAcquired = useRef();
+  const itemNameRef = useRef(null);
+  const itemDescriptionRef = useRef(null);
+  const itemMakeModelNoRef = useRef(null);
+  const itemDateAcquiredRef = useRef(null);
 
   useEffect(() => {
     setDropdownInfo((prev) => ({
@@ -41,10 +41,10 @@ export default function AddItem() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const submittedItemName = enteredItemName.current.value;
-    const submittedItemDescription = enteredItemDescription.current.value;
-    const submittedItemMakeModelNo = enteredItemMakeModelNo.current.value;
-    const submittedItemDateAcquired = enteredItemDateAcquired.current.value;
+    const submittedItemName = itemNameRef.current.value;
+    const submittedItemDescription = itemDescriptionRef.current.value;
+    const submittedItemMakeModelNo = itemMakeModelNoRef.current.value;
+    const submittedItemDateAcquired = itemDateAcquiredRef.current.value;
 
     const submittedItemSourceId =
       dropdownInfo.item === 0 ? "1357" : dropdownInfo.item;
@@ -131,13 +131,13 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-name"
                   >
-                    Item Name <span className="text-[#ff6365]">*</span>
+                    Item Name: <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. Dell XPS 15 Laptop"
                     id="item-name"
-                    ref={enteredItemName}
+                    ref={itemNameRef}
                   />
                 </div>
                 <div className="row-span-2">
@@ -146,13 +146,13 @@ export default function AddItem() {
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-description"
                     >
-                      Description
+                      Description:
                     </label>
                     <textarea
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-32 min-h-32 max-h-32 resize-none"
                       placeholder="Enter a detailed description of the item"
                       id="item-description"
-                      ref={enteredItemDescription}
+                      ref={itemDescriptionRef}
                     ></textarea>
                   </div>
                 </div>
@@ -162,13 +162,13 @@ export default function AddItem() {
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-make-or-model-no"
                     >
-                      Make/Model No.
+                      Make/Model No:
                     </label>
                     <input
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       placeholder="e.g. RDC7000"
                       id="item-make-or-model-no"
-                      ref={enteredItemMakeModelNo}
+                      ref={itemMakeModelNoRef}
                     />
                   </div>
                   <div className="space-y-2">
@@ -176,7 +176,7 @@ export default function AddItem() {
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-category"
                     >
-                      Category <span className="text-[#ff6365]">*</span>
+                      Category: <span className="text-[#ff6365]">*</span>
                     </label>
                     <TableFilter
                       dropdownInitialValue="Select category"
@@ -196,7 +196,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-floor"
                   >
-                    Floor <span className="text-[#ff6365]">*</span>
+                    Floor: <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
                     dropdownInitialValue="Select floor"
@@ -212,7 +212,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-room"
                   >
-                    Room <span className="text-[#ff6365]">*</span>
+                    Room: <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
                     key={dropdownInfo.floor}
@@ -231,14 +231,14 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-acquired-date"
                   >
-                    Date Acquired <span className="text-[#ff6365]">*</span>
+                    Date Acquired: <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-acquired-date"
                     type="date"
                     defaultValue={todayDate}
-                    ref={enteredItemDateAcquired}
+                    ref={itemDateAcquiredRef}
                   />
                 </div>
               </section>
@@ -248,7 +248,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-source"
                   >
-                    Source <span className="text-[#ff6365]">*</span>
+                    Source: <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
                     dropdownInitialValue="Purchase"
@@ -263,7 +263,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-unit-cost"
                   >
-                    Unit Cost (Rs.) <span className="text-[#ff6365]">*</span>
+                    Unit Cost (Rs.): <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
@@ -280,7 +280,7 @@ export default function AddItem() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-count"
                   >
-                    Count <span className="text-[#ff6365]">*</span>
+                    Count: <span className="text-[#ff6365]">*</span>
                   </label>
                   <input
                     type="number"
@@ -300,7 +300,7 @@ export default function AddItem() {
             <div className="grid gap-6 col-span-4">
               <div className="rounded-md border p-4 mt-2 bg-muted/20">
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm font-medium">Total Cost</span>
+                  <span className="text-sm font-medium">Total Cost:</span>
                   <span className="text-sm font-bold">
                     Rs. {currencyFormatter(costValues.totalCost)}
                   </span>

@@ -9,8 +9,8 @@ function validateLength(text) {
 }
 
 export default function LoginPage({ handleLogin }) {
-  const username = useRef();
-  const password = useRef();
+  const username = useRef(null);
+  const password = useRef(null);
 
   const [isVisible, setIsVisible] = useState(false);
   const [isEmpty, setIsEmpty] = useState({

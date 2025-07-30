@@ -21,6 +21,7 @@ export default function AcquisitionTab({ hidden }) {
           <TableFilter
             dropdownInitialValue="All categories"
             dropdownConfigKey="category"
+            isInitialValueAnOption={true}
             // onStateChange={handleDropdownChange}
             widthSize="230px"
           />

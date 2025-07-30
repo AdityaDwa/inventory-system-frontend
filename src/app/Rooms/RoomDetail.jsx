@@ -16,6 +16,11 @@ import AlertIcon from "../../components/icons/AlertIcon.jsx";
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 export default function RoomDetail() {
+  const [roomStatusBreakdown, setRoomStatusBreakdown] = useState({
+    working: 0,
+    repairable: 0,
+    notWorking: 0,
+  });
   const [itemTableData, setitemTableData] = useState([]);
   const { accessToken } = useContext(AuthProvider);
 
@@ -41,6 +46,14 @@ export default function RoomDetail() {
         if (response.ok) {
           const responseBody = await response.json();
           setitemTableData(responseBody.data);
+
+          const breakdown = { working: 0, repairable: 0, notWorking: 0 };
+          responseBody.data.forEach((eachData) => {
+            breakdown.working += eachData.workingCount;
+            breakdown.repairable += eachData.repairableCount;
+            breakdown.notWorking += eachData.notWorkingCount;
+          });
+          setRoomStatusBreakdown(breakdown);
         }
       } catch (error) {
         console.log(error);
@@ -128,12 +141,19 @@ export default function RoomDetail() {
                     <CircleCheckIcon />
                     Working
                   </div>
-                  <div>1 / 1</div>
+                  <div>
+                    {roomStatusBreakdown.working} / {room.totalItems}
+                  </div>
                 </div>
                 <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
                   <div
                     className="h-full w-full flex-1 bg-primary transition-all"
-                    style={{ transform: `translateX(-${100 - 100}%)` }}
+                    style={{
+                      transform: `translateX(-${
+                        100 -
+                        (roomStatusBreakdown.working / room.totalItems) * 100
+                      }%)`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -143,12 +163,19 @@ export default function RoomDetail() {
                     <PenNibIcon />
                     Repairable
                   </div>
-                  <div>0 / 1</div>
+                  <div>
+                    {roomStatusBreakdown.repairable} / {room.totalItems}
+                  </div>
                 </div>
                 <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
                   <div
                     className="h-full w-full flex-1 bg-primary transition-all"
-                    style={{ transform: `translateX(-${100 - 0}%)` }}
+                    style={{
+                      transform: `translateX(-${
+                        100 -
+                        (roomStatusBreakdown.repairable / room.totalItems) * 100
+                      }%)`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -158,12 +185,19 @@ export default function RoomDetail() {
                     <AlertIcon />
                     Not-working
                   </div>
-                  <div>0 / 1</div>
+                  <div>
+                    {roomStatusBreakdown.notWorking} / {room.totalItems}
+                  </div>
                 </div>
                 <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
                   <div
                     className="h-full w-full flex-1 bg-primary transition-all"
-                    style={{ transform: `translateX(-${100 - 0}%)` }}
+                    style={{
+                      transform: `translateX(-${
+                        100 -
+                        (roomStatusBreakdown.notWorking / room.totalItems) * 100
+                      }%)`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -196,7 +230,6 @@ export default function RoomDetail() {
             <tbody className="[&_tr:last-child]:border-0">
               {itemTableData.length !== 0 ? (
                 itemTableData.map((item, index) => {
-                  console.log(item);
                   const additionalValue =
                     item.itemDescription !== ""
                       ? `(${item.itemDescription})`

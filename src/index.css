@@ -50,3 +50,26 @@ body {
 .no-spinner {
   -moz-appearance: textfield;
 }
+
+.dropdown::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  margin: 0.25rem;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background-color: rgb(197, 194, 194);
+  border: 2px solid #ffffff;
+  border-radius: 10rem;
+  cursor: pointer;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(181, 178, 178);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}

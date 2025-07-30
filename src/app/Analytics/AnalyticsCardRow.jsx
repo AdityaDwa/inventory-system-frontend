@@ -21,6 +21,7 @@ export default function AnalyticsCardRow({ inventoryStats }) {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <OverviewCard
         title="Total Items"
+        path="/inventory"
         overviewNum={inventoryStats[overviewConfig.responseMapping.totalItems]}
         overviewInfo={`${
           inventoryStats[overviewConfig.responseMapping.totalItems] -

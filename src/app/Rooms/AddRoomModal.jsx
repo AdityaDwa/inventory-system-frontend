@@ -1,9 +1,9 @@
+import { useState, useRef, useContext } from "react";
 import ReactDOM from "react-dom";
 
 import RoomIcon from "../../components/icons/RoomIcon";
 import TableFilter from "../../components/TableFilter.jsx";
 
-import { useState, useRef, useContext } from "react";
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 function validateLength(text) {
@@ -11,8 +11,8 @@ function validateLength(text) {
 }
 
 export default function AddRoomModal({ isModalVisible, onClose }) {
-  const roomName = useRef();
-  const roomAllottedTo = useRef();
+  const roomNameRef = useRef(null);
+  const roomAllottedToRef = useRef(null);
 
   const [selectedFloorId, setSelectedFloorId] = useState(null);
   const [selectedRoomTypeId, setSelectedRoomTypeId] = useState(null);
@@ -25,21 +25,18 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
 
   const { accessToken } = useContext(AuthProvider);
 
-  if (!isModalVisible) {
-    return null;
-  }
-
   function handleFloorSelection(identifier, selectedFloorOption) {
     setSelectedFloorId(selectedFloorOption.id);
   }
+
   function handleRoomTypeSelection(identifier, selectedRoomTypeOption) {
     setSelectedRoomTypeId(selectedRoomTypeOption.id);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    const enteredRoomName = roomName.current?.value;
-    const enteredRoomAllottedTo = roomAllottedTo.current?.value;
+    const enteredRoomName = roomNameRef.current?.value;
+    const enteredRoomAllottedTo = roomAllottedToRef.current?.value;
 
     const isEmptyCheck = {
       roomName: validateLength(enteredRoomName),
@@ -84,6 +81,10 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
     }
   }
 
+  if (!isModalVisible) {
+    return null;
+  }
+
   return ReactDOM.createPortal(
     <section className="fixed top-0 left-0 flex items-center justify-center bg-black/80 w-full h-full z-[1000] transition-all duration-400 ease-in-out">
       <div className="fixed left-[50%] top-[50%] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg sm:max-w-[525px]">
@@ -104,7 +105,7 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
             <div className="flex items-center gap-2 mt-2">
               <RoomIcon />
               <input
-                ref={roomName}
+                ref={roomNameRef}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 id="room-name"
                 placeholder="e.g. Lecture Room 305"
@@ -120,7 +121,7 @@ export default function AddRoomModal({ isModalVisible, onClose }) {
             </label>
             <div className="flex items-center gap-2 mt-2">
               <input
-                ref={roomAllottedTo}
+                ref={roomAllottedToRef}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 id="room-allotted-to"
               />
