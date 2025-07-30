@@ -61,7 +61,7 @@ export default function AddItem() {
         item_source: submittedItemSourceId,
         item_cost: +costValues.unitCost,
         item_create_count: +costValues.count,
-        item_status: "Working",
+        item_status: "1234",
       };
 
       const fetchUrl = getEndpoint("item", "addData");

@@ -150,8 +150,11 @@ export default function RoomDetail() {
                     className="h-full w-full flex-1 bg-primary transition-all"
                     style={{
                       transform: `translateX(-${
-                        100 -
-                        (roomStatusBreakdown.working / room.totalItems) * 100
+                        room.totalItems === 0
+                          ? 100
+                          : 100 -
+                            (roomStatusBreakdown.working / room.totalItems) *
+                              100
                       }%)`,
                     }}
                   ></div>
@@ -172,8 +175,11 @@ export default function RoomDetail() {
                     className="h-full w-full flex-1 bg-primary transition-all"
                     style={{
                       transform: `translateX(-${
-                        100 -
-                        (roomStatusBreakdown.repairable / room.totalItems) * 100
+                        room.totalItems === 0
+                          ? 100
+                          : 100 -
+                            (roomStatusBreakdown.repairable / room.totalItems) *
+                              100
                       }%)`,
                     }}
                   ></div>
@@ -194,8 +200,11 @@ export default function RoomDetail() {
                     className="h-full w-full flex-1 bg-primary transition-all"
                     style={{
                       transform: `translateX(-${
-                        100 -
-                        (roomStatusBreakdown.notWorking / room.totalItems) * 100
+                        room.totalItems === 0
+                          ? 100
+                          : 100 -
+                            (roomStatusBreakdown.notWorking / room.totalItems) *
+                              100
                       }%)`,
                     }}
                   ></div>

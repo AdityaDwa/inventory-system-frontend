@@ -209,7 +209,7 @@ export default function ItemDetail() {
 
                     <tbody className="[&_tr:last-child]:border-0">
                       {historyTableData.length !== 0
-                        ? historyTableData.map((historyLog) => {
+                        ? historyTableData.map((historyLog, index) => {
                             const status = historyLog.changes.status.to;
 
                             const statusColor =
@@ -219,7 +219,10 @@ export default function ItemDetail() {
                                 ? "text-yellow-600"
                                 : "text-red-600";
                             return (
-                              <tr className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]">
+                              <tr
+                                className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
+                                key={index}
+                              >
                                 <td className="text-left w-24">
                                   {getDateWithoutTime(historyLog.createdAt)}
                                 </td>

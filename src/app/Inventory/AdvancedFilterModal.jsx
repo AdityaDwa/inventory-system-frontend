@@ -1,9 +1,20 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
 import TableFilter from "../../components/TableFilter.jsx";
 
-export default function AdvancedFilterModal({ isModalVisible, onClose }) {
+export default function AdvancedFilterModal({
+  isModalVisible,
+  onClose,
+  onFilter,
+}) {
+  const [dropdownInfo, setDropdownInfo] = useState({
+    room: "0",
+    category: "0",
+    item: "0",
+    status: "0",
+  });
+  const startDateRef = useRef(null);
   const endDateRef = useRef(null);
 
   function handleStartDateChange(event) {
@@ -16,7 +27,26 @@ export default function AdvancedFilterModal({ isModalVisible, onClose }) {
     }
   }
 
-  function handleSubmit() {}
+  function handleSubmit(event) {
+    event.preventDefault();
+    let submittedStartDate = startDateRef.current.value;
+    let submittedEndDate = endDateRef.current.value;
+
+    submittedStartDate = submittedStartDate === "" ? "0" : submittedStartDate;
+    submittedEndDate = submittedEndDate === "" ? "0" : submittedEndDate;
+
+    const payloadBody = `${dropdownInfo.category}/${dropdownInfo.room}/${dropdownInfo.status}/${dropdownInfo.item}/${submittedStartDate}/${submittedEndDate}`;
+
+    onFilter(payloadBody);
+    onClose(false);
+  }
+
+  function handleDropdownChange(identifier, payload) {
+    setDropdownInfo((prev) => ({
+      ...prev,
+      [identifier]: payload.id,
+    }));
+  }
 
   if (!isModalVisible) {
     return null;
@@ -39,11 +69,12 @@ export default function AdvancedFilterModal({ isModalVisible, onClose }) {
               </label>
               <TableFilter
                 dropdownInitialValue="All rooms"
-                dropdownConfigKey="floor"
+                dropdownConfigKey="room"
                 isInitialValueAnOption={true}
-                //   onStateChange={handleFloorSelection}
+                onStateChange={handleDropdownChange}
                 widthSize="100%"
                 id="item-filter-room"
+                apiPayload="0"
               />
             </div>
             <div className="space-y-2">
@@ -57,7 +88,7 @@ export default function AdvancedFilterModal({ isModalVisible, onClose }) {
                 dropdownInitialValue="All categories"
                 dropdownConfigKey="category"
                 isInitialValueAnOption={true}
-                //   onStateChange={handleRoomTypeSelection}
+                onStateChange={handleDropdownChange}
                 widthSize="100%"
                 id="item-filter-category"
               />
@@ -76,7 +107,7 @@ export default function AdvancedFilterModal({ isModalVisible, onClose }) {
                 dropdownInitialValue="All sources"
                 dropdownConfigKey="item"
                 isInitialValueAnOption={true}
-                //   onStateChange={handleFloorSelection}
+                onStateChange={handleDropdownChange}
                 widthSize="100%"
                 id="item-filter-source"
               />
@@ -90,9 +121,9 @@ export default function AdvancedFilterModal({ isModalVisible, onClose }) {
               </label>
               <TableFilter
                 dropdownInitialValue="All status"
-                dropdownConfigKey="item"
+                dropdownConfigKey="status"
                 isInitialValueAnOption={true}
-                //   onStateChange={handleRoomTypeSelection}
+                onStateChange={handleDropdownChange}
                 widthSize="100%"
                 id="item-filter-status"
               />
@@ -113,6 +144,7 @@ export default function AdvancedFilterModal({ isModalVisible, onClose }) {
                   id="starting-date"
                   type="date"
                   onChange={handleStartDateChange}
+                  ref={startDateRef}
                 />
               </div>
             </div>

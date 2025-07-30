@@ -49,6 +49,8 @@ export default function AnalyticsCardRow({ inventoryStats }) {
 
       <OverviewCard
         title="Working Items"
+        path="/inventory"
+        dataPackage="0/0/1234/0/0/0"
         overviewNum={
           inventoryStats[overviewConfig.responseMapping.workingItems]
         }
@@ -62,6 +64,8 @@ export default function AnalyticsCardRow({ inventoryStats }) {
 
       <OverviewCard
         title="Needs Attention"
+        path="/inventory"
+        dataPackage="0/0/5678/0/0/0"
         overviewNum={
           inventoryStats[overviewConfig.responseMapping.notWorkingItems]
         }

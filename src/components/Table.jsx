@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 
 import SearchIcon from "./icons/SearchIcon.jsx";
 import FilterIcon from "./icons/FilterIcon.jsx";
@@ -14,10 +14,15 @@ import getEndpoint from "../constants/apiEndpoints.js";
 
 const NO_OF_DATA_PER_PAGE = 6;
 
-export default function Table({ configKey, onModalToggle = () => {} }) {
+export default function Table({
+  configKey,
+  onModalToggle = () => {},
+  apiPayload = "",
+}) {
   const { accessToken } = useContext(AuthProvider);
   const tableConfig = TABLE_CONFIG[configKey];
 
+  const [payloadData, setPayloadData] = useState(apiPayload);
   const [tableData, setTableData] = useState({
     count: 0,
     rows: [],
@@ -30,26 +35,37 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
   });
 
   const [resetKey, setResetKey] = useState(0);
+  const [isSearchDisabled, setIsSearchDisabled] = useState(true);
+
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
+
+  useEffect(() => {
+    setPayloadData(apiPayload);
+  }, [apiPayload]);
 
   useEffect(() => {
     async function fetchTableData() {
       try {
         let fetchAction = "getAllData";
-        let apiPayload = "";
+        let fetchPayload = payloadData;
 
+        if (fetchPayload !== "") {
+          fetchAction = "getFilteredData";
+        }
         if (dropdownSelect.id !== "0") {
           fetchAction = "getFilteredData";
-          apiPayload = dropdownSelect.id;
+          fetchPayload = dropdownSelect.id;
         }
         if (searchTerm !== "") {
           fetchAction = "getSearchedData";
-          apiPayload = searchTerm;
+          fetchPayload = searchTerm;
         }
 
         const fetchUrl = getEndpoint(
           configKey,
           fetchAction,
-          apiPayload,
+          fetchPayload,
           pagination
         );
 
@@ -73,7 +89,7 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
     }
 
     fetchTableData();
-  }, [configKey, pagination, searchTerm, dropdownSelect]);
+  }, [configKey, pagination, searchTerm, dropdownSelect, payloadData]);
 
   useEffect(() => {
     setResetKey((prevKey) => prevKey + 1);
@@ -89,11 +105,18 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
     setPagination(1);
   }, [dropdownSelect]);
 
-  useEffect(() => {
-    resetFilters();
-  }, [configKey]);
+  // useEffect(() => {
+  //   resetFilters();
+  // }, [configKey]);
 
   function resetFilters() {
+    if (startDateRef && startDateRef.current) {
+      startDateRef.current.value = "";
+    }
+    if (endDateRef && endDateRef.current) {
+      endDateRef.current.value = "";
+    }
+
     setDropdownSelect({
       id: "0",
       value: tableConfig.filterOptions.dropdown.value,
@@ -101,6 +124,8 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
     setSearchTerm("");
     setPagination(1);
     setResetKey((prevKey) => prevKey + 1);
+    setPayloadData("");
+    setIsSearchDisabled(true);
   }
 
   function handlePageChange(page) {
@@ -109,6 +134,34 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
 
   function handleDropdownSelect(identifier, dataObject) {
     setDropdownSelect(dataObject);
+  }
+
+  function handleDateFilter() {
+    const submittedStartDate = startDateRef.current.value;
+    const submittedEndDate = endDateRef.current.value;
+
+    const startDate = new Date(submittedStartDate);
+    const endDate = new Date(submittedEndDate);
+
+    if (startDate > endDate) {
+      startDateRef.current.value = "";
+      endDateRef.current.value = "";
+      setIsSearchDisabled(true);
+      return;
+    }
+
+    setPayloadData(`${startDate}/${endDate}`);
+  }
+
+  function handleDateChange() {
+    if (
+      startDateRef.current.value.length === 10 &&
+      endDateRef.current.value.length === 10
+    ) {
+      setIsSearchDisabled(false);
+    } else {
+      setIsSearchDisabled(true);
+    }
   }
 
   function renderTableHeader() {
@@ -160,7 +213,56 @@ export default function Table({ configKey, onModalToggle = () => {} }) {
 
     return (
       tableConfig.filterOptions.visible && (
-        <div className="flex flex-col md:flex-row items-center gap-4 py-4 pl-[38.5rem]">
+        <div
+          className={`flex flex-col md:flex-row items-center gap-4 py-4 justify-end ${
+            configKey !== "activity" ? "pl-[38.5rem]" : "justify-end"
+          }`}
+        >
+          {configKey === "activity" && (
+            <section className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="starting-date"
+                >
+                  Starting Date:
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    id="starting-date"
+                    type="date"
+                    onChange={handleDateChange}
+                    ref={startDateRef}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="end-date"
+                >
+                  End Date:
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    id="end-date"
+                    type="date"
+                    onChange={handleDateChange}
+                    ref={endDateRef}
+                  />
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-80 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                onClick={handleDateFilter}
+                disabled={isSearchDisabled}
+              >
+                Search
+              </button>
+            </section>
+          )}
           {tableConfig.filterOptions.dropdown.show && dropdownFilter}
           {tableConfig.filterOptions.advancedFilter.show && advancedFilterBtn}
           {tableConfig.filterOptions.searchBar.show && searchBar}

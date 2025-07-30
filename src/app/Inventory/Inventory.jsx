@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 
@@ -9,6 +9,15 @@ import AdvancedFilterModal from "./AdvancedFilterModal.jsx";
 
 export default function Inventory() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [payload, setPayload] = useState("");
+
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state) {
+      setPayload(state);
+    }
+  }, [state]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -27,6 +36,10 @@ export default function Inventory() {
     setIsModalVisible(isVisible);
   }
 
+  function handleFilter(payloadBody) {
+    setPayload(payloadBody);
+  }
+
   return (
     <>
       <PageHeader title="Inventory">
@@ -40,10 +53,16 @@ export default function Inventory() {
           </Link>
         </div>
       </PageHeader>
-      <Table configKey="item" onModalToggle={handleModalToggle} />
+      <Table
+        key={payload}
+        configKey="item"
+        onModalToggle={handleModalToggle}
+        apiPayload={payload}
+      />
       <AdvancedFilterModal
         isModalVisible={isModalVisible}
         onClose={handleModalToggle}
+        onFilter={handleFilter}
       />
     </>
   );

@@ -136,7 +136,7 @@ export const TABLE_CONFIG = {
       visible: true,
       dropdown: { show: false },
       advancedFilter: { show: false },
-      searchBar: { show: true, value: "Search rooms by name" },
+      searchBar: { show: false },
     },
 
     columnHeaders: [
@@ -336,5 +336,9 @@ export const DROPDOWN_RESPONSE_MAPPING = {
   item: {
     idKey: "sourceId",
     dataKey: "sourceName",
+  },
+  status: {
+    idKey: "statusId",
+    dataKey: "statusName",
   },
 };

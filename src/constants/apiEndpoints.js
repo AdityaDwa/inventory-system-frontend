@@ -36,7 +36,7 @@ export const API_ENDPOINTS = {
 
   item: {
     getAllData: "/api/v1/items/all/",
-    getFilteredData: "/api/v1/rooms/floor-filter/",
+    getFilteredData: "/api/v1/items/filter/",
     getSearchedData: "/api/v1/items/search/",
     getDropdownData: "/api/v1/items/item_source",
     addData: "/api/v1/items",
@@ -44,6 +44,7 @@ export const API_ENDPOINTS = {
 
   activity: {
     getAllData: "/api/v1/inventory/logs/",
+    getFilteredData: "/api/v1/inventory/logs/filter/",
   },
 
   user: {
@@ -63,5 +64,9 @@ export const API_ENDPOINTS = {
   category: {
     getAllData: "/api/v1/categories/description/",
     getDropdownData: "/api/v1/categories",
+  },
+
+  status: {
+    getDropdownData: "/api/v1/items/item_status",
   },
 };
