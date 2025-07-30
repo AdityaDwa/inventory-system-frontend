@@ -7,6 +7,7 @@ import AddRoomModal from "./AddRoomModal.jsx";
 
 export default function Room() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [doTableReRender, setDoTableReRender] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -25,6 +26,10 @@ export default function Room() {
     setIsModalVisible(isVisible);
   }
 
+  function handleTableRender() {
+    setDoTableReRender((prev) => prev + 1);
+  }
+
   return (
     <>
       <PageHeader title="Rooms">
@@ -37,10 +42,11 @@ export default function Room() {
           Add Room
         </button>
       </PageHeader>
-      <Table configKey="room" />
+      <Table key={doTableReRender} configKey="room" />
       <AddRoomModal
         isModalVisible={isModalVisible}
         onClose={handleModalToggle}
+        onSuccess={handleTableRender}
       />
     </>
   );

@@ -53,7 +53,7 @@ export default function AdvancedFilterModal({
   }
 
   return ReactDOM.createPortal(
-    <section className="fixed top-0 left-0 flex items-center justify-center bg-black/80 w-full h-full z-[1000] transition-all duration-400 ease-in-out">
+    <section className="fixed top-0 left-0 flex items-center justify-center bg-black/40 w-full h-full z-[1000] transition-all duration-400 ease-in-out">
       <div className="fixed left-[50%] top-[50%] grid w-[40rem] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg">
         <div className="text-2xl font-semibold leading-none tracking-tight text-center">
           Advanced Filter

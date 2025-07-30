@@ -32,6 +32,7 @@ export const API_ENDPOINTS = {
     getFilteredData: "/api/v1/rooms/floor-filter/",
     getSearchedData: "/api/v1/rooms/search/",
     getDropdownData: "/api/v1/rooms/floor-filter/",
+    addData: "/api/v1/rooms",
   },
 
   item: {
@@ -64,6 +65,7 @@ export const API_ENDPOINTS = {
   category: {
     getAllData: "/api/v1/categories/description/",
     getDropdownData: "/api/v1/categories",
+    addData: "/api/v1/categories",
   },
 
   status: {

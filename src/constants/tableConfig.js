@@ -184,10 +184,10 @@ export const TABLE_CONFIG = {
     },
 
     filterOptions: {
-      visible: true,
+      visible: false,
       dropdown: { show: false },
       advancedFilter: { show: false },
-      searchBar: { show: true, value: "Search category by name" },
+      searchBar: { show: false },
     },
 
     columnHeaders: [

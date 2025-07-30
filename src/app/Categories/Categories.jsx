@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import PageHeader from "../../components/PageHeader.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import Table from "../../components/Table.jsx";
-// import AddRoomModal from "./AddRoomModal.jsx";
+import AddCategoryModal from "./AddCategoryModal.jsx";
 
 export default function Categories() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [doTableReRender, setDoTableReRender] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -25,6 +26,10 @@ export default function Categories() {
     setIsModalVisible(isVisible);
   }
 
+  function handleTableRender() {
+    setDoTableReRender((prev) => prev + 1);
+  }
+
   return (
     <>
       <PageHeader title="Categories">
@@ -37,11 +42,12 @@ export default function Categories() {
           Add Category
         </button>
       </PageHeader>
-      <Table configKey="category" />
-      {/* <AddRoomModal
+      <Table key={doTableReRender} configKey="category" />
+      <AddCategoryModal
         isModalVisible={isModalVisible}
         onClose={handleModalToggle}
-      /> */}
+        onSuccess={handleTableRender}
+      />
     </>
   );
 }

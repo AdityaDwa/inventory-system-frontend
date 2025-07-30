@@ -214,7 +214,7 @@ export default function Table({
     return (
       tableConfig.filterOptions.visible && (
         <div
-          className={`flex flex-col md:flex-row items-center gap-4 py-4 justify-end ${
+          className={`flex flex-col md:flex-row items-center gap-4 py-4 pb-0 justify-end ${
             configKey !== "activity" ? "pl-[38.5rem]" : "justify-end"
           }`}
         >
@@ -335,7 +335,7 @@ export default function Table({
       <section className="p-6 pt-0">
         {renderTableFilter()}
 
-        <div className="relative w-full rounded-t-md">
+        <div className="relative w-full rounded-t-md pt-4">
           <table className="w-full text-sm">
             {renderTableCaption()}
             {renderTableData()}
