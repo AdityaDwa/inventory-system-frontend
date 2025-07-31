@@ -1,18 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import PageHeader from "../../components/PageHeader.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import Table from "../../components/Table.jsx";
 import AddCategoryModal from "./AddCategoryModal.jsx";
+import DeleteCategoryModal from "./DeleteCategoryModal.jsx";
+
+import { AuthProvider } from "../../store/AuthProvider.jsx";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function Categories() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isDeletePossible, setIsDeletePossible] = useState({
+    id: "0",
+    totalItems: 0,
+    possible: true,
+    message: "Are you sure you want to delete this category?",
+  });
   const [doTableReRender, setDoTableReRender] = useState(0);
+
+  const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         handleModalToggle(false);
+        handleDeleteToggle(false);
       }
     };
 
@@ -26,8 +40,68 @@ export default function Categories() {
     setIsModalVisible(isVisible);
   }
 
+  function handleDeleteToggle(isVisible) {
+    setIsDeleteVisible(isVisible);
+
+    if (!isVisible) {
+      setIsDeletePossible({
+        totalItems: 0,
+        possible: true,
+        message: "Are you sure you want to delete this category?",
+      });
+    }
+  }
+
   function handleTableRender() {
     setDoTableReRender((prev) => prev + 1);
+  }
+
+  function handleDeleteData(deleteData) {
+    setIsDeleteVisible(true);
+    setIsDeletePossible((prev) => ({
+      ...prev,
+      totalItems: deleteData.totalItems,
+      id: deleteData._id,
+    }));
+  }
+
+  function handleConfirmDelete() {
+    if (!(isDeletePossible.totalItems === 0)) {
+      setIsDeletePossible((prev) => ({
+        ...prev,
+        possible: false,
+        message: "The cateogory must be empty before deletion.",
+      }));
+      return;
+    }
+
+    async function deleteData() {
+      try {
+        const fetchUrl = getEndpoint(
+          "category",
+          "deleteData",
+          isDeletePossible.id
+        );
+
+        const response = await fetch(fetchUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          handleDeleteToggle(false);
+          handleTableRender();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    deleteData();
   }
 
   return (
@@ -42,11 +116,22 @@ export default function Categories() {
           Add Category
         </button>
       </PageHeader>
-      <Table key={doTableReRender} configKey="category" />
+      <Table
+        key={doTableReRender}
+        configKey="category"
+        onDelete={handleDeleteData}
+      />
       <AddCategoryModal
         isModalVisible={isModalVisible}
         onClose={handleModalToggle}
         onSuccess={handleTableRender}
+      />
+      <DeleteCategoryModal
+        isModalVisible={isDeleteVisible}
+        onClose={handleDeleteToggle}
+        confirmDelete={handleConfirmDelete}
+        message={isDeletePossible.message}
+        canDelete={isDeletePossible.possible}
       />
     </>
   );

@@ -17,6 +17,7 @@ const NO_OF_DATA_PER_PAGE = 6;
 export default function Table({
   configKey,
   onModalToggle = () => {},
+  onDelete = () => {},
   apiPayload = "",
 }) {
   const { accessToken } = useContext(AuthProvider);
@@ -307,6 +308,7 @@ export default function Table({
               configKey={configKey}
               serialNo={(pagination - 1) * NO_OF_DATA_PER_PAGE + index + 1}
               rowData={eachData}
+              onDelete={onDelete}
             />
           ))
         ) : (

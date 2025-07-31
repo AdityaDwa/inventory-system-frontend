@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import EditIcon from "./icons/EditIcon.jsx";
 import DeleteIcon from "./icons/DeleteIcon.jsx";
 import VisibilityIcon from "./icons/VisibilityIcon.jsx";
-import ChevronDownIcon from "./icons/ChevronDownIcon.jsx";
 
 import { TABLE_CONFIG } from "../constants/tableConfig.js";
 import { getDateWithoutTime, getTime } from "../utils/formatter.js";
@@ -13,7 +12,12 @@ const formatters = {
   Time: getTime,
 };
 
-export default function TableRow({ configKey, serialNo, rowData }) {
+export default function TableRow({
+  configKey,
+  serialNo,
+  rowData,
+  onDelete = () => {},
+}) {
   const tableConfig = TABLE_CONFIG[configKey];
   const dataFields = tableConfig.responseMapping.dataFields;
   const rowId = rowData[tableConfig.responseMapping.idKey];
@@ -83,6 +87,7 @@ export default function TableRow({ configKey, serialNo, rowData }) {
               <button
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 h-9 w-9 border border-[#fe2b42] text-[#fe2b42] hover:bg-[#fde6e8]"
                 type="button"
+                onClick={() => onDelete(rowData)}
               >
                 <DeleteIcon />
               </button>

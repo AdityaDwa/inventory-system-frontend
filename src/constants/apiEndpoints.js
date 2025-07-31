@@ -66,6 +66,7 @@ export const API_ENDPOINTS = {
     getAllData: "/api/v1/categories/description/",
     getDropdownData: "/api/v1/categories",
     addData: "/api/v1/categories",
+    deleteData: "/api/v1/categories/",
   },
 
   status: {
