@@ -45,7 +45,7 @@ export default function TableRow({
             : null;
 
         return (
-          <td key={eachField.key}>
+          <td key={eachField.label}>
             <div className="flex flex-col">
               <div className={`${eachField.additionalStyles} ${statusColor}`}>
                 {tableValue}

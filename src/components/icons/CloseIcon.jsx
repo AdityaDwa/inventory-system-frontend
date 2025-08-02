@@ -1,4 +1,4 @@
-export default function CloseIcon() {
+export default function CloseIcon({ cssClass = "h-4 w-4" }) {
   return (
     <svg
       width="24"
@@ -9,7 +9,7 @@ export default function CloseIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className={cssClass}
     >
       <path d="M18 6 6 18"></path>
       <path d="m6 6 12 12"></path>

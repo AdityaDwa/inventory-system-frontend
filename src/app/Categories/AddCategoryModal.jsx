@@ -43,7 +43,6 @@ export default function AddCategoryModal({
 
         if (response.ok) {
           const responseData = await response.json();
-          // console.log(responseData);
           onToggle(false);
           onSuccess();
         }

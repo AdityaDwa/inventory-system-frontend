@@ -17,7 +17,7 @@ export const TABLE_CONFIG = {
       { label: "Type", additionalStyles: "justify-start w-40" },
       { label: "Floor", additionalStyles: "justify-start w-24" },
       { label: "Total Items", additionalStyles: "justify-center w-24" },
-      { label: "Action", additionalStyles: "justify-center w-24" },
+      { label: "View", additionalStyles: "justify-center w-24" },
     ],
 
     responseMapping: {
@@ -76,11 +76,11 @@ export const TABLE_CONFIG = {
         label: "Name & Category",
         additionalStyles: "justify-start w-48",
       },
-      { label: "Item ID", additionalStyles: "justify-start w-24" },
+      { label: "Item ID", additionalStyles: "justify-start w-28" },
       { label: "Make/Model No.", additionalStyles: "justify-start w-48" },
       { label: "Location", additionalStyles: "justify-start w-[17.5rem]" },
       { label: "Status", additionalStyles: "justify-center w-[5.75rem]" },
-      { label: "Action", additionalStyles: "justify-center w-24" },
+      { label: "View", additionalStyles: "justify-center w-24" },
     ],
 
     responseMapping: {
@@ -97,7 +97,7 @@ export const TABLE_CONFIG = {
         {
           key: "itemSerialNumber",
           label: "Item ID",
-          additionalStyles: "text-left w-24",
+          additionalStyles: "text-left w-28",
         },
         {
           key: "itemModelNumberOrMake",

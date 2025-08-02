@@ -56,9 +56,8 @@ export default function EditItem() {
           item_acquired_date: itemData.itemAcquiredDate,
           item_source: dropdownInfo.item,
           item_status: dropdownInfo.status,
-          item_cost: itemData.itemCost,
+          item_cost: +itemData.itemCost,
         };
-        console.log(payloadBody);
 
         const fetchUrl = `/api/v1/items/${item._id}/details`;
 
@@ -73,7 +72,6 @@ export default function EditItem() {
 
         if (response.ok) {
           const responseBody = await response.json();
-          console.log(responseBody);
           navigate("/inventory");
         }
       } catch (error) {

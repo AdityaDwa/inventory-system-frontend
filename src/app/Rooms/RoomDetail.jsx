@@ -11,6 +11,7 @@ import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import CircleCheckIcon from "../../components/icons/CircleCheckIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
+import VisibilityIcon from "../../components/icons/VisibilityIcon.jsx";
 
 import EditRoomModal from "./EditRoomModal.jsx";
 import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
@@ -159,7 +160,7 @@ export default function RoomDetail() {
 
       <section className="flex flex-col md:flex-row gap-4">
         <aside className="md:w-2/3 space-y-4">
-          <div className="rounded-lg border bg-card text-card-foreground shadow-sm h-[183.6px]">
+          <div className="rounded-lg border bg-card text-card-foreground shadow-sm h-[11.5rem]">
             <header className="flex flex-col space-y-1.5 p-6 bg-primary/5 rounded-t-lg">
               <div className="flex items-center justify-between">
                 <div>
@@ -224,7 +225,7 @@ export default function RoomDetail() {
         </aside>
 
         <aside className="md:w-1/3 space-y-4">
-          <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div className="rounded-lg border bg-card text-card-foreground shadow-sm h-[11.5rem]">
             <div className="flex flex-col p-3">
               <h3 className="font-semibold">Status Breakdown</h3>
             </div>
@@ -328,6 +329,9 @@ export default function RoomDetail() {
                 <th className="h-12 font-bold text-sidebar/95 flex justify-center w-28 items-center">
                   Total Quantity
                 </th>
+                <th className="h-12 font-bold text-sidebar/95 flex justify-center w-24 items-center">
+                  View
+                </th>
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
@@ -377,6 +381,20 @@ export default function RoomDetail() {
                         </div>
                       </td>
                       <td className="text-center w-28">{item.totalCount}</td>
+                      <td>
+                        <div className="flex justify-center items-center gap-2 w-24">
+                          <Link
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 h-9 w-9 border border-[#292929] text-[#565656] hover:bg-[#ebebeb]"
+                            to={`/rooms/room/${roomId}/${item.itemName}`}
+                            state={{ room, item }}
+                          >
+                            <VisibilityIcon
+                              isVisible={true}
+                              cssClass="fill-[#565656] hover:fill-[#565656]"
+                            />
+                          </Link>
+                        </div>
+                      </td>
                     </tr>
                   );
                 })

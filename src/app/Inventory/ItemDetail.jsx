@@ -14,6 +14,7 @@ import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
 import CloseIcon from "../../components/icons/CloseIcon.jsx";
 
 import TableFilter from "../../components/TableFilter.jsx";
+import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -23,7 +24,6 @@ import {
   dateFormatter,
   getDateWithoutTime,
 } from "../../utils/formatter.js";
-import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
 
 export default function ItemDetail() {
   const { accessToken } = useContext(AuthProvider);
@@ -43,7 +43,7 @@ export default function ItemDetail() {
     move: false,
   });
   const [dropdownInfo, setDropdownInfo] = useState({
-    status: item.itemStatusId || "1234",
+    status: item.itemStatusId,
     room: item.itemRoomId,
   });
 
@@ -119,12 +119,48 @@ export default function ItemDetail() {
     }));
   }
 
-  function handleUpdateItemStatus() {
-    console.log(dropdownInfo);
+  async function handleUpdateItemStatus() {
+    try {
+      const fetchUrl = `/api/v1/items/${itemId}/status`;
+
+      const response = await fetch(fetchUrl, {
+        method: "PATCH",
+        body: JSON.stringify({ statusId: dropdownInfo.status }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        navigate("/inventory");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function handleMoveItem() {
-    console.log(dropdownInfo);
+  async function handleMoveItem() {
+    try {
+      const fetchUrl = `/api/v1/items/${itemId}/room`;
+
+      const response = await fetch(fetchUrl, {
+        method: "PATCH",
+        body: JSON.stringify({ new_room_id: dropdownInfo.room }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        navigate("/inventory");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const customClass =
@@ -393,7 +429,7 @@ export default function ItemDetail() {
                   }
                 >
                   <RoomIcon cssClass="mr-2 h-4 w-4" />
-                  Move Items
+                  Move Item
                 </button>
               )}
               {(quickActionsVisible.updateStatus ||
