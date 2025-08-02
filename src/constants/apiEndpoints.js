@@ -33,6 +33,8 @@ export const API_ENDPOINTS = {
     getSearchedData: "/api/v1/rooms/search/",
     getDropdownData: "/api/v1/rooms/floor-filter/",
     addData: "/api/v1/rooms",
+    editData: "/api/v1/rooms/",
+    deleteData: "/api/v1/rooms/",
   },
 
   item: {

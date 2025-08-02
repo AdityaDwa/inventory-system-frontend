@@ -70,12 +70,12 @@ export default function Categories() {
       setIsDeletePossible((prev) => ({
         ...prev,
         possible: false,
-        message: "The cateogory must be empty before deletion.",
+        message: "The category must be empty before deletion.",
       }));
       return;
     }
 
-    async function deleteData() {
+    async function deleteCategoryData() {
       try {
         const fetchUrl = getEndpoint(
           "category",
@@ -101,7 +101,7 @@ export default function Categories() {
       }
     }
 
-    deleteData();
+    deleteCategoryData();
   }
 
   return (
@@ -123,12 +123,13 @@ export default function Categories() {
       />
       <AddCategoryModal
         isModalVisible={isModalVisible}
-        onClose={handleModalToggle}
+        onToggle={handleModalToggle}
         onSuccess={handleTableRender}
       />
       <DeleteCategoryModal
+        title="Delete Category"
         isModalVisible={isDeleteVisible}
-        onClose={handleDeleteToggle}
+        onToggle={handleDeleteToggle}
         confirmDelete={handleConfirmDelete}
         message={isDeletePossible.message}
         canDelete={isDeletePossible.possible}

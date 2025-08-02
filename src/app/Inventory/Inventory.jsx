@@ -61,7 +61,7 @@ export default function Inventory() {
       />
       <AdvancedFilterModal
         isModalVisible={isModalVisible}
-        onClose={handleModalToggle}
+        onToggle={handleModalToggle}
         onFilter={handleFilter}
       />
     </>

@@ -11,7 +11,7 @@ function validateLength(text) {
   return text.length === 0;
 }
 
-export default function AddRoomModal({ isModalVisible, onClose, onSuccess }) {
+export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
   const roomNameRef = useRef(null);
   const roomAllottedToRef = useRef(null);
 
@@ -52,7 +52,6 @@ export default function AddRoomModal({ isModalVisible, onClose, onSuccess }) {
 
         const response = await fetch(fetchUrl, {
           method: "POST",
-
           body: JSON.stringify(roomData),
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +62,7 @@ export default function AddRoomModal({ isModalVisible, onClose, onSuccess }) {
         if (response.ok) {
           const responseData = await response.json();
           // console.log(responseData);
-          onClose(false);
+          onToggle(false);
           onSuccess();
         }
       } catch (error) {
@@ -167,7 +166,7 @@ export default function AddRoomModal({ isModalVisible, onClose, onSuccess }) {
             <button
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-[5.25rem] h-10 px-4 py-2"
               type="button"
-              onClick={() => onClose(false)}
+              onClick={() => onToggle(false)}
             >
               Cancel
             </button>

@@ -5,7 +5,7 @@ import TableFilter from "../../components/TableFilter.jsx";
 
 export default function AdvancedFilterModal({
   isModalVisible,
-  onClose,
+  onToggle,
   onFilter,
 }) {
   const [dropdownInfo, setDropdownInfo] = useState({
@@ -38,7 +38,7 @@ export default function AdvancedFilterModal({
     const payloadBody = `${dropdownInfo.category}/${dropdownInfo.room}/${dropdownInfo.status}/${dropdownInfo.item}/${submittedStartDate}/${submittedEndDate}`;
 
     onFilter(payloadBody);
-    onClose(false);
+    onToggle(false);
   }
 
   function handleDropdownChange(identifier, payload) {
@@ -170,7 +170,7 @@ export default function AdvancedFilterModal({
             <button
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-[5.25rem] h-10 px-4 py-2"
               type="button"
-              onClick={() => onClose(false)}
+              onClick={() => onToggle(false)}
             >
               Cancel
             </button>

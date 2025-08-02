@@ -1,10 +1,9 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 
 import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
 import EditIcon from "../../components/icons/EditIcon.jsx";
 import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
-
 import FloorIcon from "../../components/icons/FloorIcon.jsx";
 import UserIcon from "../../components/icons/UserIcon.jsx";
 import RoomIcon from "../../components/icons/RoomIcon.jsx";
@@ -13,7 +12,11 @@ import CircleCheckIcon from "../../components/icons/CircleCheckIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 import AlertIcon from "../../components/icons/AlertIcon.jsx";
 
+import EditRoomModal from "./EditRoomModal.jsx";
+import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
+
 import { AuthProvider } from "../../store/AuthProvider.jsx";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function RoomDetail() {
   const [roomStatusBreakdown, setRoomStatusBreakdown] = useState({
@@ -22,14 +25,41 @@ export default function RoomDetail() {
     notWorking: 0,
   });
   const [itemTableData, setitemTableData] = useState([]);
+  const [editModal, setEditModal] = useState({
+    visible: false,
+    payload: "",
+  });
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isDeletePossible, setIsDeletePossible] = useState({
+    totalItems: 0,
+    possible: true,
+    message: "Are you sure you want to delete this room?",
+  });
+
   const { accessToken } = useContext(AuthProvider);
+  const navigate = useNavigate();
 
   const { state } = useLocation();
   const { roomId } = useParams();
 
   const room = state?.rowData;
+
   if (!room) {
   }
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleModalToggle(false);
+        handleDeleteToggle(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchItemData() {
@@ -63,6 +93,58 @@ export default function RoomDetail() {
     fetchItemData();
   }, []);
 
+  function handleModalToggle(isVisible, modalPayload = "") {
+    setEditModal({ visible: isVisible, payload: modalPayload });
+  }
+
+  function handleDeleteToggle(isVisible) {
+    setIsDeleteVisible(isVisible);
+    setIsDeletePossible((prev) => ({ ...prev, totalItems: room.totalItems }));
+
+    if (!isVisible) {
+      setIsDeletePossible({
+        totalItems: 0,
+        possible: true,
+        message: "Are you sure you want to delete this category?",
+      });
+    }
+  }
+
+  function handleConfirmDelete() {
+    if (!(isDeletePossible.totalItems === 0)) {
+      setIsDeletePossible((prev) => ({
+        ...prev,
+        possible: false,
+        message: "The room must be empty before deletion.",
+      }));
+      return;
+    }
+
+    async function deleteRoomData() {
+      try {
+        const fetchUrl = getEndpoint("room", "deleteData", room._id);
+
+        const response = await fetch(fetchUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          handleDeleteToggle(false);
+          navigate("/rooms");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    deleteRoomData();
+  }
+
   return (
     <>
       <header className="flex items-center gap-2">
@@ -86,11 +168,17 @@ export default function RoomDetail() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                  <button
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
+                    onClick={() => handleModalToggle(true, room)}
+                  >
                     <EditIcon cssClass="mr-2 h-4 w-4" />
                     Edit
                   </button>
-                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3">
+                  <button
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3"
+                    onClick={() => handleDeleteToggle(true)}
+                  >
                     <DeleteIcon cssClass="mr-2 h-4 w-4" />
                     Delete
                   </button>
@@ -297,6 +385,15 @@ export default function RoomDetail() {
           </table>
         </div>
       </section>
+      <EditRoomModal modalData={editModal} onToggle={handleModalToggle} />
+      <DeleteCategoryModal
+        title="Delete Room"
+        isModalVisible={isDeleteVisible}
+        onToggle={handleDeleteToggle}
+        confirmDelete={handleConfirmDelete}
+        message={isDeletePossible.message}
+        canDelete={isDeletePossible.possible}
+      />
     </>
   );
 }

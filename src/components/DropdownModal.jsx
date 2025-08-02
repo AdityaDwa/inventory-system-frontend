@@ -70,7 +70,9 @@ export default function DropdownModal({
               <div
                 className={`relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent  data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground ${
                   dropdownData.id ===
-                  item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey]
+                    item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey] ||
+                  dropdownData.value ===
+                    item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].dataKey]
                     ? "bg-accent text-accent-foreground"
                     : ""
                 }`}
@@ -90,7 +92,11 @@ export default function DropdownModal({
                 <CheckIcon
                   isSelected={
                     dropdownData.id ===
-                    item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey]
+                      item[
+                        DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].idKey
+                      ] ||
+                    dropdownData.value ===
+                      item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].dataKey]
                   }
                 />
                 {item[DROPDOWN_RESPONSE_MAPPING[dropdownConfigKey].dataKey]}

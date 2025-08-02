@@ -1,8 +1,9 @@
 import ReactDOM from "react-dom";
 
 export default function DeleteCategoryModal({
+  title,
   isModalVisible,
-  onClose,
+  onToggle,
   confirmDelete,
   message,
   canDelete,
@@ -21,7 +22,7 @@ export default function DeleteCategoryModal({
       <div className="fixed left-[50%] top-[50%] grid w-full max-w-sm translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg sm:max-w-[350px]">
         <div className="flex flex-col space-y-1.5 text-center sm:text-left bg-destructive/15 p-4 rounded-t-lg">
           <h2 className="text-lg font-semibold leading-none tracking-tight">
-            Delete Category
+            {title}
           </h2>
         </div>
         <form className="grid gap-4" onSubmit={handleSubmit}>
@@ -32,7 +33,7 @@ export default function DeleteCategoryModal({
                 <button
                   className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-[5.25rem] h-10 px-4 py-2"
                   type="button"
-                  onClick={() => onClose(false)}
+                  onClick={() => onToggle(false)}
                 >
                   Cancel
                 </button>
@@ -47,7 +48,7 @@ export default function DeleteCategoryModal({
               <button
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 w-[5.25rem] h-10 px-4 py-2"
                 type="button"
-                onClick={() => onClose(false)}
+                onClick={() => onToggle(false)}
               >
                 Ok
               </button>
