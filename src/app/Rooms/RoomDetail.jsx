@@ -19,6 +19,17 @@ import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function RoomDetail() {
+  const { accessToken } = useContext(AuthProvider);
+  const navigate = useNavigate();
+
+  const { state } = useLocation();
+  const { roomId } = useParams();
+
+  const room = state?.rowData;
+
+  if (!room) {
+  }
+
   const [roomStatusBreakdown, setRoomStatusBreakdown] = useState({
     working: 0,
     repairable: 0,
@@ -35,17 +46,6 @@ export default function RoomDetail() {
     possible: true,
     message: "Are you sure you want to delete this room?",
   });
-
-  const { accessToken } = useContext(AuthProvider);
-  const navigate = useNavigate();
-
-  const { state } = useLocation();
-  const { roomId } = useParams();
-
-  const room = state?.rowData;
-
-  if (!room) {
-  }
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -197,7 +197,13 @@ export default function RoomDetail() {
                   <div className="flex items-center gap-2 text-sm">
                     <UserIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Allotted To:</span>
-                    {room.allottedTo === undefined ? " - " : room.allottedTo}
+                    {room.allottedTo !== undefined ? (
+                      room.allottedTo
+                    ) : (
+                      <span className="italic text-muted-foreground">
+                        Not assigned
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-3">

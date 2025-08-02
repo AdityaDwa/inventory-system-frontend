@@ -43,6 +43,7 @@ export const API_ENDPOINTS = {
     getSearchedData: "/api/v1/items/search/",
     getDropdownData: "/api/v1/items/item_source",
     addData: "/api/v1/items",
+    deleteData: "/api/v1/items/",
   },
 
   activity: {

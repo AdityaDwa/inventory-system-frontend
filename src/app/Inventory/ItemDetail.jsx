@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 
 import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
@@ -11,25 +11,41 @@ import CalenderIcon from "../../components/icons/CalenderIcon.jsx";
 import ShoppingCartIcon from "../../components/icons/ShoppingCartIcon.jsx";
 import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
 import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
+import CloseIcon from "../../components/icons/CloseIcon.jsx";
+
+import TableFilter from "../../components/TableFilter.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
+import getEndpoint from "../../constants/apiEndpoints.js";
 
 import {
   currencyFormatter,
   dateFormatter,
   getDateWithoutTime,
 } from "../../utils/formatter.js";
+import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
 
 export default function ItemDetail() {
-  const [historyTableData, setHistoryTableData] = useState([]);
   const { accessToken } = useContext(AuthProvider);
 
   const { state } = useLocation();
   const { itemId } = useParams();
+  const navigate = useNavigate();
 
   const item = state?.rowData;
   if (!item) {
   }
+
+  const [historyTableData, setHistoryTableData] = useState([]);
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [quickActionsVisible, setQuickActionsVisible] = useState({
+    updateStatus: false,
+    move: false,
+  });
+  const [dropdownInfo, setDropdownInfo] = useState({
+    status: item.itemStatusId || "1234",
+    room: item.itemRoomId,
+  });
 
   useEffect(() => {
     async function fetchHistoryTableData() {
@@ -54,6 +70,62 @@ export default function ItemDetail() {
 
     fetchHistoryTableData();
   }, []);
+
+  function handleDeleteToggle(isVisible) {
+    setIsDeleteVisible(isVisible);
+  }
+
+  function handleConfirmDelete() {
+    async function deleteItemData() {
+      try {
+        const fetchUrl = getEndpoint("item", "deleteData", itemId);
+
+        const response = await fetch(fetchUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          handleDeleteToggle(false);
+          navigate("/inventory");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    deleteItemData();
+  }
+
+  function handleQuickAction(identifier) {
+    setQuickActionsVisible((prev) => ({ ...prev, [identifier]: true }));
+  }
+
+  function resetQuickActions() {
+    setQuickActionsVisible({
+      updateStatus: false,
+      move: false,
+    });
+  }
+
+  function handleDropdownChange(identifier, payload) {
+    setDropdownInfo((prev) => ({
+      ...prev,
+      [identifier]: payload.id,
+    }));
+  }
+
+  function handleUpdateItemStatus() {
+    console.log(dropdownInfo);
+  }
+
+  function handleMoveItem() {
+    console.log(dropdownInfo);
+  }
 
   const customClass =
     item.itemSource !== "Purchase"
@@ -89,17 +161,29 @@ export default function ItemDetail() {
                   </div>
                   <div className="text-sm text-muted-foreground">
                     <span className="font-semibold text-sidebar/95">
-                      Make/Model No:{" "}
+                      Make/Model No:&nbsp;
                     </span>
-                    {item.itemModelNumberOrMake}
+
+                    {item.itemModelNumberOrMake !== "" ? (
+                      item.itemModelNumberOrMake
+                    ) : (
+                      <span className="italic">Not specified</span>
+                    )}
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                  <Link
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
+                    to={`/inventory/item/edit-item/${itemId}`}
+                    state={{ item }}
+                  >
                     <EditIcon cssClass="mr-2 h-4 w-4" />
                     Edit
-                  </button>
-                  <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3">
+                  </Link>
+                  <button
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3"
+                    onClick={() => handleDeleteToggle(true)}
+                  >
                     <DeleteIcon cssClass="mr-2 h-4 w-4" />
                     Delete
                   </button>
@@ -116,7 +200,7 @@ export default function ItemDetail() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <FloorIcon cssClass="h-4 w-4 text-muted-foreground" />
-                    <span class="font-medium">Floor:</span>
+                    <span className="font-medium">Floor:</span>
                     {item.itemFloor}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
@@ -208,50 +292,52 @@ export default function ItemDetail() {
                     </thead>
 
                     <tbody className="[&_tr:last-child]:border-0">
-                      {historyTableData.length !== 0
-                        ? historyTableData.map((historyLog, index) => {
-                            const status = historyLog.changes.status.to;
+                      {historyTableData.length !== 0 ? (
+                        historyTableData.map((historyLog, index) => {
+                          const status = historyLog.changes.status.to;
 
-                            const statusColor =
-                              status === "Working"
-                                ? "text-green-600"
-                                : status === "Repairable"
-                                ? "text-yellow-600"
-                                : "text-red-600";
-                            return (
-                              <tr
-                                className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
-                                key={index}
+                          const statusColor =
+                            status === "Working"
+                              ? "text-green-600"
+                              : status === "Repairable"
+                              ? "text-yellow-600"
+                              : "text-red-600";
+                          return (
+                            <tr
+                              className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
+                              key={index}
+                            >
+                              <td className="text-left w-24">
+                                {getDateWithoutTime(historyLog.createdAt)}
+                              </td>
+                              <td className="text-left w-[7.5rem] capitalize">
+                                {historyLog.action}
+                              </td>
+                              <td
+                                className={`text-center w-[5.75rem] font-semibold ${statusColor}`}
                               >
-                                <td className="text-left w-24">
-                                  {getDateWithoutTime(historyLog.createdAt)}
-                                </td>
-                                <td className="text-left w-[7.5rem] capitalize">
-                                  {historyLog.action}
-                                </td>
-                                <td
-                                  className={`text-center w-[5.75rem] font-semibold ${statusColor}`}
-                                >
-                                  {historyLog.changes.status.to}
-                                </td>
-                                <td>
-                                  <div className="flex flex-col">
-                                    <div className="justify-start w-[17.5rem]">
-                                      {historyLog.changes.room.to}
-                                    </div>
-
-                                    <div className="text-xs text-muted-foreground">
-                                      ({historyLog.changes.floor.to})
-                                    </div>
+                                {historyLog.changes.status.to}
+                              </td>
+                              <td>
+                                <div className="flex flex-col">
+                                  <div className="justify-start w-[17.5rem]">
+                                    {historyLog.changes.room.to}
                                   </div>
-                                </td>
-                                <td className="text-left w-[4.8rem]">
-                                  {historyLog.performedByName}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        : ""}
+
+                                  <div className="text-xs text-muted-foreground">
+                                    ({historyLog.changes.floor.to})
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="text-left w-[4.8rem]">
+                                {historyLog.performedByName}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr></tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -267,18 +353,71 @@ export default function ItemDetail() {
               </div>
             </div>
             <div className="p-6 pt-0 space-y-2">
-              <button className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start">
-                <ClipboardIcon cssClass="mr-2 h-4 w-4" />
-                Update Status
-              </button>
-              <button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full justify-start">
-                <RoomIcon cssClass="mr-2 h-4 w-4" />
-                Move Items
-              </button>
+              {quickActionsVisible.updateStatus && (
+                <TableFilter
+                  dropdownInitialValue={item.itemStatus}
+                  dropdownConfigKey="status"
+                  onStateChange={handleDropdownChange}
+                  widthSize="100%"
+                />
+              )}
+              {quickActionsVisible.move && (
+                <TableFilter
+                  dropdownInitialValue={item.itemRoom}
+                  dropdownConfigKey="room"
+                  widthSize="100%"
+                  onStateChange={handleDropdownChange}
+                  apiPayload="0"
+                />
+              )}
+              {!quickActionsVisible.move && (
+                <button
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start"
+                  onClick={() =>
+                    !quickActionsVisible.updateStatus
+                      ? handleQuickAction("updateStatus")
+                      : handleUpdateItemStatus()
+                  }
+                >
+                  <ClipboardIcon cssClass="mr-2 h-4 w-4" />
+                  Update Status
+                </button>
+              )}
+              {!quickActionsVisible.updateStatus && (
+                <button
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full justify-start"
+                  onClick={() =>
+                    !quickActionsVisible.move
+                      ? handleQuickAction("move")
+                      : handleMoveItem()
+                  }
+                >
+                  <RoomIcon cssClass="mr-2 h-4 w-4" />
+                  Move Items
+                </button>
+              )}
+              {(quickActionsVisible.updateStatus ||
+                quickActionsVisible.move) && (
+                <button
+                  className="inline-flex items-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md h-10 px-4 py-2 w-full justify-start"
+                  onClick={resetQuickActions}
+                >
+                  <CloseIcon />
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
         </aside>
       </section>
+      <DeleteCategoryModal
+        title="Delete Room"
+        isModalVisible={isDeleteVisible}
+        onToggle={handleDeleteToggle}
+        confirmDelete={handleConfirmDelete}
+        message="Are you sure you want to delete this item?"
+        canDelete={true}
+      />
     </>
   );
 }

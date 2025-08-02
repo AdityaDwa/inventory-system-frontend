@@ -9,6 +9,7 @@ import RoomDetail from "../app/Rooms/RoomDetail.jsx";
 import Inventory from "../app/Inventory/Inventory.jsx";
 import AddItem from "../app/Inventory/AddItem.jsx";
 import ItemDetail from "../app/Inventory/ItemDetail.jsx";
+import EditItem from "../app/Inventory/EditItem.jsx";
 import Analytics from "../app/Analytics/Analytics.jsx";
 import ActivityLog from "../app/ActivityLog/ActivityLog.jsx";
 import Categories from "../app/Categories/Categories.jsx";
@@ -27,6 +28,7 @@ export default function RoutesManager() {
     { path: "/inventory", component: <Inventory /> },
     { path: "/inventory/add-item", component: <AddItem /> },
     { path: "/inventory/item/:itemId", component: <ItemDetail /> },
+    { path: "/inventory/item/edit-item/:itemId", component: <EditItem /> },
     { path: "/analytics", component: <Analytics /> },
     { path: "/activity", component: <ActivityLog /> },
     { path: "/categories", component: <Categories /> },

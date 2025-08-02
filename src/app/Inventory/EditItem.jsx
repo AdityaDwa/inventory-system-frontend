@@ -1,127 +1,122 @@
-import { useState, useRef, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import PlusIcon from "../../components/icons/PlusIcon.jsx";
+import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
+import SaveIcon from "../../components/icons/SaveIcon.jsx";
 import TableFilter from "../../components/TableFilter.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
-import { currencyFormatter } from "../../utils/formatter.js";
-import getEndpoint from "../../constants/apiEndpoints.js";
 
-export default function AddItem() {
-  const navigate = useNavigate();
-  const { accessToken } = useContext(AuthProvider);
-  const todayDate = new Date().toISOString().split("T")[0];
+export default function EditItem() {
+  const { state } = useLocation();
 
-  const [dropdownInfo, setDropdownInfo] = useState({
-    category: "0",
-    floor: "0",
-    room: "0",
-    item: "0",
-  });
+  const item = state?.item;
+  const acquiredDate = new Date(item.itemAcquiredDate)
+    .toISOString()
+    .split("T")[0];
 
-  const [costValues, setCostValues] = useState({
-    unitCost: 0,
-    count: 1,
-    totalCost: 0,
-  });
-
-  const itemNameRef = useRef(null);
-  const itemDescriptionRef = useRef(null);
-  const itemMakeModelNoRef = useRef(null);
-  const itemDateAcquiredRef = useRef(null);
-
-  useEffect(() => {
-    setDropdownInfo((prev) => ({
-      ...prev,
-      room: "0",
-    }));
-  }, [dropdownInfo.floor]);
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    const submittedItemName = itemNameRef.current.value;
-    const submittedItemDescription = itemDescriptionRef.current.value;
-    const submittedItemMakeModelNo = itemMakeModelNoRef.current.value;
-    const submittedItemDateAcquired = itemDateAcquiredRef.current.value;
-
-    const submittedItemSourceId =
-      dropdownInfo.item === "0" ? "1357" : dropdownInfo.item;
-
-    try {
-      const payloadBody = {
-        item_name: submittedItemName,
-        item_description: submittedItemDescription,
-        item_make_or_model_no: submittedItemMakeModelNo,
-        item_category_id: dropdownInfo.category,
-        item_floor_id: dropdownInfo.floor,
-        item_room_id: dropdownInfo.room,
-        item_acquired_date: submittedItemDateAcquired,
-        item_source: submittedItemSourceId,
-        item_cost: +costValues.unitCost,
-        item_create_count: +costValues.count,
-        item_status: "1234",
-      };
-
-      const fetchUrl = getEndpoint("item", "addData");
-
-      const response = await fetch(fetchUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payloadBody),
-      });
-
-      if (response.ok) {
-      } else {
-        const errorDetails = await response.json();
-        console.log("Conflict error details:", errorDetails);
-      }
-
-      navigate("/inventory");
-    } catch (error) {
-      console.log(error);
-    }
+  if (!item) {
   }
 
-  function calculateTotalCost(identifier, value) {
-    const updatedData = {
-      ...costValues,
-      [identifier]: value,
-    };
+  const { accessToken } = useContext(AuthProvider);
+  const navigate = useNavigate();
 
-    const sum = +updatedData.count * +updatedData.unitCost;
+  const [dropdownInfo, setDropdownInfo] = useState({
+    category: item.itemCategoryId,
+    floor: item.itemFloorId,
+    room: item.itemRoomId,
+    item: item.itemSourceId,
+    status: item.itemStatusId,
+  });
 
-    setCostValues((prevValues) => ({
-      ...prevValues,
-      [identifier]: value,
-      totalCost: sum,
-    }));
+  const [itemData, setItemData] = useState({
+    itemName: item.itemName,
+    itemDescription: item.itemDescription,
+    itemMakeOrModelNo: item.itemModelNumberOrMake,
+    itemCategory: item.itemCategory,
+    itemFloor: item.itemFloor,
+    itemRoom: item.itemRoom,
+    itemAcquiredDate: acquiredDate,
+    itemSource: item.itemSource,
+    itemStatus: item.itemStatus,
+    itemCost: item.itemCost,
+  });
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    async function updateItemData() {
+      try {
+        const payloadBody = {
+          item_name: itemData.itemName,
+          item_description: itemData.itemDescription,
+          item_make_or_model_no: itemData.itemMakeOrModelNo,
+          item_category_id: dropdownInfo.category,
+          item_room_id: dropdownInfo.room,
+          item_acquired_date: itemData.itemAcquiredDate,
+          item_source: dropdownInfo.item,
+          item_status: dropdownInfo.status,
+          item_cost: itemData.itemCost,
+        };
+        console.log(payloadBody);
+
+        const fetchUrl = `/api/v1/items/${item._id}/details`;
+
+        const response = await fetch(fetchUrl, {
+          method: "PATCH",
+          body: JSON.stringify(payloadBody),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          console.log(responseBody);
+          navigate("/inventory");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    updateItemData();
   }
 
   function handleDropdownChange(identifier, payload) {
-    setDropdownInfo((prev) => ({
-      ...prev,
-      [identifier]: payload.id,
-    }));
+    if (identifier === "floor") {
+      setDropdownInfo((prev) => ({
+        ...prev,
+        [identifier]: payload.id,
+        room: "0",
+      }));
+    } else {
+      setDropdownInfo((prev) => ({
+        ...prev,
+        [identifier]: payload.id,
+      }));
+    }
+  }
+
+  function handleInputChange(identifier, value) {
+    setItemData((prevData) => ({ ...prevData, [identifier]: value }));
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="grid gap-6">
+        <header className="flex items-center gap-2">
+          <Link
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10"
+            to={`/inventory/item/${item._id}`}
+            state={{ rowData: item }}
+          >
+            <ArrowLeftIcon />
+          </Link>
+          <h2 className="text-3xl font-bold tracking-tight">Edit Item</h2>
+        </header>
         <section className="rounded-lg border bg-card text-card-foreground shadow-sm">
-          <header className="flex flex-col space-y-1.5 p-6 bg-primary/5 rounded-t-lg">
-            <div className="text-2xl font-semibold leading-none tracking-tight">
-              Add New Item
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Enter the basic information about this item
-            </div>
-          </header>
-
           <aside className="p-6">
             <div className="grid gap-4">
               <section className="grid grid-cols-2 grid-rows-2 gap-4">
@@ -136,7 +131,10 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. Dell XPS 15 Laptop"
                     id="item-name"
-                    ref={itemNameRef}
+                    value={itemData.itemName}
+                    onChange={(event) =>
+                      handleInputChange("itemName", event.target.value)
+                    }
                   />
                 </div>
                 <div className="row-span-2">
@@ -151,7 +149,10 @@ export default function AddItem() {
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-32 min-h-32 max-h-32 resize-none"
                       placeholder="Enter a detailed description of the item"
                       id="item-description"
-                      ref={itemDescriptionRef}
+                      value={itemData.itemDescription}
+                      onChange={(event) =>
+                        handleInputChange("itemDescription", event.target.value)
+                      }
                     ></textarea>
                   </div>
                 </div>
@@ -167,7 +168,13 @@ export default function AddItem() {
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       placeholder="e.g. RDC7000"
                       id="item-make-or-model-no"
-                      ref={itemMakeModelNoRef}
+                      value={itemData.itemMakeOrModelNo}
+                      onChange={(event) =>
+                        handleInputChange(
+                          "itemMakeOrModelNo",
+                          event.target.value
+                        )
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -178,11 +185,10 @@ export default function AddItem() {
                       Category: <span className="text-[#ff6365]">*</span>
                     </label>
                     <TableFilter
-                      dropdownInitialValue="Select category"
+                      dropdownInitialValue={itemData.itemCategory}
                       dropdownConfigKey="category"
                       onStateChange={handleDropdownChange}
                       widthSize="100%"
-                      customPlaceholderStyle="text-muted-foreground"
                       id="item-category"
                     />
                   </div>
@@ -198,11 +204,10 @@ export default function AddItem() {
                     Floor: <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
-                    dropdownInitialValue="Select floor"
+                    dropdownInitialValue={item.itemFloor}
                     dropdownConfigKey="floor"
                     onStateChange={handleDropdownChange}
                     widthSize="100%"
-                    customPlaceholderStyle="text-muted-foreground"
                     id="item-floor"
                   />
                 </div>
@@ -215,12 +220,12 @@ export default function AddItem() {
                   </label>
                   <TableFilter
                     key={dropdownInfo.floor}
-                    dropdownInitialValue="Select room"
+                    dropdownInitialValue={
+                      dropdownInfo.room === "0" ? "Select room" : item.itemRoom
+                    }
                     dropdownConfigKey="room"
                     widthSize="100%"
                     onStateChange={handleDropdownChange}
-                    isDisabled={dropdownInfo.floor === "0"}
-                    customPlaceholderStyle="text-muted-foreground"
                     id="item-room"
                     apiPayload={dropdownInfo.floor}
                   />
@@ -236,8 +241,10 @@ export default function AddItem() {
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-acquired-date"
                     type="date"
-                    defaultValue={todayDate}
-                    ref={itemDateAcquiredRef}
+                    value={itemData.itemAcquiredDate}
+                    onChange={(event) =>
+                      handleInputChange("itemAcquiredDate", event.target.value)
+                    }
                   />
                 </div>
               </section>
@@ -250,11 +257,26 @@ export default function AddItem() {
                     Source: <span className="text-[#ff6365]">*</span>
                   </label>
                   <TableFilter
-                    dropdownInitialValue="Purchase"
+                    dropdownInitialValue={item.itemSource}
                     dropdownConfigKey="item"
                     onStateChange={handleDropdownChange}
                     widthSize="100%"
                     id="item-source"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-status"
+                  >
+                    Status: <span className="text-[#ff6365]">*</span>
+                  </label>
+                  <TableFilter
+                    dropdownInitialValue={item.itemStatus}
+                    dropdownConfigKey="status"
+                    onStateChange={handleDropdownChange}
+                    widthSize="100%"
+                    id="item-status"
                   />
                 </div>
                 <div className="space-y-2">
@@ -269,25 +291,9 @@ export default function AddItem() {
                     placeholder="e.g. 1200"
                     id="item-unit-cost"
                     type="number"
+                    value={itemData.itemCost}
                     onChange={(event) =>
-                      calculateTotalCost("unitCost", event.target.value)
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-count"
-                  >
-                    Count: <span className="text-[#ff6365]">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
-                    defaultValue={costValues.count}
-                    id="item-count"
-                    onChange={(event) =>
-                      calculateTotalCost("count", event.target.value)
+                      handleInputChange("itemCost", event.target.value)
                     }
                   />
                 </div>
@@ -296,23 +302,14 @@ export default function AddItem() {
           </aside>
 
           <footer className="items-center p-6 grid grid-cols-6 gap-2 pt-2 border-t bg-primary/5">
-            <div className="grid gap-6 col-span-4">
-              <div className="rounded-md border p-4 mt-2 bg-muted/20">
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm font-medium">Total Cost:</span>
-                  <span className="text-sm font-bold">
-                    Rs. {currencyFormatter(costValues.totalCost)}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <div className="grid gap-6 col-span-4"></div>
             <div className="flex col-span-1 col-start-6 gap-4 h-full">
               <button
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 mt-2 h-16 text-base [&_svg]:size-5"
                 type="submit"
               >
-                <PlusIcon />
-                <span>Add Item</span>
+                <SaveIcon />
+                <span>Save Item</span>
               </button>
             </div>
           </footer>
