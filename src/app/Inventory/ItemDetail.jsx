@@ -38,14 +38,29 @@ export default function ItemDetail() {
 
   const [historyTableData, setHistoryTableData] = useState([]);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+
   const [quickActionsVisible, setQuickActionsVisible] = useState({
     updateStatus: false,
     move: false,
   });
+
   const [dropdownInfo, setDropdownInfo] = useState({
     status: item.itemStatusId,
     room: item.itemRoomId,
   });
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleDeleteToggle(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchHistoryTableData() {
@@ -408,7 +423,7 @@ export default function ItemDetail() {
               )}
               {!quickActionsVisible.move && (
                 <button
-                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start"
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full justify-start"
                   onClick={() =>
                     !quickActionsVisible.updateStatus
                       ? handleQuickAction("updateStatus")
@@ -416,7 +431,9 @@ export default function ItemDetail() {
                   }
                 >
                   <ClipboardIcon cssClass="mr-2 h-4 w-4" />
-                  Update Status
+                  {quickActionsVisible.updateStatus
+                    ? "Confirm"
+                    : "Update Status"}
                 </button>
               )}
               {!quickActionsVisible.updateStatus && (
@@ -429,7 +446,7 @@ export default function ItemDetail() {
                   }
                 >
                   <RoomIcon cssClass="mr-2 h-4 w-4" />
-                  Move Item
+                  {quickActionsVisible.move ? "Confirm" : "Move Item"}
                 </button>
               )}
               {(quickActionsVisible.updateStatus ||
@@ -447,7 +464,7 @@ export default function ItemDetail() {
         </aside>
       </section>
       <DeleteCategoryModal
-        title="Delete Room"
+        title="Delete Item"
         isModalVisible={isDeleteVisible}
         onToggle={handleDeleteToggle}
         confirmDelete={handleConfirmDelete}

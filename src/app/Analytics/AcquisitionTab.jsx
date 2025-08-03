@@ -97,6 +97,7 @@ export default function AcquisitionTab({ hidden }) {
                     color: "#8b5cf6",
                   },
                 ]}
+                isLabelRequired={false}
               />
               <aside className="grid grid-cols-2 gap-8 w-full max-w-md mt-4">
                 <ChartLegendPoint

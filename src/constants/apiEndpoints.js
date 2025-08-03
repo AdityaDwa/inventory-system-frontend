@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
     addData: "/api/v1/rooms",
     editData: "/api/v1/rooms/",
     deleteData: "/api/v1/rooms/",
+    getItems: "/api/v1/items/similar/",
   },
 
   item: {
@@ -44,6 +45,9 @@ export const API_ENDPOINTS = {
     getDropdownData: "/api/v1/items/item_source",
     addData: "/api/v1/items",
     deleteData: "/api/v1/items/",
+    updateMultipleData: "/api/v1/items/similar/bulk/status",
+    moveMultipleData: "/api/v1/items/similar/bulk/room",
+    deleteMultipleData: "/api/v1/items/similar/bulk",
   },
 
   activity: {

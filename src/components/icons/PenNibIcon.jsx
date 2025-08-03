@@ -1,4 +1,4 @@
-export default function PenNibIcon() {
+export default function PenNibIcon({ cssClass = "h-4 w-4 text-yellow-500" }) {
   return (
     <svg
       width="24"
@@ -9,7 +9,7 @@ export default function PenNibIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 text-yellow-500"
+      className={cssClass}
     >
       <path d="M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z"></path>
       <path d="m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18"></path>

@@ -2,20 +2,24 @@ import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 
 import ArrowLeftIcon from "../../components/icons/ArrowLeftIcon.jsx";
-import EditIcon from "../../components/icons/EditIcon.jsx";
 import SquareIcon from "../../components/icons/SquareIcon.jsx";
 import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
 import PackageIcon from "../../components/icons/PackageIcon.jsx";
 import FloorIcon from "../../components/icons/FloorIcon.jsx";
 import RoomIcon from "../../components/icons/RoomIcon.jsx";
-import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
 import CloseIcon from "../../components/icons/CloseIcon.jsx";
 import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
+import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 
 import TableFilter from "../../components/TableFilter.jsx";
+import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
+import {
+  currencyFormatter,
+  getDateWithoutTime,
+} from "../../utils/formatter.js";
 
 export default function RoomInventory() {
   const { accessToken } = useContext(AuthProvider);
@@ -36,16 +40,36 @@ export default function RoomInventory() {
     delete: false,
   });
 
+  const [dropdownInfo, setDropdownInfo] = useState({
+    status: "1234",
+    room: room._id,
+  });
+
   const [selectedItems, setSelectedItems] = useState([]);
   const [areActionsDisabled, setAreActionsDisabled] = useState(true);
-
   const [selectBtn, setSelectBtn] = useState(false);
+  const [itemTableData, setItemTableData] = useState([]);
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleDeleteToggle(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedItems.length > 0) {
       setAreActionsDisabled(false);
     } else {
       setAreActionsDisabled(true);
+      resetActionModal();
     }
   }, [selectedItems]);
 
@@ -54,6 +78,34 @@ export default function RoomInventory() {
       setSelectedItems([]);
     }
   }, [selectBtn]);
+
+  useEffect(() => {
+    async function fetchItemData() {
+      try {
+        const payload = `${item.itemName}/${
+          item.itemModel === "" ? `""` : item.itemModel
+        }/${room._id}`;
+
+        const fetchUrl = getEndpoint("room", "getItems", payload);
+
+        const response = await fetch(fetchUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseBody = await response.json();
+          setItemTableData(responseBody.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchItemData();
+  }, []);
 
   function handleAction(identifier) {
     setItemActionsVisible((prev) => ({ ...prev, [identifier]: true }));
@@ -71,6 +123,96 @@ export default function RoomInventory() {
     setSelectedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  }
+
+  function handleDropdownChange(identifier, payload) {
+    setDropdownInfo((prev) => ({
+      ...prev,
+      [identifier]: payload.id,
+    }));
+  }
+
+  async function handleUpdateStatus() {
+    try {
+      const fetchUrl = getEndpoint("item", "updateMultipleData");
+
+      const response = await fetch(fetchUrl, {
+        method: "PATCH",
+        body: JSON.stringify({
+          item_ids: selectedItems,
+          statusId: dropdownInfo.status,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        navigate("/rooms");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleMoveItems() {
+    try {
+      const fetchUrl = getEndpoint("item", "moveMultipleData");
+
+      const response = await fetch(fetchUrl, {
+        method: "PATCH",
+        body: JSON.stringify({
+          item_ids: selectedItems,
+          new_room_id: dropdownInfo.room,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        navigate("/rooms");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleDeleteToggle(isVisible) {
+    setIsDeleteVisible(isVisible);
+  }
+
+  function handleConfirmDelete() {
+    async function deleteItemData() {
+      try {
+        const fetchUrl = getEndpoint("item", "deleteMultipleData");
+
+        const response = await fetch(fetchUrl, {
+          method: "DELETE",
+          body: JSON.stringify({
+            item_ids: selectedItems,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          handleDeleteToggle(false);
+          navigate("/rooms");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    deleteItemData();
   }
 
   return (
@@ -112,7 +254,7 @@ export default function RoomInventory() {
                   <div className="flex items-center gap-2 text-sm">
                     <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Category:</span>
-                    [Category]
+                    {item.itemCategoryName}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <FloorIcon cssClass="h-4 w-4 text-muted-foreground" />
@@ -122,8 +264,15 @@ export default function RoomInventory() {
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
+                    <PenNibIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Make/Model No:</span>
-                    {item.itemModel}
+                    {item.itemModel !== "" ? (
+                      item.itemModel
+                    ) : (
+                      <span className="italic text-muted-foreground">
+                        Not specified
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <RoomIcon />
@@ -148,7 +297,7 @@ export default function RoomInventory() {
                 <TableFilter
                   dropdownInitialValue="Working"
                   dropdownConfigKey="status"
-                  //   onStateChange={handleDropdownChange}
+                  onStateChange={handleDropdownChange}
                   widthSize="100%"
                 />
               )}
@@ -157,40 +306,44 @@ export default function RoomInventory() {
                   dropdownInitialValue={room.roomName}
                   dropdownConfigKey="room"
                   widthSize="100%"
-                  //   onStateChange={handleDropdownChange}
+                  onStateChange={handleDropdownChange}
                   apiPayload="0"
                 />
               )}
               {!itemActionsVisible.move && (
                 <button
-                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start"
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full justify-start"
                   onClick={() =>
                     !itemActionsVisible.updateStatus
                       ? handleAction("updateStatus")
-                      : () => {}
+                      : handleUpdateStatus()
                   }
                   disabled={areActionsDisabled}
                 >
                   <ClipboardIcon cssClass="mr-2 h-4 w-4" />
-                  Update Status
+                  {itemActionsVisible.updateStatus
+                    ? "Confirm"
+                    : "Update Status"}
                 </button>
               )}
               {!itemActionsVisible.updateStatus && (
                 <button
                   className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full justify-start"
                   onClick={() =>
-                    !itemActionsVisible.move ? handleAction("move") : () => {}
+                    !itemActionsVisible.move
+                      ? handleAction("move")
+                      : handleMoveItems()
                   }
                   disabled={areActionsDisabled}
                 >
                   <RoomIcon cssClass="mr-2 h-4 w-4" />
-                  Move Item
+                  {itemActionsVisible.move ? "Confirm" : "Move Items"}
                 </button>
               )}
               {!itemActionsVisible.updateStatus && !itemActionsVisible.move && (
                 <button
                   className="inline-flex items-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md h-10 px-4 py-2 w-full justify-start"
-                  onClick={() => {}}
+                  onClick={() => handleDeleteToggle(true)}
                   disabled={areActionsDisabled}
                 >
                   <DeleteIcon />
@@ -237,51 +390,86 @@ export default function RoomInventory() {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-              {/* {itemTableData.length !== 0 ? (
-                      itemTableData.map((item, index) => {
-                        const additionalValue =
-                          item.itemDescription !== ""
-                            ? `(${item.itemDescription})`
-                            : null;
-      
-                        return ( */}
-              <tr
-                className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
-                // key={index}
-              >
-                <td className="text-center w-16">
-                  {selectBtn ? (
-                    <div className="flex justify-center items-center ">
-                      <button
-                        className="cursor-pointer"
-                        onClick={() => handleItemSelect("1")}
+              {itemTableData.length !== 0 ? (
+                itemTableData.map((item, index) => {
+                  const status = item.itemStatus;
+
+                  const statusColor =
+                    status === "Working"
+                      ? "text-green-600"
+                      : status === "Repairable"
+                      ? "text-yellow-600"
+                      : "text-red-600";
+
+                  const customClass =
+                    item.itemSource !== "Purchase"
+                      ? "text-foreground"
+                      : "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 ";
+
+                  return (
+                    <tr
+                      className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
+                      key={item._id}
+                    >
+                      <td className="text-center w-16">
+                        {selectBtn ? (
+                          <div className="flex justify-center items-center ">
+                            <button
+                              className="cursor-pointer"
+                              onClick={() => handleItemSelect(item._id)}
+                            >
+                              <SquareIcon
+                                isSelected={selectedItems.includes(item._id)}
+                              />
+                            </button>
+                          </div>
+                        ) : (
+                          index + 1 + "."
+                        )}
+                      </td>
+                      <td className="text-left w-[7.5rem]">
+                        {getDateWithoutTime(item.itemAcquiredDate)}
+                      </td>
+                      <td className="text-left w-28">
+                        {item.itemSerialNumber}
+                      </td>
+                      <td className="text-left w-[7.5rem]">
+                        Rs. {currencyFormatter(item.itemCost)}
+                      </td>
+                      <td
+                        className={`text-center w-24 font-semibold ${statusColor}`}
                       >
-                        <SquareIcon isSelected={selectedItems.includes("1")} />
-                      </button>
-                    </div>
-                  ) : (
-                    1
-                  )}
-                </td>
-                <td className="text-left w-[7.5rem]">2025-07-31</td>
-                <td className="text-left w-28">2025TBL003</td>
-                <td className="text-left w-[7.5rem]">Rs. 1,20,000</td>
-                <td className="text-center w-24">Working</td>
-                <td className="text-center w-24">Purchase</td>
-              </tr>
-              {/* // ); */}
-              {/* //   }) */}
-              {/* // ) : ( */}
-              {/* //   <tr className="border-b transition-colors hover:bg-muted/50"> */}
-              {/* <td className="p-4 h-24 text-center" colSpan="10"> */}
-              {/* No item found. */}
-              {/* </td> */}
-              {/* </tr> */}
-              {/* // )} */}
+                        {item.itemStatus}
+                      </td>
+                      <td className="text-center w-24">
+                        <div
+                          className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${customClass}`}
+                        >
+                          {item.itemSource}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr className="border-b transition-colors hover:bg-muted/50">
+                  <td className="p-4 h-24 text-center" colSpan="10">
+                    No item found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </section>
+      <DeleteCategoryModal
+        title="Delete Items"
+        isModalVisible={isDeleteVisible}
+        onToggle={handleDeleteToggle}
+        confirmDelete={handleConfirmDelete}
+        message="Are you sure you want to delete these items?"
+        canDelete={true}
+      />
     </>
   );
 }

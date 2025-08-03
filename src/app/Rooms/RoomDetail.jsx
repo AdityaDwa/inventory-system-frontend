@@ -347,7 +347,7 @@ export default function RoomDetail() {
                       className="border-b transition-colors text-slate-600 flex justify-between items-center gap-4 p-4 h-[4.5rem]"
                       key={index}
                     >
-                      <td className="text-center w-16">{index + 1}</td>
+                      <td className="text-center w-16">{index + 1}.</td>
                       <td>
                         <div className="flex flex-col">
                           <div className="justify-start w-80">

@@ -123,7 +123,7 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
                   color: "#f87171",
                 },
               ]}
-              isLabelRequired={true}
+              isLabelRequired={false}
             />
             <aside className="grid grid-cols-3 gap-4 w-full max-w-md mt-4">
               <ChartLegendPoint
