@@ -252,7 +252,7 @@ export const TABLE_CONFIG = {
       { label: "Email", additionalStyles: "justify-start w-60" },
       { label: "Phone Number", additionalStyles: "justify-start w-32" },
       { label: "Role", additionalStyles: "justify-center w-24" },
-      { label: "Action", additionalStyles: "justify-center w-24" },
+      // { label: "Action", additionalStyles: "justify-center w-24" },
     ],
 
     responseMapping: {
@@ -283,16 +283,16 @@ export const TABLE_CONFIG = {
       ],
     },
     rowActions: {
-      visible: true,
+      visible: false,
       view: { show: false },
-      edit: true,
-      delete: true,
+      edit: false,
+      delete: false,
     },
     noData: "user",
   },
 };
 
-export const overviewConfig = {
+export const INVENTORY_STATS_RESPONSE_MAPPING = {
   responseMapping: {
     totalItems: "no_total_items",
     workingItems: "no_working",

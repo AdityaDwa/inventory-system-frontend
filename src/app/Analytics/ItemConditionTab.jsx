@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 
 import TableFilter from "../../components/TableFilter.jsx";
-import ConditionPieChart from "./ConditionPieChart.jsx";
-import ChartLegendPoint from "./ChartLegendPoint.jsx";
+import ConditionPieChart from "../../components/ConditionPieChart.jsx";
+import ChartLegendPoint from "../../components/ChartLegendPoint.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import {
-  overviewConfig,
+  INVENTORY_STATS_RESPONSE_MAPPING,
   PIE_CHART_RESPONSE_MAPPING,
 } from "../../constants/tableConfig.js";
 
@@ -26,11 +26,17 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
     if (categoryId === "0") {
       setStatusBreakdown({
         working:
-          inventoryStats[overviewConfig.responseMapping.workingItems] || 0,
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.workingItems
+          ] || 0,
         repairable:
-          inventoryStats[overviewConfig.responseMapping.repairableItems] || 0,
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.repairableItems
+          ] || 0,
         notWorking:
-          inventoryStats[overviewConfig.responseMapping.notWorkingItems] || 0,
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.notWorkingItems
+          ] || 0,
       });
       return;
     }

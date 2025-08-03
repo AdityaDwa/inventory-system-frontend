@@ -5,7 +5,7 @@ import AlertIcon from "../../components/icons/AlertIcon.jsx";
 
 import OverviewCard from "./OverviewCard.jsx";
 
-import { overviewConfig } from "../../constants/tableConfig.js";
+import { INVENTORY_STATS_RESPONSE_MAPPING } from "../../constants/tableConfig.js";
 
 export default function OverviewRow({ inventoryStats }) {
   return (
@@ -13,18 +13,30 @@ export default function OverviewRow({ inventoryStats }) {
       <OverviewCard
         title="Total Items"
         path="/inventory"
-        overviewNum={inventoryStats[overviewConfig.responseMapping.totalItems]}
+        overviewNum={
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.totalItems
+          ]
+        }
         overviewInfo={`${
-          inventoryStats[overviewConfig.responseMapping.totalItems] -
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.totalItems
+          ] -
             inventoryStats[
-              overviewConfig.responseMapping.totalItemsTillLastMonth
+              INVENTORY_STATS_RESPONSE_MAPPING.responseMapping
+                .totalItemsTillLastMonth
             ] >=
           0
             ? "+"
             : ""
         }${
-          inventoryStats[overviewConfig.responseMapping.totalItems] -
-          inventoryStats[overviewConfig.responseMapping.totalItemsTillLastMonth]
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.totalItems
+          ] -
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping
+              .totalItemsTillLastMonth
+          ]
         } from last month`}
       >
         <PackageIcon cssClass="h-4 w-4 text-primary" />
@@ -35,11 +47,18 @@ export default function OverviewRow({ inventoryStats }) {
         path="/inventory"
         dataPackage="0/0/1234/0/0/0"
         overviewNum={
-          inventoryStats[overviewConfig.responseMapping.workingItems]
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.workingItems
+          ]
         }
         overviewInfo={`${(
-          (inventoryStats[overviewConfig.responseMapping.workingItems] * 100) /
-          inventoryStats[overviewConfig.responseMapping.totalItems]
+          (inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.workingItems
+          ] *
+            100) /
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.totalItems
+          ]
         ).toFixed(2)}% of total inventory`}
       >
         <CircleCheckIcon />
@@ -50,12 +69,18 @@ export default function OverviewRow({ inventoryStats }) {
         path="/inventory"
         dataPackage="0/0/3456/0/0/0"
         overviewNum={
-          inventoryStats[overviewConfig.responseMapping.repairableItems]
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.repairableItems
+          ]
         }
         overviewInfo={`${(
-          (inventoryStats[overviewConfig.responseMapping.repairableItems] *
+          (inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.repairableItems
+          ] *
             100) /
-          inventoryStats[overviewConfig.responseMapping.totalItems]
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.totalItems
+          ]
         ).toFixed(2)}% of total inventory`}
       >
         <PenNibIcon />
@@ -66,12 +91,18 @@ export default function OverviewRow({ inventoryStats }) {
         path="/inventory"
         dataPackage="0/0/5678/0/0/0"
         overviewNum={
-          inventoryStats[overviewConfig.responseMapping.notWorkingItems]
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.notWorkingItems
+          ]
         }
         overviewInfo={`${(
-          (inventoryStats[overviewConfig.responseMapping.notWorkingItems] *
+          (inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.notWorkingItems
+          ] *
             100) /
-          inventoryStats[overviewConfig.responseMapping.totalItems]
+          inventoryStats[
+            INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.totalItems
+          ]
         ).toFixed(2)}% of total inventory`}
       >
         <AlertIcon />

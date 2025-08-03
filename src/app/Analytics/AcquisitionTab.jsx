@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 
 import TableFilter from "../../components/TableFilter.jsx";
-import ConditionPieChart from "./ConditionPieChart.jsx";
-import ChartLegendPoint from "./ChartLegendPoint.jsx";
+import ConditionPieChart from "../../components/ConditionPieChart.jsx";
+import ChartLegendPoint from "../../components/ChartLegendPoint.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import { PIE_CHART_RESPONSE_MAPPING } from "../../constants/tableConfig.js";

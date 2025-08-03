@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 
-export default function DeleteCategoryModal({
+export default function DeleteModal({
   title,
   isModalVisible,
   onToggle,

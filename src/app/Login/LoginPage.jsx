@@ -48,8 +48,6 @@ export default function LoginPage({ handleLogin }) {
             responseBody.data.accessToken,
             responseBody.data.refreshToken
           );
-        } else {
-          // handleNotificationAction(false, "Invalid Credentials");
         }
       } catch (error) {
         console.log(error);
@@ -119,14 +117,6 @@ export default function LoginPage({ handleLogin }) {
             >
               Login
             </button>
-            {/* <div className="text-center">
-              <button
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-white hover:text-accent-foreground hover:underline"
-                type="button"
-              >
-                Forgot password?
-              </button>
-            </div> */}
           </section>
         </form>
       </article>

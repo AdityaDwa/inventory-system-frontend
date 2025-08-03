@@ -14,7 +14,7 @@ import HashtagIcon from "../../components/icons/HashtagIcon.jsx";
 import CloseIcon from "../../components/icons/CloseIcon.jsx";
 
 import TableFilter from "../../components/TableFilter.jsx";
-import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
+import DeleteModal from "../../components/DeleteModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -463,7 +463,7 @@ export default function ItemDetail() {
           </div>
         </aside>
       </section>
-      <DeleteCategoryModal
+      <DeleteModal
         title="Delete Item"
         isModalVisible={isDeleteVisible}
         onToggle={handleDeleteToggle}

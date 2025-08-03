@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
-import LogData from "../../components/LogData.jsx";
+import LogData from "./LogData.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 

@@ -12,7 +12,7 @@ import ClipboardIcon from "../../components/icons/ClipboardIcon.jsx";
 import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 
 import TableFilter from "../../components/TableFilter.jsx";
-import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
+import DeleteModal from "../../components/DeleteModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -462,7 +462,7 @@ export default function RoomInventory() {
           </table>
         </div>
       </section>
-      <DeleteCategoryModal
+      <DeleteModal
         title="Delete Items"
         isModalVisible={isDeleteVisible}
         onToggle={handleDeleteToggle}

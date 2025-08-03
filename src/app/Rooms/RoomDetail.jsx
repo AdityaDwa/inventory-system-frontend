@@ -14,7 +14,7 @@ import AlertIcon from "../../components/icons/AlertIcon.jsx";
 import VisibilityIcon from "../../components/icons/VisibilityIcon.jsx";
 
 import EditRoomModal from "./EditRoomModal.jsx";
-import DeleteCategoryModal from "../Categories/DeleteCategoryModal.jsx";
+import DeleteModal from "../../components/DeleteModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -410,7 +410,7 @@ export default function RoomDetail() {
         </div>
       </section>
       <EditRoomModal modalData={editModal} onToggle={handleModalToggle} />
-      <DeleteCategoryModal
+      <DeleteModal
         title="Delete Room"
         isModalVisible={isDeleteVisible}
         onToggle={handleDeleteToggle}

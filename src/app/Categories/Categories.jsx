@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader.jsx";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import Table from "../../components/Table.jsx";
 import AddCategoryModal from "./AddCategoryModal.jsx";
-import DeleteCategoryModal from "./DeleteCategoryModal.jsx";
+import DeleteModal from "../../components/DeleteModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -126,7 +126,7 @@ export default function Categories() {
         onToggle={handleModalToggle}
         onSuccess={handleTableRender}
       />
-      <DeleteCategoryModal
+      <DeleteModal
         title="Delete Category"
         isModalVisible={isDeleteVisible}
         onToggle={handleDeleteToggle}

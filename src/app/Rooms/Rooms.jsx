@@ -44,6 +44,7 @@ export default function Room() {
       </PageHeader>
       <Table key={doTableReRender} configKey="room" />
       <AddRoomModal
+        key={`${isModalVisible}${123}`}
         isModalVisible={isModalVisible}
         onToggle={handleModalToggle}
         onSuccess={handleTableRender}
