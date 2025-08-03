@@ -28,10 +28,6 @@ function App() {
   const ctxValue = {
     accessToken: loginCredential.accessToken,
     refreshToken: loginCredential.refreshToken,
-    // role: loginCredential.role,
-    // id: loginCredential.id,
-    // username: loginCredential.username,
-    // email: loginCredential.email,
     isLoggedIn: loginCredential.isLoggedIn,
     handleLogin: handleLogin,
   };

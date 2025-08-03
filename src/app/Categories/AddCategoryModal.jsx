@@ -1,4 +1,4 @@
-import { useRef, useContext } from "react";
+import { useRef, useState, useContext } from "react";
 import ReactDOM from "react-dom";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
@@ -12,6 +12,11 @@ export default function AddCategoryModal({
   const categoryNameRef = useRef(null);
   const categorySymbolRef = useRef(null);
 
+  const [isEmpty, setIsEmpty] = useState({
+    categoryName: false,
+    categorySymbol: false,
+  });
+
   const { accessToken } = useContext(AuthProvider);
 
   function handleSubmit(event) {
@@ -19,6 +24,12 @@ export default function AddCategoryModal({
 
     const enteredCategoryName = categoryNameRef.current.value;
     const enteredCategorySymbol = categorySymbolRef.current.value;
+
+    const isEmptyCheck = {
+      categoryName: enteredCategoryName.length === 0,
+      categorySymbol: enteredCategorySymbol.length === 0,
+    };
+    setIsEmpty(isEmptyCheck);
 
     if (enteredCategorySymbol.length !== 3) {
       return;
@@ -51,7 +62,9 @@ export default function AddCategoryModal({
       }
     }
 
-    postCategoryData();
+    if (!isEmptyCheck.categoryName && !isEmptyCheck.categorySymbol) {
+      postCategoryData();
+    }
   }
 
   function handleSymbolLimit(event) {
@@ -60,6 +73,11 @@ export default function AddCategoryModal({
       symbolData.length > 3 ? symbolData.slice(0, 3) : symbolData;
 
     event.target.value = finalSymbol.toUpperCase();
+
+    setIsEmpty((prevState) => ({
+      ...prevState,
+      categorySymbol: false,
+    }));
   }
 
   if (!isModalVisible) {
@@ -75,8 +93,8 @@ export default function AddCategoryModal({
           </h2>
           <p className="text-sm text-muted-foreground">Create a new category</p>
         </div>
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
+        <form className="grid" onSubmit={handleSubmit}>
+          <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               htmlFor="category-name"
@@ -89,10 +107,19 @@ export default function AddCategoryModal({
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 placeholder="e.g. Computer"
                 id="category-name"
+                onChange={() =>
+                  setIsEmpty((prevState) => ({
+                    ...prevState,
+                    categoryName: false,
+                  }))
+                }
               />
             </div>
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+              {isEmpty.categoryName ? "Please enter category name" : ""}
+            </div>
           </div>
-          <div className="space-y-2">
+          <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               htmlFor="category-symbol"
@@ -108,8 +135,11 @@ export default function AddCategoryModal({
                 onChange={handleSymbolLimit}
               />
             </div>
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+              {isEmpty.categorySymbol ? "Please enter category symbol" : ""}
+            </div>
           </div>
-          <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4">
             <button
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-[5.25rem] h-10 px-4 py-2"
               type="button"

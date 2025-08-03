@@ -70,7 +70,6 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
 
         if (response.ok) {
           const responseData = await response.json();
-          // console.log(responseData);
           onToggle(false);
           onSuccess();
         }
@@ -78,6 +77,7 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
         console.log(error);
       }
     }
+
     if (
       !isEmptyCheck.roomName &&
       !isEmptyCheck.roomTypeId &&
@@ -129,7 +129,7 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
                 }
               />
             </div>
-            <div class="text-[#ff6365] h-3 text-sm mb-2">
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
               {isEmpty.roomName ? "Please enter room name" : ""}
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
                 id="room-allotted-to"
               />
             </div>
-            <div class="text-[#ff6365] h-3 text-sm mb-2"></div>
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
           </div>
           <div>
             <label
@@ -165,7 +165,7 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
               onStateChange={handleFloorSelection}
               id="room-floor"
             />
-            <div class="text-[#ff6365] h-3 text-sm mb-2">
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
               {isEmpty.floorId ? "Please select a floor" : ""}
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
               onStateChange={handleRoomTypeSelection}
               id="room-type"
             />
-            <div class="text-[#ff6365] h-3 text-sm mb-2">
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
               {isEmpty.roomTypeId ? "Please select a room type" : ""}
             </div>
           </div>

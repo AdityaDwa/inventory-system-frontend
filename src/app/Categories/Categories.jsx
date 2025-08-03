@@ -122,6 +122,7 @@ export default function Categories() {
         onDelete={handleDeleteData}
       />
       <AddCategoryModal
+        key={`${isModalVisible}${123}`}
         isModalVisible={isModalVisible}
         onToggle={handleModalToggle}
         onSuccess={handleTableRender}

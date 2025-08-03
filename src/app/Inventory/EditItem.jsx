@@ -42,8 +42,35 @@ export default function EditItem() {
     itemCost: item.itemCost,
   });
 
+  const [isEmpty, setIsEmpty] = useState({
+    itemName: false,
+    itemDescription: false,
+    itemMakeOrModelNo: false,
+    category: false,
+    floor: false,
+    room: false,
+    itemAcquiredDate: false,
+    item: false,
+    status: false,
+    itemCost: false,
+  });
+
   function handleSubmit(event) {
     event.preventDefault();
+
+    const isEmptyCheck = {
+      itemName: itemData.itemName.length === 0,
+      itemDescription: false,
+      itemMakeOrModelNo: false,
+      category: false,
+      floor: false,
+      room: dropdownInfo.room === "0",
+      itemAcquiredDate: itemData.itemAcquiredDate.length === 0,
+      item: false,
+      status: false,
+      itemCost: +itemData.itemCost <= 0,
+    };
+    setIsEmpty(isEmptyCheck);
 
     async function updateItemData() {
       try {
@@ -79,7 +106,14 @@ export default function EditItem() {
       }
     }
 
-    updateItemData();
+    if (
+      !isEmptyCheck.itemName &&
+      !isEmptyCheck.room &&
+      !isEmptyCheck.itemAcquiredDate &&
+      !isEmptyCheck.itemCost
+    ) {
+      updateItemData();
+    }
   }
 
   function handleDropdownChange(identifier, payload) {
@@ -94,11 +128,21 @@ export default function EditItem() {
         ...prev,
         [identifier]: payload.id,
       }));
+
+      setIsEmpty((prevState) => ({
+        ...prevState,
+        [identifier]: false,
+      }));
     }
   }
 
   function handleInputChange(identifier, value) {
     setItemData((prevData) => ({ ...prevData, [identifier]: value }));
+
+    setIsEmpty((prevState) => ({
+      ...prevState,
+      [identifier]: false,
+    }));
   }
 
   return (
@@ -115,16 +159,17 @@ export default function EditItem() {
           <h2 className="text-3xl font-bold tracking-tight">Edit Item</h2>
         </header>
         <section className="rounded-lg border bg-card text-card-foreground shadow-sm">
-          <aside className="p-6">
-            <div className="grid gap-4">
-              <section className="grid grid-cols-2 grid-rows-2 gap-4">
-                <div className="space-y-2">
+          <aside className="p-6 pb-3">
+            <div className="grid">
+              <section className="grid grid-cols-2 grid-rows-2 gap-x-4">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-name"
                   >
                     Item Name: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. Dell XPS 15 Laptop"
@@ -134,17 +179,21 @@ export default function EditItem() {
                       handleInputChange("itemName", event.target.value)
                     }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.itemName ? "Please enter item name" : ""}
+                  </div>
                 </div>
                 <div className="row-span-2">
-                  <div className="space-y-2">
+                  <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-description"
                     >
                       Description:
                     </label>
+                    <div className="h-2"></div>
                     <textarea
-                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-32 min-h-32 max-h-32 resize-none"
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-[8.55rem] min-h-[8.55rem] max-h-[8.55rem] resize-none"
                       placeholder="Enter a detailed description of the item"
                       id="item-description"
                       value={itemData.itemDescription}
@@ -152,16 +201,18 @@ export default function EditItem() {
                         handleInputChange("itemDescription", event.target.value)
                       }
                     ></textarea>
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                  <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-make-or-model-no"
                     >
                       Make/Model No:
                     </label>
+                    <div className="h-2"></div>
                     <input
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       placeholder="e.g. RDC7000"
@@ -174,14 +225,16 @@ export default function EditItem() {
                         )
                       }
                     />
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-category"
                     >
                       Category: <span className="text-[#ff6365]">*</span>
                     </label>
+                    <div className="h-2"></div>
                     <TableFilter
                       dropdownInitialValue={itemData.itemCategory}
                       dropdownConfigKey="category"
@@ -189,18 +242,20 @@ export default function EditItem() {
                       widthSize="100%"
                       id="item-category"
                     />
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                   </div>
                 </div>
               </section>
 
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-floor"
                   >
                     Floor: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     dropdownInitialValue={item.itemFloor}
                     dropdownConfigKey="floor"
@@ -208,14 +263,16 @@ export default function EditItem() {
                     widthSize="100%"
                     id="item-floor"
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-room"
                   >
                     Room: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     key={dropdownInfo.floor}
                     dropdownInitialValue={
@@ -227,14 +284,18 @@ export default function EditItem() {
                     id="item-room"
                     apiPayload={dropdownInfo.floor}
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.room ? "Please select a room" : ""}
+                  </div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-acquired-date"
                   >
                     Date Acquired: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-acquired-date"
@@ -244,16 +305,22 @@ export default function EditItem() {
                       handleInputChange("itemAcquiredDate", event.target.value)
                     }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.itemAcquiredDate
+                      ? "Please enter acquired date"
+                      : ""}
+                  </div>
                 </div>
               </section>
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-source"
                   >
                     Source: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     dropdownInitialValue={item.itemSource}
                     dropdownConfigKey="item"
@@ -261,14 +328,16 @@ export default function EditItem() {
                     widthSize="100%"
                     id="item-source"
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-status"
                   >
                     Status: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     dropdownInitialValue={item.itemStatus}
                     dropdownConfigKey="status"
@@ -276,14 +345,16 @@ export default function EditItem() {
                     widthSize="100%"
                     id="item-status"
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-unit-cost"
                   >
                     Unit Cost (Rs.): <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="e.g. 1200"
@@ -294,6 +365,9 @@ export default function EditItem() {
                       handleInputChange("itemCost", event.target.value)
                     }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.itemCost ? "Please enter a valid cost" : ""}
+                  </div>
                 </div>
               </section>
             </div>

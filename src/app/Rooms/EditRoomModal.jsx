@@ -17,6 +17,10 @@ export default function EditRoomModal({ modalData, onToggle }) {
     roomType: "",
   });
 
+  const [isEmpty, setIsEmpty] = useState({
+    name: false,
+  });
+
   const { accessToken } = useContext(AuthProvider);
   const navigate = useNavigate();
 
@@ -36,6 +40,9 @@ export default function EditRoomModal({ modalData, onToggle }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    const isEmptyCheck = { name: modalFieldData.name.length === 0 };
+    setIsEmpty(isEmptyCheck);
 
     async function updateRoomData() {
       try {
@@ -65,7 +72,9 @@ export default function EditRoomModal({ modalData, onToggle }) {
       }
     }
 
-    updateRoomData();
+    if (!isEmptyCheck.name) {
+      updateRoomData();
+    }
   }
 
   function handleDropdownChange(identifier, payload) {
@@ -77,6 +86,11 @@ export default function EditRoomModal({ modalData, onToggle }) {
 
   function handleInputChange(identifier, value) {
     setModalFieldData((prevData) => ({ ...prevData, [identifier]: value }));
+
+    setIsEmpty((prevState) => ({
+      ...prevState,
+      [identifier]: false,
+    }));
   }
 
   if (!modalData.visible) {
@@ -91,8 +105,8 @@ export default function EditRoomModal({ modalData, onToggle }) {
             Edit Room
           </h2>
         </div>
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
+        <form className="grid" onSubmit={handleSubmit}>
+          <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               htmlFor="room-name"
@@ -110,8 +124,11 @@ export default function EditRoomModal({ modalData, onToggle }) {
                 }
               />
             </div>
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+              {isEmpty.name ? "Please enter room name" : ""}
+            </div>
           </div>
-          <div className="space-y-2">
+          <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               htmlFor="room-allotted-to"
@@ -128,14 +145,16 @@ export default function EditRoomModal({ modalData, onToggle }) {
                 }
               />
             </div>
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
           </div>
-          <div className="space-y-2">
+          <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               htmlFor="room-floor"
             >
               Floor: <span className="text-[#ff6365]">*</span>
             </label>
+            <div className="h-2"></div>
             <TableFilter
               key={`${modalData.visible}-${modalFieldData.floor}`}
               dropdownInitialValue={modalFieldData.floor}
@@ -144,14 +163,16 @@ export default function EditRoomModal({ modalData, onToggle }) {
               onStateChange={handleDropdownChange}
               id="room-floor"
             />
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
           </div>
-          <div className="space-y-2">
+          <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               htmlFor="room-type"
             >
               Room Type: <span className="text-[#ff6365]">*</span>
             </label>
+            <div className="h-2"></div>
             <TableFilter
               key={`${modalData.visible}-${modalFieldData.roomType}`}
               dropdownInitialValue={modalFieldData.roomType}
@@ -160,8 +181,9 @@ export default function EditRoomModal({ modalData, onToggle }) {
               onStateChange={handleDropdownChange}
               id="room-type"
             />
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
           </div>
-          <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4">
             <button
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-[5.25rem] h-10 px-4 py-2"
               type="button"

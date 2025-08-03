@@ -409,7 +409,11 @@ export default function RoomDetail() {
           </table>
         </div>
       </section>
-      <EditRoomModal modalData={editModal} onToggle={handleModalToggle} />
+      <EditRoomModal
+        key={`${editModal.visible}${123}`}
+        modalData={editModal}
+        onToggle={handleModalToggle}
+      />
       <DeleteModal
         title="Delete Room"
         isModalVisible={isDeleteVisible}

@@ -26,6 +26,17 @@ export default function AddItem() {
     totalCost: 0,
   });
 
+  const [isEmpty, setIsEmpty] = useState({
+    itemName: false,
+    itemDateAcquired: false,
+    category: false,
+    floor: false,
+    room: false,
+    item: false,
+    unitCost: false,
+    count: false,
+  });
+
   const itemNameRef = useRef(null);
   const itemDescriptionRef = useRef(null);
   const itemMakeModelNoRef = useRef(null);
@@ -48,6 +59,30 @@ export default function AddItem() {
 
     const submittedItemSourceId =
       dropdownInfo.item === "0" ? "1357" : dropdownInfo.item;
+
+    const isEmptyCheck = {
+      itemName: submittedItemName.length === 0,
+      itemDateAcquired: submittedItemDateAcquired.length === 0,
+      category: dropdownInfo.category === "0",
+      floor: dropdownInfo.floor === "0",
+      room: dropdownInfo.room === "0",
+      item: false,
+      unitCost: +costValues.unitCost <= 0,
+      count: +costValues.count <= 0,
+    };
+    setIsEmpty(isEmptyCheck);
+
+    if (
+      isEmptyCheck.itemName ||
+      isEmptyCheck.itemDateAcquired ||
+      isEmptyCheck.category ||
+      isEmptyCheck.floor ||
+      isEmptyCheck.room ||
+      isEmptyCheck.unitCost ||
+      isEmptyCheck.count
+    ) {
+      return;
+    }
 
     try {
       const payloadBody = {
@@ -100,12 +135,22 @@ export default function AddItem() {
       [identifier]: value,
       totalCost: sum,
     }));
+
+    setIsEmpty((prevState) => ({
+      ...prevState,
+      [identifier]: false,
+    }));
   }
 
   function handleDropdownChange(identifier, payload) {
     setDropdownInfo((prev) => ({
       ...prev,
       [identifier]: payload.id,
+    }));
+
+    setIsEmpty((prevState) => ({
+      ...prevState,
+      [identifier]: false,
     }));
   }
 
@@ -122,61 +167,76 @@ export default function AddItem() {
             </div>
           </header>
 
-          <aside className="p-6">
-            <div className="grid gap-4">
-              <section className="grid grid-cols-2 grid-rows-2 gap-4">
-                <div className="space-y-2">
+          <aside className="p-6 pb-3">
+            <div className="grid">
+              <section className="grid grid-cols-2 grid-rows-2 gap-x-4">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-name"
                   >
                     Item Name: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="e.g. Dell XPS 15 Laptop"
                     id="item-name"
                     ref={itemNameRef}
+                    onChange={() =>
+                      setIsEmpty((prevState) => ({
+                        ...prevState,
+                        itemName: false,
+                      }))
+                    }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.itemName ? "Please enter item name" : ""}
+                  </div>
                 </div>
                 <div className="row-span-2">
-                  <div className="space-y-2">
+                  <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-description"
                     >
                       Description:
                     </label>
+                    <div className="h-2"></div>
                     <textarea
-                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-32 min-h-32 max-h-32 resize-none"
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-[8.55rem] min-h-[8.55rem] max-h-[8.55rem] resize-none"
                       placeholder="Enter a detailed description of the item"
                       id="item-description"
                       ref={itemDescriptionRef}
                     ></textarea>
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                  <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-make-or-model-no"
                     >
                       Make/Model No:
                     </label>
+                    <div className="h-2"></div>
                     <input
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       placeholder="e.g. RDC7000"
                       id="item-make-or-model-no"
                       ref={itemMakeModelNoRef}
                     />
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       htmlFor="item-category"
                     >
                       Category: <span className="text-[#ff6365]">*</span>
                     </label>
+                    <div className="h-2"></div>
                     <TableFilter
                       dropdownInitialValue="Select category"
                       dropdownConfigKey="category"
@@ -185,18 +245,22 @@ export default function AddItem() {
                       customPlaceholderStyle="text-muted-foreground"
                       id="item-category"
                     />
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                      {isEmpty.category ? "Please select a category" : ""}
+                    </div>
                   </div>
                 </div>
               </section>
 
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-floor"
                   >
                     Floor: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     dropdownInitialValue="Select floor"
                     dropdownConfigKey="floor"
@@ -205,14 +269,18 @@ export default function AddItem() {
                     customPlaceholderStyle="text-muted-foreground"
                     id="item-floor"
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.floor ? "Please select a floor" : ""}
+                  </div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-room"
                   >
                     Room: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     key={dropdownInfo.floor}
                     dropdownInitialValue="Select room"
@@ -224,31 +292,47 @@ export default function AddItem() {
                     id="item-room"
                     apiPayload={dropdownInfo.floor}
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.room ? "Please select a room" : ""}
+                  </div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-acquired-date"
                   >
                     Date Acquired: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     id="item-acquired-date"
                     type="date"
                     defaultValue={todayDate}
                     ref={itemDateAcquiredRef}
+                    onChange={() =>
+                      setIsEmpty((prevState) => ({
+                        ...prevState,
+                        itemDateAcquired: false,
+                      }))
+                    }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.itemDateAcquired
+                      ? "Please enter acquired date"
+                      : ""}
+                  </div>
                 </div>
               </section>
               <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-source"
                   >
                     Source: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <TableFilter
                     dropdownInitialValue="Purchase"
                     dropdownConfigKey="item"
@@ -256,14 +340,16 @@ export default function AddItem() {
                     widthSize="100%"
                     id="item-source"
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-unit-cost"
                   >
                     Unit Cost (Rs.): <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
                     placeholder="e.g. 1200"
@@ -273,14 +359,18 @@ export default function AddItem() {
                       calculateTotalCost("unitCost", event.target.value)
                     }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.unitCost ? "Please enter a valid cost" : ""}
+                  </div>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     htmlFor="item-count"
                   >
                     Count: <span className="text-[#ff6365]">*</span>
                   </label>
+                  <div className="h-2"></div>
                   <input
                     type="number"
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm no-spinner"
@@ -290,6 +380,9 @@ export default function AddItem() {
                       calculateTotalCost("count", event.target.value)
                     }
                   />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.count ? "Please enter a valid count" : ""}
+                  </div>
                 </div>
               </section>
             </div>
