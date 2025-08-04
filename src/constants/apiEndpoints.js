@@ -59,6 +59,7 @@ export const API_ENDPOINTS = {
     getAllData: "/api/v1/users/active/",
     getSearchedData: "/api/v1/users/",
     getCurrentUserData: "/api/v1/users/current-user",
+    addData: "/api/v1/users/register",
   },
 
   floor: {

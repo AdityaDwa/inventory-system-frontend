@@ -3,9 +3,11 @@ import { useState, useEffect } from "react";
 import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import PageHeader from "../../components/PageHeader.jsx";
 import Table from "../../components/Table.jsx";
+import AddUserModal from "./AddUserModal.jsx";
 
 export default function Users() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [doTableReRender, setDoTableReRender] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -24,6 +26,10 @@ export default function Users() {
     setIsModalVisible(isVisible);
   }
 
+  function handleTableRender() {
+    setDoTableReRender((prev) => prev + 1);
+  }
+
   return (
     <>
       <PageHeader title="Users">
@@ -36,7 +42,13 @@ export default function Users() {
           Add User
         </button>
       </PageHeader>
-      <Table configKey="user" />
+      <Table key={doTableReRender} configKey="user" />
+      <AddUserModal
+        key={`${isModalVisible}${123}`}
+        isModalVisible={isModalVisible}
+        onToggle={handleModalToggle}
+        onSuccess={handleTableRender}
+      />
     </>
   );
 }

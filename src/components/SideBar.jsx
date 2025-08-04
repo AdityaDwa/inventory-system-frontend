@@ -46,10 +46,10 @@ const NAV_LINKS = [
   },
 ];
 
-export default function SideBar() {
+export default function SideBar({ handleLogout }) {
   const pathLocation = useLocation();
   const [userData, setUserData] = useState({});
-  const { accessToken, handleLogin } = useContext(AuthProvider);
+  const { accessToken } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -138,7 +138,7 @@ export default function SideBar() {
         <Link
           className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border h-9 rounded-md px-3 mt-4 w-full gap-1 bg-sidebar-foreground/10 border-sidebar-border text-sidebar-foreground hover:bg-sidebar-foreground/20 hover:text-sidebar-foreground"
           to="/login"
-          onClick={() => handleLogin("", "")}
+          onClick={handleLogout}
         >
           <LogoutIcon />
           Log out
