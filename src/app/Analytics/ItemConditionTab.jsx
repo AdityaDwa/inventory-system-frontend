@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import TableFilter from "../../components/TableFilter.jsx";
 import ConditionPieChart from "../../components/ConditionPieChart.jsx";
 import ChartLegendPoint from "../../components/ChartLegendPoint.jsx";
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import {
@@ -18,7 +19,8 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
   });
 
   const [categoryId, setCategoryId] = useState("0");
-  const { accessToken } = useContext(AuthProvider);
+  const [isLoading, setIsLoading] = useState(true);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     if (!inventoryStats) return;
@@ -38,6 +40,7 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
             INVENTORY_STATS_RESPONSE_MAPPING.responseMapping.notWorkingItems
           ] || 0,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -69,6 +72,10 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
                 PIE_CHART_RESPONSE_MAPPING.status.notWorkingItems
               ] || 0,
           });
+
+          setIsLoading(false);
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -107,49 +114,57 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
           />
         </header>
         <div className="p-6 pt-0">
-          <article
-            className="flex flex-col items-center"
-            style={{ height: "280px" }}
-          >
-            <ConditionPieChart
-              chartData={[
-                {
-                  name: "Working",
-                  value: statusBreakdown.working,
-                  color: "#4ade80",
-                },
-                {
-                  name: "Repairable",
-                  value: statusBreakdown.repairable,
-                  color: "#facc15",
-                },
-                {
-                  name: "Not-working",
-                  value: statusBreakdown.notWorking,
-                  color: "#f87171",
-                },
-              ]}
-              isLabelRequired={false}
-            />
-            <aside className="grid grid-cols-3 gap-4 w-full max-w-md mt-4">
-              <ChartLegendPoint
-                title="Working"
-                count={statusBreakdown.working}
-                backgroundColor="rgb(74, 222, 128)"
-              />
+          {isLoading ? (
+            <div className="h-[280px] flex justify-center items-center">
+              <LoadingIndicator />
+            </div>
+          ) : (
+            <>
+              <article
+                className="flex flex-col items-center"
+                style={{ height: "280px" }}
+              >
+                <ConditionPieChart
+                  chartData={[
+                    {
+                      name: "Working",
+                      value: statusBreakdown.working,
+                      color: "#4ade80",
+                    },
+                    {
+                      name: "Repairable",
+                      value: statusBreakdown.repairable,
+                      color: "#facc15",
+                    },
+                    {
+                      name: "Not-working",
+                      value: statusBreakdown.notWorking,
+                      color: "#f87171",
+                    },
+                  ]}
+                  isLabelRequired={false}
+                />
+                <aside className="grid grid-cols-3 gap-4 w-full max-w-md mt-4">
+                  <ChartLegendPoint
+                    title="Working"
+                    count={statusBreakdown.working}
+                    backgroundColor="rgb(74, 222, 128)"
+                  />
 
-              <ChartLegendPoint
-                title="Repairable"
-                count={statusBreakdown.repairable}
-                backgroundColor="rgb(250, 204, 21)"
-              />
-              <ChartLegendPoint
-                title="Not-working"
-                count={statusBreakdown.notWorking}
-                backgroundColor="rgb(248, 113, 113)"
-              />
-            </aside>
-          </article>
+                  <ChartLegendPoint
+                    title="Repairable"
+                    count={statusBreakdown.repairable}
+                    backgroundColor="rgb(250, 204, 21)"
+                  />
+                  <ChartLegendPoint
+                    title="Not-working"
+                    count={statusBreakdown.notWorking}
+                    backgroundColor="rgb(248, 113, 113)"
+                  />
+                </aside>
+              </article>
+            </>
+          )}
         </div>
       </div>
     </section>

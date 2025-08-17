@@ -25,7 +25,7 @@ export default function TableFilter({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownOptions, setDropdownOptions] = useState([]);
 
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchDropdownData() {
@@ -47,6 +47,8 @@ export default function TableFilter({
         if (response.ok) {
           const responseBody = await response.json();
           setDropdownOptions(responseBody.data);
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);

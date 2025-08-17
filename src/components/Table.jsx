@@ -11,6 +11,7 @@ import Pagination from "./Pagination.jsx";
 import { AuthProvider } from "../store/AuthProvider.jsx";
 import { TABLE_CONFIG } from "../constants/tableConfig.js";
 import getEndpoint from "../constants/apiEndpoints.js";
+import LoadingIndicator from "./LoadingIndicator.jsx";
 
 const NO_OF_DATA_PER_PAGE = 6;
 
@@ -20,7 +21,7 @@ export default function Table({
   onDelete = () => {},
   apiPayload = "",
 }) {
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const tableConfig = TABLE_CONFIG[configKey];
 
   const [payloadData, setPayloadData] = useState(apiPayload);
@@ -37,6 +38,7 @@ export default function Table({
 
   const [resetKey, setResetKey] = useState(0);
   const [isSearchDisabled, setIsSearchDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
@@ -83,6 +85,9 @@ export default function Table({
             count: responseBody.data[tableConfig.responseMapping.countKey],
             rows: responseBody.data[tableConfig.responseMapping.dataKey],
           });
+          setIsLoading(false);
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -301,7 +306,17 @@ export default function Table({
   function renderTableData() {
     return (
       <tbody className="[&_tr:last-child]:border-0 ">
-        {tableData.count > 0 ? (
+        {isLoading ? (
+          <tr className="border-b transition-colors hover:bg-muted/50">
+            <td
+              className="p-4 h-24 text-center text-muted-foreground flex flex-col justify-center items-center gap-2 my-2"
+              colSpan="10"
+            >
+              Loading data...
+              <LoadingIndicator />
+            </td>
+          </tr>
+        ) : tableData.count > 0 ? (
           tableData.rows.map((eachData, index) => (
             <TableRow
               key={eachData[tableConfig.responseMapping.idKey]}

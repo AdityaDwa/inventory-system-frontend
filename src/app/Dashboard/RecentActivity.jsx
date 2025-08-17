@@ -6,10 +6,12 @@ import { AuthProvider } from "../../store/AuthProvider.jsx";
 
 import { dateFormatter, getTime } from "../../utils/formatter.js";
 import getEndpoint from "../../constants/apiEndpoints.js";
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
 
 export default function RecentActivity() {
   const [logData, setLogData] = useState([]);
-  const { accessToken } = useContext(AuthProvider);
+  const [isLoading, setIsLoading] = useState(true);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchActivityData() {
@@ -26,6 +28,9 @@ export default function RecentActivity() {
         if (response.ok) {
           const responseBody = await response.json();
           setLogData(responseBody.data);
+          setIsLoading(false);
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -47,18 +52,22 @@ export default function RecentActivity() {
       </header>
       <section className="p-6 pt-0">
         <div className="space-y-6">
-          {logData.length !== 0
-            ? logData.map((singleLog) => (
-                <LogData
-                  key={singleLog._id}
-                  profileInitials={singleLog.performedByName[0].toUpperCase()}
-                  userName={singleLog.performedByName}
-                  action={singleLog.description}
-                  date={dateFormatter(singleLog.createdAt)}
-                  time={getTime(singleLog.createdAt)}
-                />
-              ))
-            : ""}
+          {isLoading && (
+            <div className="h-[300px] flex justify-center items-center">
+              <LoadingIndicator />
+            </div>
+          )}
+          {logData.length !== 0 &&
+            logData.map((singleLog) => (
+              <LogData
+                key={singleLog._id}
+                profileInitials={singleLog.performedByName[0].toUpperCase()}
+                userName={singleLog.performedByName}
+                action={singleLog.description}
+                date={dateFormatter(singleLog.createdAt)}
+                time={getTime(singleLog.createdAt)}
+              />
+            ))}
         </div>
       </section>
     </article>

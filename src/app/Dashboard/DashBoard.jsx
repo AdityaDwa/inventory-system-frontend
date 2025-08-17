@@ -10,7 +10,7 @@ import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function DashBoard() {
   const [inventoryStats, setInventoryStats] = useState({});
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchInventoryStatusData() {
@@ -27,6 +27,8 @@ export default function DashBoard() {
         if (response.ok) {
           const responseBody = await response.json();
           setInventoryStats(responseBody.data);
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);

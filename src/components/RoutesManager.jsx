@@ -14,6 +14,7 @@ import EditItem from "../app/Inventory/EditItem.jsx";
 import Analytics from "../app/Analytics/Analytics.jsx";
 import ActivityLog from "../app/ActivityLog/ActivityLog.jsx";
 import Categories from "../app/Categories/Categories.jsx";
+import SubCategories from "../app/Categories/SubCategories.jsx";
 import Users from "../app/Users/Users.jsx";
 import ErrorPage from "./ErrorPage.jsx";
 
@@ -34,6 +35,7 @@ export default function RoutesManager() {
     { path: "/analytics", component: <Analytics /> },
     { path: "/activity", component: <ActivityLog /> },
     { path: "/categories", component: <Categories /> },
+    { path: "/categories/category/:categoryId", component: <SubCategories /> },
     { path: "/users", component: <Users /> },
   ];
 

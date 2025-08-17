@@ -15,12 +15,13 @@ import VisibilityIcon from "../../components/icons/VisibilityIcon.jsx";
 
 import EditRoomModal from "./EditRoomModal.jsx";
 import DeleteModal from "../../components/DeleteModal.jsx";
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function RoomDetail() {
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const navigate = useNavigate();
 
   const { state } = useLocation();
@@ -47,6 +48,7 @@ export default function RoomDetail() {
     possible: true,
     message: "Are you sure you want to delete this room?",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -85,6 +87,9 @@ export default function RoomDetail() {
             breakdown.notWorking += eachData.notWorkingCount;
           });
           setRoomStatusBreakdown(breakdown);
+          setIsLoading(false);
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -137,6 +142,8 @@ export default function RoomDetail() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           navigate("/rooms");
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -195,11 +202,11 @@ export default function RoomDetail() {
                     <span className="font-medium">Floor:</span>
                     {room.roomFloorName}
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex gap-2 text-sm">
                     <UserIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Allotted To:</span>
                     {room.allottedTo !== undefined ? (
-                      room.allottedTo
+                      <span className="max-w-[15rem]">{room.allottedTo}</span>
                     ) : (
                       <span className="italic text-muted-foreground">
                         Not assigned
@@ -229,83 +236,91 @@ export default function RoomDetail() {
             <div className="flex flex-col p-3">
               <h3 className="font-semibold">Status Breakdown</h3>
             </div>
-            <div className="space-y-4 p-3 pt-0">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <CircleCheckIcon />
-                    Working
+            {isLoading ? (
+              <div className="flex justify-center items-center h-[7.5rem]">
+                <LoadingIndicator />
+              </div>
+            ) : (
+              <div className="space-y-4 p-3 pt-0">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <CircleCheckIcon />
+                      Working
+                    </div>
+                    <div>
+                      {roomStatusBreakdown.working} / {room.totalItems}
+                    </div>
                   </div>
-                  <div>
-                    {roomStatusBreakdown.working} / {room.totalItems}
+                  <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
+                    <div
+                      className="h-full w-full flex-1 bg-primary transition-all"
+                      style={{
+                        transform: `translateX(-${
+                          room.totalItems === 0
+                            ? 100
+                            : 100 -
+                              (roomStatusBreakdown.working / room.totalItems) *
+                                100
+                        }%)`,
+                      }}
+                    ></div>
                   </div>
                 </div>
-                <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
-                  <div
-                    className="h-full w-full flex-1 bg-primary transition-all"
-                    style={{
-                      transform: `translateX(-${
-                        room.totalItems === 0
-                          ? 100
-                          : 100 -
-                            (roomStatusBreakdown.working / room.totalItems) *
-                              100
-                      }%)`,
-                    }}
-                  ></div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <PenNibIcon />
+                      Repairable
+                    </div>
+                    <div>
+                      {roomStatusBreakdown.repairable} / {room.totalItems}
+                    </div>
+                  </div>
+                  <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
+                    <div
+                      className="h-full w-full flex-1 bg-primary transition-all"
+                      style={{
+                        transform: `translateX(-${
+                          room.totalItems === 0
+                            ? 100
+                            : 100 -
+                              (roomStatusBreakdown.repairable /
+                                room.totalItems) *
+                                100
+                        }%)`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <AlertIcon />
+                      Not-working
+                    </div>
+                    <div>
+                      {roomStatusBreakdown.notWorking} / {room.totalItems}
+                    </div>
+                  </div>
+                  <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
+                    <div
+                      className="h-full w-full flex-1 bg-primary transition-all"
+                      style={{
+                        transform: `translateX(-${
+                          room.totalItems === 0
+                            ? 100
+                            : 100 -
+                              (roomStatusBreakdown.notWorking /
+                                room.totalItems) *
+                                100
+                        }%)`,
+                      }}
+                    ></div>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <PenNibIcon />
-                    Repairable
-                  </div>
-                  <div>
-                    {roomStatusBreakdown.repairable} / {room.totalItems}
-                  </div>
-                </div>
-                <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
-                  <div
-                    className="h-full w-full flex-1 bg-primary transition-all"
-                    style={{
-                      transform: `translateX(-${
-                        room.totalItems === 0
-                          ? 100
-                          : 100 -
-                            (roomStatusBreakdown.repairable / room.totalItems) *
-                              100
-                      }%)`,
-                    }}
-                  ></div>
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <AlertIcon />
-                    Not-working
-                  </div>
-                  <div>
-                    {roomStatusBreakdown.notWorking} / {room.totalItems}
-                  </div>
-                </div>
-                <div className="relative w-full overflow-hidden rounded-full bg-muted h-1.5">
-                  <div
-                    className="h-full w-full flex-1 bg-primary transition-all"
-                    style={{
-                      transform: `translateX(-${
-                        room.totalItems === 0
-                          ? 100
-                          : 100 -
-                            (roomStatusBreakdown.notWorking / room.totalItems) *
-                              100
-                      }%)`,
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </aside>
       </section>
@@ -335,7 +350,17 @@ export default function RoomDetail() {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-              {itemTableData.length !== 0 ? (
+              {isLoading ? (
+                <tr className="border-b transition-colors hover:bg-muted/50">
+                  <td
+                    className="p-4 h-24 text-center text-muted-foreground flex flex-col justify-center items-center gap-2 my-2"
+                    colSpan="10"
+                  >
+                    Loading data...
+                    <LoadingIndicator />
+                  </td>
+                </tr>
+              ) : itemTableData.length !== 0 ? (
                 itemTableData.map((item, index) => {
                   const additionalValue =
                     item.itemDescription !== ""

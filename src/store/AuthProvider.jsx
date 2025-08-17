@@ -5,4 +5,5 @@ export const AuthProvider = createContext({
   refreshToken: "",
   isLoggedIn: "",
   handleLogin: () => {},
+  handleLogout: () => {},
 });

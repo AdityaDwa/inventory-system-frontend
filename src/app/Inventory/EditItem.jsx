@@ -18,7 +18,7 @@ export default function EditItem() {
   if (!item) {
   }
 
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const navigate = useNavigate();
 
   const [dropdownInfo, setDropdownInfo] = useState({
@@ -100,6 +100,8 @@ export default function EditItem() {
         if (response.ok) {
           const responseBody = await response.json();
           navigate("/inventory");
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);

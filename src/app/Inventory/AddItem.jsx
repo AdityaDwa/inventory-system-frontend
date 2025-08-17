@@ -10,7 +10,7 @@ import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function AddItem() {
   const navigate = useNavigate();
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const todayDate = new Date().toISOString().split("T")[0];
 
   const [dropdownInfo, setDropdownInfo] = useState({
@@ -114,6 +114,7 @@ export default function AddItem() {
       } else {
         const errorDetails = await response.json();
         console.log("Conflict error details:", errorDetails);
+        handleLogout();
       }
 
       navigate("/inventory");

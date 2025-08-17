@@ -21,7 +21,7 @@ export default function EditRoomModal({ modalData, onToggle }) {
     name: false,
   });
 
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,6 +66,8 @@ export default function EditRoomModal({ modalData, onToggle }) {
           const responseBody = await response.json();
           onToggle(false);
           navigate("/rooms");
+        } else {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
