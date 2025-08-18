@@ -101,7 +101,8 @@ export default function RoomInventory() {
           const responseBody = await response.json();
           setItemTableData(responseBody.data);
           setIsLoading(false);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {
@@ -156,7 +157,8 @@ export default function RoomInventory() {
       if (response.ok) {
         const responseBody = await response.json();
         navigate("/rooms");
-      } else {
+      }
+      if (response.status < 400 && response.status > 450) {
         handleLogout();
       }
     } catch (error) {
@@ -183,7 +185,8 @@ export default function RoomInventory() {
       if (response.ok) {
         const responseBody = await response.json();
         navigate("/rooms");
-      } else {
+      }
+      if (response.status < 400 && response.status > 450) {
         handleLogout();
       }
     } catch (error) {
@@ -215,7 +218,8 @@ export default function RoomInventory() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           navigate("/rooms");
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {
@@ -271,7 +275,7 @@ export default function RoomInventory() {
                     <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Category:</span>
                     <span className="max-w-[19rem]">
-                      {item.itemCategoryName}(Computer)
+                      {item.itemCategoryName} ({item.itemSubCategoryName})
                     </span>
                   </div>
                 </div>

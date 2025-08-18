@@ -29,7 +29,8 @@ export default function RecentActivity() {
           const responseBody = await response.json();
           setLogData(responseBody.data);
           setIsLoading(false);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

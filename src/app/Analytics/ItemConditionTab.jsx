@@ -74,7 +74,8 @@ export default function ItemConditionTab({ hidden, inventoryStats }) {
           });
 
           setIsLoading(false);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

@@ -41,7 +41,8 @@ export default function AddCategoryModal({
           const responseData = await response.json();
           onToggle(false);
           onSuccess();
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

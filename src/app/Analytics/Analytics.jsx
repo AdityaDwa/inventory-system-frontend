@@ -29,7 +29,8 @@ export default function Analytics() {
         if (response.ok) {
           const responseBody = await response.json();
           setInventoryStats(responseBody.data);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

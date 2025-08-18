@@ -88,7 +88,8 @@ export default function RoomDetail() {
           });
           setRoomStatusBreakdown(breakdown);
           setIsLoading(false);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {
@@ -142,7 +143,8 @@ export default function RoomDetail() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           navigate("/rooms");
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

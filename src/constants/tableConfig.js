@@ -327,6 +327,10 @@ export const DROPDOWN_RESPONSE_MAPPING = {
     idKey: "_id",
     dataKey: "categoryName",
   },
+  subCategory: {
+    idKey: "_id",
+    dataKey: "subCategoryName",
+  },
   item: {
     idKey: "sourceId",
     dataKey: "sourceName",

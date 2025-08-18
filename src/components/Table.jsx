@@ -86,7 +86,8 @@ export default function Table({
             rows: responseBody.data[tableConfig.responseMapping.dataKey],
           });
           setIsLoading(false);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

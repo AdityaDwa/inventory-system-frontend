@@ -66,7 +66,8 @@ export default function EditRoomModal({ modalData, onToggle }) {
           const responseBody = await response.json();
           onToggle(false);
           navigate("/rooms");
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

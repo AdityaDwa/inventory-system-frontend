@@ -80,7 +80,8 @@ export default function ItemDetail() {
           const responseBody = await response.json();
           setHistoryTableData(responseBody.data);
           setIsLoading(false);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {
@@ -112,7 +113,8 @@ export default function ItemDetail() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           navigate("/inventory");
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {
@@ -157,7 +159,8 @@ export default function ItemDetail() {
       if (response.ok) {
         const responseBody = await response.json();
         navigate("/inventory");
-      } else {
+      }
+      if (response.status < 400 && response.status > 450) {
         handleLogout();
       }
     } catch (error) {
@@ -181,7 +184,8 @@ export default function ItemDetail() {
       if (response.ok) {
         const responseBody = await response.json();
         navigate("/inventory");
-      } else {
+      }
+      if (response.status < 400 && response.status > 450) {
         handleLogout();
       }
     } catch (error) {
@@ -259,7 +263,7 @@ export default function ItemDetail() {
                     <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Category:</span>
                     <span className="max-w-[19rem]">
-                      {item.itemCategory}(Computer)
+                      {item.itemCategory} ({item.itemSubCategory})
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">

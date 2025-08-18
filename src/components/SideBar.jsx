@@ -66,7 +66,8 @@ export default function SideBar() {
         if (response.ok) {
           const responseBody = await response.json();
           setUserData(responseBody.data);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

@@ -44,7 +44,9 @@ export default function AcquisitionTab({ hidden }) {
               ] || 0,
           });
           setIsLoading(false);
-        } else {
+        }
+
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {

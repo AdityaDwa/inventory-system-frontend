@@ -47,7 +47,8 @@ export default function TableFilter({
         if (response.ok) {
           const responseBody = await response.json();
           setDropdownOptions(responseBody.data);
-        } else {
+        }
+        if (response.status < 400 && response.status > 450) {
           handleLogout();
         }
       } catch (error) {
