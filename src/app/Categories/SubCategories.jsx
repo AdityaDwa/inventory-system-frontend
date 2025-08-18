@@ -6,7 +6,8 @@ import PlusIcon from "../../components/icons/PlusIcon.jsx";
 import DeleteIcon from "../../components/icons/DeleteIcon.jsx";
 
 import LoadingIndicator from "../../components/LoadingIndicator.jsx";
-import AddCategoryModal from "./AddCategoryModal.jsx";
+import AddSubCategoryModal from "./AddSubCategoryModal.jsx";
+import DeleteModal from "../../components/DeleteModal.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -25,12 +26,20 @@ export default function SubCategories() {
   const [subCategoryData, setSubCategoryData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isDeletePossible, setIsDeletePossible] = useState({
+    id: "0",
+    totalItems: 0,
+    possible: true,
+    message: "Are you sure you want to delete this sub-category?",
+  });
+  const [doTableReRender, setDoTableReRender] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         handleModalToggle(false);
-        // handleDeleteToggle(false);
+        handleDeleteToggle(false);
       }
     };
 
@@ -66,10 +75,75 @@ export default function SubCategories() {
     }
 
     fetchSubCategoryData();
-  }, []);
+  }, [doTableReRender]);
 
   function handleModalToggle(isVisible) {
     setIsModalVisible(isVisible);
+  }
+
+  function handleDeleteToggle(isVisible) {
+    setIsDeleteVisible(isVisible);
+
+    if (!isVisible) {
+      setIsDeletePossible({
+        totalItems: 0,
+        possible: true,
+        message: "Are you sure you want to delete this sub-category?",
+      });
+    }
+  }
+
+  function handleTableRender() {
+    setDoTableReRender((prev) => prev + 1);
+  }
+
+  function handleDeleteData(deleteData) {
+    setIsDeleteVisible(true);
+    setIsDeletePossible((prev) => ({
+      ...prev,
+      totalItems: deleteData.totalItems,
+      id: deleteData._id,
+    }));
+  }
+
+  function handleConfirmDelete() {
+    if (!(isDeletePossible.totalItems === 0)) {
+      setIsDeletePossible((prev) => ({
+        ...prev,
+        possible: false,
+        message: "The sub-category must be empty before deletion.",
+      }));
+      return;
+    }
+
+    async function deleteSubCategoryData() {
+      try {
+        const payload = `${categoryId}/${isDeletePossible.id}`;
+
+        const fetchUrl = getEndpoint("subCategory", "deleteData", payload);
+
+        const response = await fetch(fetchUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          handleDeleteToggle(false);
+          handleTableRender();
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    deleteSubCategoryData();
   }
 
   return (
@@ -150,7 +224,7 @@ export default function SubCategories() {
                           <button
                             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 h-9 w-9 border border-[#fe2b42] text-[#fe2b42] hover:bg-[#fde6e8]"
                             type="button"
-                            // onClick={() => onDelete(rowData)}
+                            onClick={() => handleDeleteData(subCategory)}
                           >
                             <DeleteIcon />
                           </button>
@@ -170,11 +244,20 @@ export default function SubCategories() {
           </table>
         </div>
       </section>
-      <AddCategoryModal
+      <AddSubCategoryModal
         key={`${isModalVisible}${123}`}
         isModalVisible={isModalVisible}
+        categoryId={categoryId}
         onToggle={handleModalToggle}
-        // onSuccess={handleTableRender}
+        onSuccess={handleTableRender}
+      />
+      <DeleteModal
+        title="Delete Sub Category"
+        isModalVisible={isDeleteVisible}
+        onToggle={handleDeleteToggle}
+        confirmDelete={handleConfirmDelete}
+        message={isDeletePossible.message}
+        canDelete={isDeletePossible.possible}
       />
     </>
   );

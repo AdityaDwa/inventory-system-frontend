@@ -4,32 +4,48 @@ import ReactDOM from "react-dom";
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
 
-export default function AddCategoryModal({
+export default function AddSubCategoryModal({
   isModalVisible,
+  categoryId,
   onToggle,
   onSuccess,
 }) {
   const { accessToken, handleLogout } = useContext(AuthProvider);
-  const categoryNameRef = useRef(null);
-  const [isEmpty, setIsEmpty] = useState(false);
+
+  const subCategoryNameRef = useRef(null);
+  const subCategorySymbolRef = useRef(null);
+
+  const [isEmpty, setIsEmpty] = useState({
+    subCategoryName: false,
+    subCategorySymbol: false,
+  });
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const enteredCategoryName = categoryNameRef.current.value;
+    const enteredSubCategoryName = subCategoryNameRef.current.value;
+    const enteredSubCategorySymbol = subCategorySymbolRef.current.value;
 
-    const isEmptyCheck = enteredCategoryName.length === 0;
+    const isEmptyCheck = {
+      subCategoryName: enteredSubCategoryName.length === 0,
+      subCategorySymbol: enteredSubCategorySymbol.length === 0,
+    };
     setIsEmpty(isEmptyCheck);
 
-    async function postCategoryData() {
+    if (enteredSubCategorySymbol.length !== 3) {
+      return;
+    }
+
+    async function postSubCategoryData() {
       try {
-        const fetchUrl = getEndpoint("category", "addData");
+        const fetchUrl = getEndpoint("subCategory", "addData", categoryId);
 
         const response = await fetch(fetchUrl, {
           method: "POST",
 
           body: JSON.stringify({
-            category_name: enteredCategoryName,
+            subCategory_name: enteredSubCategoryName,
+            subCategory_abbr: enteredSubCategorySymbol,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -50,9 +66,22 @@ export default function AddCategoryModal({
       }
     }
 
-    if (!isEmptyCheck) {
-      postCategoryData();
+    if (!isEmptyCheck.subCategoryName && !isEmptyCheck.subCategorySymbol) {
+      postSubCategoryData();
     }
+  }
+
+  function handleSymbolLimit(event) {
+    const symbolData = event.target.value;
+    let finalSymbol =
+      symbolData.length > 3 ? symbolData.slice(0, 3) : symbolData;
+
+    event.target.value = finalSymbol.toUpperCase();
+
+    setIsEmpty((prevState) => ({
+      ...prevState,
+      subCategorySymbol: false,
+    }));
   }
 
   if (!isModalVisible) {
@@ -64,29 +93,58 @@ export default function AddCategoryModal({
       <div className="fixed left-[50%] top-[50%] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg sm:max-w-[525px]">
         <div className="flex flex-col space-y-1.5 text-center sm:text-left bg-primary/5 p-4 rounded-t-lg">
           <h2 className="text-lg font-semibold leading-none tracking-tight">
-            Add New Category
+            Add New Sub Category
           </h2>
-          <p className="text-sm text-muted-foreground">Create a new category</p>
+          <p className="text-sm text-muted-foreground">
+            Create a new sub-category
+          </p>
         </div>
         <form className="grid" onSubmit={handleSubmit}>
           <div>
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              htmlFor="category-name"
+              htmlFor="sub-category-name"
             >
-              Category Name: <span className="text-[#ff6365]">*</span>
+              Sub Category Name: <span className="text-[#ff6365]">*</span>
             </label>
             <div className="flex items-center gap-2 mt-2">
               <input
-                ref={categoryNameRef}
+                ref={subCategoryNameRef}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                placeholder="e.g. Furniture"
-                id="category-name"
-                onChange={() => setIsEmpty(false)}
+                placeholder="e.g. Table"
+                id="sub-category-name"
+                onChange={() =>
+                  setIsEmpty((prevState) => ({
+                    ...prevState,
+                    subCategoryName: false,
+                  }))
+                }
               />
             </div>
             <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
-              {isEmpty ? "Please enter category name" : ""}
+              {isEmpty.subCategoryName ? "Please enter sub-category name" : ""}
+            </div>
+          </div>
+          <div>
+            <label
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              htmlFor="sub-category-symbol"
+            >
+              Sub Category Symbol: <span className="text-[#ff6365]">*</span>
+            </label>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                ref={subCategorySymbolRef}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                placeholder="e.g. TBL"
+                id="sub-category-symbol"
+                onChange={handleSymbolLimit}
+              />
+            </div>
+            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+              {isEmpty.subCategorySymbol
+                ? "Please enter sub-category symbol"
+                : ""}
             </div>
           </div>
           <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4">

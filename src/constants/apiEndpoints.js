@@ -80,8 +80,8 @@ export const API_ENDPOINTS = {
   subCategory: {
     getAllData: "/api/v1/categories/subcategories/description/",
     getDropdownData: "/api/v1/categories/subcategories/",
-    addData: "/api/v1/categories",
-    deleteData: "/api/v1/categories/",
+    addData: " /api/v1/categories/subcategories/",
+    deleteData: "/api/v1/categories/subcategories/",
   },
 
   status: {
