@@ -66,7 +66,7 @@ export default function SubCategories() {
           setSubCategoryData(responseBody.data.subCategories);
           setIsLoading(false);
         }
-        if (response.status >= 400 && response.status <= 450) {
+        if (response.status == 401) {
           handleLogout();
         }
       } catch (error) {
@@ -135,7 +135,7 @@ export default function SubCategories() {
           handleDeleteToggle(false);
           handleTableRender();
         }
-        if (response.status >= 400 && response.status <= 450) {
+        if (response.status == 401) {
           handleLogout();
         }
       } catch (error) {

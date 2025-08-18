@@ -65,7 +65,7 @@ export default function Inventory() {
         },
       });
 
-      if (response.status >= 400 && response.status <= 450) {
+      if (response.status == 401) {
         handleLogout();
         return;
       }

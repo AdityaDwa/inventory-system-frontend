@@ -87,7 +87,7 @@ export default function Table({
           });
           setIsLoading(false);
         }
-        if (response.status >= 400 && response.status <= 450) {
+        if (response.status == 401) {
           handleLogout();
         }
       } catch (error) {

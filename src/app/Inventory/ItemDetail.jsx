@@ -81,7 +81,7 @@ export default function ItemDetail() {
           setHistoryTableData(responseBody.data);
           setIsLoading(false);
         }
-        if (response.status >= 400 && response.status <= 450) {
+        if (response.status == 401) {
           handleLogout();
         }
       } catch (error) {
@@ -114,7 +114,7 @@ export default function ItemDetail() {
           handleDeleteToggle(false);
           navigate("/inventory");
         }
-        if (response.status >= 400 && response.status <= 450) {
+        if (response.status == 401) {
           handleLogout();
         }
       } catch (error) {
@@ -160,7 +160,7 @@ export default function ItemDetail() {
         const responseBody = await response.json();
         navigate("/inventory");
       }
-      if (response.status >= 400 && response.status <= 450) {
+      if (response.status == 401) {
         handleLogout();
       }
     } catch (error) {
@@ -185,7 +185,7 @@ export default function ItemDetail() {
         const responseBody = await response.json();
         navigate("/inventory");
       }
-      if (response.status >= 400 && response.status <= 450) {
+      if (response.status == 401) {
         handleLogout();
       }
     } catch (error) {
