@@ -86,7 +86,7 @@ export default function SideBar() {
       <header className="flex h-16 items-center px-4">
         <Link className="flex items-center gap-2 text-2xl font-semibold" to="/">
           <PackageIcon cssClass="h-8 w-8" />
-          <span>DoECE IMS</span>
+          <span>DOECE IMS</span>
         </Link>
       </header>
 

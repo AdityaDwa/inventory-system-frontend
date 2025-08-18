@@ -67,9 +67,11 @@ export default function LoginPage({ handleLogin }) {
     <section className="flex items-center justify-center h-full">
       <article className="w-80 rounded-md p-6 bg-white shadow-md">
         <header className="flex flex-col items-center px-4">
-          <div className="flex items-center gap-2 text-2xl font-bold text-sidebar">
+          <div className="flex flex-col items-center gap-2 text-2xl font-bold text-sidebar">
             <PackageIcon cssClass="h-9 w-9" />
-            <span>DoECE IMS</span>
+            <span className="text-center">
+              DOECE Inventory Management System
+            </span>
           </div>
           <p className="my-4 font-bold text-[1.35rem] text-center">Login</p>
         </header>
