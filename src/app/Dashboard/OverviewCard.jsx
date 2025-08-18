@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
+
 export default function OverviewCard({
   title,
   path = "#",
@@ -19,8 +21,14 @@ export default function OverviewCard({
         {children}
       </header>
       <div className="p-6 pt-0">
-        <div className="text-2xl font-bold">{overviewNum}</div>
-        <p className="text-xs text-muted-foreground">{overviewInfo}</p>
+        {overviewNum === undefined ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            <div className="text-2xl font-bold">{overviewNum}</div>
+            <p className="text-xs text-muted-foreground">{overviewInfo}</p>
+          </>
+        )}
       </div>
     </Link>
   );

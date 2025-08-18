@@ -10,11 +10,12 @@ import getEndpoint from "../../constants/apiEndpoints.js";
 
 export default function AddItem() {
   const navigate = useNavigate();
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const todayDate = new Date().toISOString().split("T")[0];
 
   const [dropdownInfo, setDropdownInfo] = useState({
     category: "0",
+    subCategory: "0",
     floor: "0",
     room: "0",
     item: "0",
@@ -30,6 +31,7 @@ export default function AddItem() {
     itemName: false,
     itemDateAcquired: false,
     category: false,
+    subCategory: false,
     floor: false,
     room: false,
     item: false,
@@ -49,6 +51,13 @@ export default function AddItem() {
     }));
   }, [dropdownInfo.floor]);
 
+  useEffect(() => {
+    setDropdownInfo((prev) => ({
+      ...prev,
+      subCategory: "0",
+    }));
+  }, [dropdownInfo.category]);
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -64,6 +73,7 @@ export default function AddItem() {
       itemName: submittedItemName.length === 0,
       itemDateAcquired: submittedItemDateAcquired.length === 0,
       category: dropdownInfo.category === "0",
+      subCategory: dropdownInfo.subCategory === "0",
       floor: dropdownInfo.floor === "0",
       room: dropdownInfo.room === "0",
       item: false,
@@ -76,6 +86,7 @@ export default function AddItem() {
       isEmptyCheck.itemName ||
       isEmptyCheck.itemDateAcquired ||
       isEmptyCheck.category ||
+      isEmptyCheck.subCategory ||
       isEmptyCheck.floor ||
       isEmptyCheck.room ||
       isEmptyCheck.unitCost ||
@@ -90,6 +101,7 @@ export default function AddItem() {
         item_description: submittedItemDescription,
         item_make_or_model_no: submittedItemMakeModelNo,
         item_category_id: dropdownInfo.category,
+        item_subCategory_id: dropdownInfo.subCategory,
         item_floor_id: dropdownInfo.floor,
         item_room_id: dropdownInfo.room,
         item_acquired_date: submittedItemDateAcquired,
@@ -114,6 +126,10 @@ export default function AddItem() {
       } else {
         const errorDetails = await response.json();
         console.log("Conflict error details:", errorDetails);
+      }
+
+      if (response.status < 400 && response.status > 450) {
+        handleLogout();
       }
 
       navigate("/inventory");
@@ -232,27 +248,80 @@ export default function AddItem() {
                   <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      htmlFor="item-category"
+                      htmlFor="item-acquired-date"
                     >
-                      Category: <span className="text-[#ff6365]">*</span>
+                      Date Acquired: <span className="text-[#ff6365]">*</span>
                     </label>
                     <div className="h-2"></div>
-                    <TableFilter
-                      dropdownInitialValue="Select category"
-                      dropdownConfigKey="category"
-                      onStateChange={handleDropdownChange}
-                      widthSize="100%"
-                      customPlaceholderStyle="text-muted-foreground"
-                      id="item-category"
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                      id="item-acquired-date"
+                      type="date"
+                      defaultValue={todayDate}
+                      ref={itemDateAcquiredRef}
+                      onChange={() =>
+                        setIsEmpty((prevState) => ({
+                          ...prevState,
+                          itemDateAcquired: false,
+                        }))
+                      }
                     />
                     <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
-                      {isEmpty.category ? "Please select a category" : ""}
+                      {isEmpty.itemDateAcquired
+                        ? "Please enter acquired date"
+                        : ""}
                     </div>
                   </div>
                 </div>
               </section>
 
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+              <section className="grid grid-cols-1 md:grid-cols-4 gap-x-8">
+                <div>
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-category"
+                  >
+                    Category: <span className="text-[#ff6365]">*</span>
+                  </label>
+                  <div className="h-2"></div>
+                  <TableFilter
+                    dropdownInitialValue="Select category"
+                    dropdownConfigKey="category"
+                    onStateChange={handleDropdownChange}
+                    widthSize="100%"
+                    customPlaceholderStyle="text-muted-foreground"
+                    id="item-category"
+                  />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.category ? "Please select a category" : ""}
+                  </div>
+                </div>
+                <div>
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-sub-category"
+                  >
+                    Sub Category: <span className="text-[#ff6365]">*</span>
+                  </label>
+                  <div className="h-2"></div>
+                  <TableFilter
+                    key={dropdownInfo.category}
+                    dropdownInitialValue="Select sub-category"
+                    dropdownConfigKey={
+                      dropdownInfo.category !== "0" ? "subCategory" : ""
+                    }
+                    widthSize="100%"
+                    onStateChange={handleDropdownChange}
+                    isDisabled={dropdownInfo.category === "0"}
+                    customPlaceholderStyle="text-muted-foreground"
+                    id="item-sub-category"
+                    apiPayload={dropdownInfo.category}
+                  />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.subCategory ? "Please select a sub-category" : ""}
+                  </div>
+                </div>
+
                 <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -294,33 +363,6 @@ export default function AddItem() {
                   />
                   <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
                     {isEmpty.room ? "Please select a room" : ""}
-                  </div>
-                </div>
-                <div>
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-acquired-date"
-                  >
-                    Date Acquired: <span className="text-[#ff6365]">*</span>
-                  </label>
-                  <div className="h-2"></div>
-                  <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                    id="item-acquired-date"
-                    type="date"
-                    defaultValue={todayDate}
-                    ref={itemDateAcquiredRef}
-                    onChange={() =>
-                      setIsEmpty((prevState) => ({
-                        ...prevState,
-                        itemDateAcquired: false,
-                      }))
-                    }
-                  />
-                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
-                    {isEmpty.itemDateAcquired
-                      ? "Please enter acquired date"
-                      : ""}
                   </div>
                 </div>
               </section>

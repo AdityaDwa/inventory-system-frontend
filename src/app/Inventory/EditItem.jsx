@@ -18,11 +18,12 @@ export default function EditItem() {
   if (!item) {
   }
 
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const navigate = useNavigate();
 
   const [dropdownInfo, setDropdownInfo] = useState({
     category: item.itemCategoryId,
+    subCategory: item.itemSubCategoryId,
     floor: item.itemFloorId,
     room: item.itemRoomId,
     item: item.itemSourceId,
@@ -34,6 +35,7 @@ export default function EditItem() {
     itemDescription: item.itemDescription,
     itemMakeOrModelNo: item.itemModelNumberOrMake,
     itemCategory: item.itemCategory,
+    itemSubCategory: item.itemSubCategory,
     itemFloor: item.itemFloor,
     itemRoom: item.itemRoom,
     itemAcquiredDate: acquiredDate,
@@ -47,6 +49,7 @@ export default function EditItem() {
     itemDescription: false,
     itemMakeOrModelNo: false,
     category: false,
+    subCategory: false,
     floor: false,
     room: false,
     itemAcquiredDate: false,
@@ -63,6 +66,7 @@ export default function EditItem() {
       itemDescription: false,
       itemMakeOrModelNo: false,
       category: false,
+      subCategory: dropdownInfo.subCategory === "0",
       floor: false,
       room: dropdownInfo.room === "0",
       itemAcquiredDate: itemData.itemAcquiredDate.length === 0,
@@ -79,6 +83,7 @@ export default function EditItem() {
           item_description: itemData.itemDescription,
           item_make_or_model_no: itemData.itemMakeOrModelNo,
           item_category_id: dropdownInfo.category,
+          item_subCategory_id: dropdownInfo.subCategory,
           item_room_id: dropdownInfo.room,
           item_acquired_date: itemData.itemAcquiredDate,
           item_source: dropdownInfo.item,
@@ -101,6 +106,9 @@ export default function EditItem() {
           const responseBody = await response.json();
           navigate("/inventory");
         }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -108,8 +116,9 @@ export default function EditItem() {
 
     if (
       !isEmptyCheck.itemName &&
-      !isEmptyCheck.room &&
       !isEmptyCheck.itemAcquiredDate &&
+      !isEmptyCheck.subCategory &&
+      !isEmptyCheck.room &&
       !isEmptyCheck.itemCost
     ) {
       updateItemData();
@@ -122,6 +131,12 @@ export default function EditItem() {
         ...prev,
         [identifier]: payload.id,
         room: "0",
+      }));
+    } else if (identifier === "category") {
+      setDropdownInfo((prev) => ({
+        ...prev,
+        [identifier]: payload.id,
+        subCategory: "0",
       }));
     } else {
       setDropdownInfo((prev) => ({
@@ -230,24 +245,77 @@ export default function EditItem() {
                   <div>
                     <label
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      htmlFor="item-category"
+                      htmlFor="item-acquired-date"
                     >
-                      Category: <span className="text-[#ff6365]">*</span>
+                      Date Acquired: <span className="text-[#ff6365]">*</span>
                     </label>
                     <div className="h-2"></div>
-                    <TableFilter
-                      dropdownInitialValue={itemData.itemCategory}
-                      dropdownConfigKey="category"
-                      onStateChange={handleDropdownChange}
-                      widthSize="100%"
-                      id="item-category"
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                      id="item-acquired-date"
+                      type="date"
+                      value={itemData.itemAcquiredDate}
+                      onChange={(event) =>
+                        handleInputChange(
+                          "itemAcquiredDate",
+                          event.target.value
+                        )
+                      }
                     />
-                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
+                    <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                      {isEmpty.itemAcquiredDate
+                        ? "Please enter acquired date"
+                        : ""}
+                    </div>
                   </div>
                 </div>
               </section>
 
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+              <section className="grid grid-cols-1 md:grid-cols-4 gap-x-8">
+                <div>
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-category"
+                  >
+                    Category: <span className="text-[#ff6365]">*</span>
+                  </label>
+                  <div className="h-2"></div>
+                  <TableFilter
+                    dropdownInitialValue={itemData.itemCategory}
+                    dropdownConfigKey="category"
+                    onStateChange={handleDropdownChange}
+                    widthSize="100%"
+                    id="item-category"
+                  />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2"></div>
+                </div>
+                <div>
+                  <label
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    htmlFor="item-sub-category"
+                  >
+                    Sub Category: <span className="text-[#ff6365]">*</span>
+                  </label>
+                  <div className="h-2"></div>
+                  <TableFilter
+                    key={dropdownInfo.category}
+                    dropdownInitialValue={
+                      dropdownInfo.room === "0"
+                        ? "Select sub-category"
+                        : item.itemSubCategory
+                    }
+                    dropdownConfigKey={
+                      dropdownInfo.category !== "0" ? "subCategory" : ""
+                    }
+                    widthSize="100%"
+                    onStateChange={handleDropdownChange}
+                    id="item-sub-category"
+                    apiPayload={dropdownInfo.category}
+                  />
+                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
+                    {isEmpty.subCategory ? "Please select a sub-category" : ""}
+                  </div>
+                </div>
                 <div>
                   <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -286,29 +354,6 @@ export default function EditItem() {
                   />
                   <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
                     {isEmpty.room ? "Please select a room" : ""}
-                  </div>
-                </div>
-                <div>
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="item-acquired-date"
-                  >
-                    Date Acquired: <span className="text-[#ff6365]">*</span>
-                  </label>
-                  <div className="h-2"></div>
-                  <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                    id="item-acquired-date"
-                    type="date"
-                    value={itemData.itemAcquiredDate}
-                    onChange={(event) =>
-                      handleInputChange("itemAcquiredDate", event.target.value)
-                    }
-                  />
-                  <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
-                    {isEmpty.itemAcquiredDate
-                      ? "Please enter acquired date"
-                      : ""}
                   </div>
                 </div>
               </section>

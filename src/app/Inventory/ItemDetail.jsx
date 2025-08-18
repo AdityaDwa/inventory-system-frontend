@@ -15,6 +15,7 @@ import CloseIcon from "../../components/icons/CloseIcon.jsx";
 
 import TableFilter from "../../components/TableFilter.jsx";
 import DeleteModal from "../../components/DeleteModal.jsx";
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -26,7 +27,7 @@ import {
 } from "../../utils/formatter.js";
 
 export default function ItemDetail() {
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   const { state } = useLocation();
   const { itemId } = useParams();
@@ -38,6 +39,7 @@ export default function ItemDetail() {
 
   const [historyTableData, setHistoryTableData] = useState([]);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [quickActionsVisible, setQuickActionsVisible] = useState({
     updateStatus: false,
@@ -77,6 +79,10 @@ export default function ItemDetail() {
         if (response.ok) {
           const responseBody = await response.json();
           setHistoryTableData(responseBody.data);
+          setIsLoading(false);
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -107,6 +113,9 @@ export default function ItemDetail() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           navigate("/inventory");
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -151,6 +160,9 @@ export default function ItemDetail() {
         const responseBody = await response.json();
         navigate("/inventory");
       }
+      if (response.status < 400 && response.status > 450) {
+        handleLogout();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -172,6 +184,9 @@ export default function ItemDetail() {
       if (response.ok) {
         const responseBody = await response.json();
         navigate("/inventory");
+      }
+      if (response.status < 400 && response.status > 450) {
+        handleLogout();
       }
     } catch (error) {
       console.log(error);
@@ -244,10 +259,12 @@ export default function ItemDetail() {
             <article className="p-6 pt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex gap-2 text-sm">
                     <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Category:</span>
-                    {item.itemCategory}
+                    <span className="max-w-[19rem]">
+                      {item.itemCategory} ({item.itemSubCategory})
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <FloorIcon cssClass="h-4 w-4 text-muted-foreground" />
@@ -343,7 +360,17 @@ export default function ItemDetail() {
                     </thead>
 
                     <tbody className="[&_tr:last-child]:border-0">
-                      {historyTableData.length !== 0 ? (
+                      {isLoading ? (
+                        <tr className="border-b transition-colors hover:bg-muted/50">
+                          <td
+                            className="p-4 h-24 text-center text-muted-foreground flex flex-col justify-center items-center gap-2 my-2"
+                            colSpan="10"
+                          >
+                            Loading data...
+                            <LoadingIndicator />
+                          </td>
+                        </tr>
+                      ) : historyTableData.length !== 0 ? (
                         historyTableData.map((historyLog, index) => {
                           const status = historyLog.changes.status.to;
 

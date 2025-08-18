@@ -77,6 +77,13 @@ export const API_ENDPOINTS = {
     deleteData: "/api/v1/categories/",
   },
 
+  subCategory: {
+    getAllData: "/api/v1/categories/subcategories/description/",
+    getDropdownData: "/api/v1/categories/subcategories/",
+    addData: "/api/v1/categories",
+    deleteData: "/api/v1/categories/",
+  },
+
   status: {
     getDropdownData: "/api/v1/items/item_status",
   },

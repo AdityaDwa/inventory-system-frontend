@@ -6,6 +6,7 @@ import ChartLegendPoint from "../../components/ChartLegendPoint.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import { PIE_CHART_RESPONSE_MAPPING } from "../../constants/tableConfig.js";
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
 
 export default function AcquisitionTab({ hidden }) {
   const [sourceBreakdown, setSourceBreakdown] = useState({
@@ -14,7 +15,8 @@ export default function AcquisitionTab({ hidden }) {
   });
 
   const [categoryId, setCategoryId] = useState("0");
-  const { accessToken } = useContext(AuthProvider);
+  const [isLoading, setIsLoading] = useState(true);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchItemSourceData() {
@@ -41,6 +43,11 @@ export default function AcquisitionTab({ hidden }) {
                 PIE_CHART_RESPONSE_MAPPING.source.donationItems
               ] || 0,
           });
+          setIsLoading(false);
+        }
+
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -80,39 +87,47 @@ export default function AcquisitionTab({ hidden }) {
         </header>
         <div className="p-6 pt-0">
           <aside className="space-y-8">
-            <article
-              className="flex flex-col items-center"
-              style={{ height: "280px" }}
-            >
-              <ConditionPieChart
-                chartData={[
-                  {
-                    name: "Purchase",
-                    value: sourceBreakdown.purchase,
-                    color: "#3b82f6",
-                  },
-                  {
-                    name: "Donation",
-                    value: sourceBreakdown.donation,
-                    color: "#8b5cf6",
-                  },
-                ]}
-                isLabelRequired={false}
-              />
-              <aside className="grid grid-cols-2 gap-8 w-full max-w-md mt-4">
-                <ChartLegendPoint
-                  title="Purchase"
-                  count={sourceBreakdown.purchase}
-                  backgroundColor="rgb(59, 130, 246)"
-                />
+            {isLoading ? (
+              <div className="h-[280px] flex justify-center items-center">
+                <LoadingIndicator />
+              </div>
+            ) : (
+              <>
+                <article
+                  className="flex flex-col items-center"
+                  style={{ height: "280px" }}
+                >
+                  <ConditionPieChart
+                    chartData={[
+                      {
+                        name: "Purchase",
+                        value: sourceBreakdown.purchase,
+                        color: "#3b82f6",
+                      },
+                      {
+                        name: "Donation",
+                        value: sourceBreakdown.donation,
+                        color: "#8b5cf6",
+                      },
+                    ]}
+                    isLabelRequired={false}
+                  />
+                  <aside className="grid grid-cols-2 gap-8 w-full max-w-md mt-4">
+                    <ChartLegendPoint
+                      title="Purchase"
+                      count={sourceBreakdown.purchase}
+                      backgroundColor="rgb(59, 130, 246)"
+                    />
 
-                <ChartLegendPoint
-                  title="Donation"
-                  count={sourceBreakdown.donation}
-                  backgroundColor="rgb(139, 92, 246)"
-                />
-              </aside>
-            </article>
+                    <ChartLegendPoint
+                      title="Donation"
+                      count={sourceBreakdown.donation}
+                      backgroundColor="rgb(139, 92, 246)"
+                    />
+                  </aside>
+                </article>
+              </>
+            )}
           </aside>
         </div>
       </div>

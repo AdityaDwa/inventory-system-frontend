@@ -46,10 +46,10 @@ const NAV_LINKS = [
   },
 ];
 
-export default function SideBar({ handleLogout }) {
+export default function SideBar() {
   const pathLocation = useLocation();
   const [userData, setUserData] = useState({});
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -66,6 +66,9 @@ export default function SideBar({ handleLogout }) {
         if (response.ok) {
           const responseBody = await response.json();
           setUserData(responseBody.data);
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);

@@ -9,31 +9,17 @@ export default function AddCategoryModal({
   onToggle,
   onSuccess,
 }) {
+  const { accessToken, handleLogout } = useContext(AuthProvider);
   const categoryNameRef = useRef(null);
-  const categorySymbolRef = useRef(null);
-
-  const [isEmpty, setIsEmpty] = useState({
-    categoryName: false,
-    categorySymbol: false,
-  });
-
-  const { accessToken } = useContext(AuthProvider);
+  const [isEmpty, setIsEmpty] = useState(false);
 
   function handleSubmit(event) {
     event.preventDefault();
 
     const enteredCategoryName = categoryNameRef.current.value;
-    const enteredCategorySymbol = categorySymbolRef.current.value;
 
-    const isEmptyCheck = {
-      categoryName: enteredCategoryName.length === 0,
-      categorySymbol: enteredCategorySymbol.length === 0,
-    };
+    const isEmptyCheck = enteredCategoryName.length === 0;
     setIsEmpty(isEmptyCheck);
-
-    if (enteredCategorySymbol.length !== 3) {
-      return;
-    }
 
     async function postCategoryData() {
       try {
@@ -44,7 +30,6 @@ export default function AddCategoryModal({
 
           body: JSON.stringify({
             category_name: enteredCategoryName,
-            category_abbr: enteredCategorySymbol,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -57,12 +42,15 @@ export default function AddCategoryModal({
           onToggle(false);
           onSuccess();
         }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
+        }
       } catch (error) {
         console.log(error);
       }
     }
 
-    if (!isEmptyCheck.categoryName && !isEmptyCheck.categorySymbol) {
+    if (!isEmptyCheck) {
       postCategoryData();
     }
   }
@@ -107,36 +95,11 @@ export default function AddCategoryModal({
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 placeholder="e.g. Computer"
                 id="category-name"
-                onChange={() =>
-                  setIsEmpty((prevState) => ({
-                    ...prevState,
-                    categoryName: false,
-                  }))
-                }
+                onChange={() => setIsEmpty(false)}
               />
             </div>
             <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
-              {isEmpty.categoryName ? "Please enter category name" : ""}
-            </div>
-          </div>
-          <div>
-            <label
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              htmlFor="category-symbol"
-            >
-              Category Symbol: <span className="text-[#ff6365]">*</span>
-            </label>
-            <div className="flex items-center gap-2 mt-2">
-              <input
-                ref={categorySymbolRef}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                placeholder="e.g. COM"
-                id="category-symbol"
-                onChange={handleSymbolLimit}
-              />
-            </div>
-            <div className="text-[#ff6365] h-3 text-sm mt-1 mb-2">
-              {isEmpty.categorySymbol ? "Please enter category symbol" : ""}
+              {isEmpty ? "Please enter category name" : ""}
             </div>
           </div>
           <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4">

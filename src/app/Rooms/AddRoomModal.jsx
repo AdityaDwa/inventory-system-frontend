@@ -23,7 +23,7 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
     floorId: false,
   });
 
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   function handleFloorSelection(identifier, selectedFloorOption) {
     setSelectedFloorId(selectedFloorOption.id);
@@ -72,6 +72,9 @@ export default function AddRoomModal({ isModalVisible, onToggle, onSuccess }) {
           const responseData = await response.json();
           onToggle(false);
           onSuccess();
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);

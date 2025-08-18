@@ -20,7 +20,7 @@ export default function Categories() {
   });
   const [doTableReRender, setDoTableReRender] = useState(0);
 
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -95,6 +95,9 @@ export default function Categories() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           handleTableRender();
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);

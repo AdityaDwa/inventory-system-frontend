@@ -195,7 +195,6 @@ export const TABLE_CONFIG = {
         label: "Name",
         additionalStyles: "justify-start w-60",
       },
-      { label: "Category Symbol", additionalStyles: "justify-center w-36" },
       { label: "Total Items", additionalStyles: "justify-center w-24" },
       { label: "Action", additionalStyles: "justify-center w-24" },
     ],
@@ -211,11 +210,6 @@ export const TABLE_CONFIG = {
           additionalStyles: "text-left w-60",
         },
         {
-          key: "categoryAbbreviation",
-          label: "Category Symbol",
-          additionalStyles: "text-center w-36",
-        },
-        {
           key: "totalItems",
           label: "Total Items",
           additionalStyles: "text-center w-24",
@@ -224,7 +218,7 @@ export const TABLE_CONFIG = {
     },
     rowActions: {
       visible: true,
-      view: { show: false },
+      view: { show: true, path: "/categories/category/" },
       edit: false,
       delete: true,
     },
@@ -332,6 +326,10 @@ export const DROPDOWN_RESPONSE_MAPPING = {
   category: {
     idKey: "_id",
     dataKey: "categoryName",
+  },
+  subCategory: {
+    idKey: "_id",
+    dataKey: "subCategoryName",
   },
   item: {
     idKey: "sourceId",

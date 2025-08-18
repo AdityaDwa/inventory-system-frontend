@@ -13,6 +13,7 @@ import PenNibIcon from "../../components/icons/PenNibIcon.jsx";
 
 import TableFilter from "../../components/TableFilter.jsx";
 import DeleteModal from "../../components/DeleteModal.jsx";
+import LoadingIndicator from "../../components/LoadingIndicator.jsx";
 
 import { AuthProvider } from "../../store/AuthProvider.jsx";
 import getEndpoint from "../../constants/apiEndpoints.js";
@@ -22,7 +23,7 @@ import {
 } from "../../utils/formatter.js";
 
 export default function RoomInventory() {
-  const { accessToken } = useContext(AuthProvider);
+  const { accessToken, handleLogout } = useContext(AuthProvider);
 
   const { state } = useLocation();
   const { roomId, itemName } = useParams();
@@ -50,6 +51,7 @@ export default function RoomInventory() {
   const [selectBtn, setSelectBtn] = useState(false);
   const [itemTableData, setItemTableData] = useState([]);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -98,6 +100,10 @@ export default function RoomInventory() {
         if (response.ok) {
           const responseBody = await response.json();
           setItemTableData(responseBody.data);
+          setIsLoading(false);
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -152,6 +158,9 @@ export default function RoomInventory() {
         const responseBody = await response.json();
         navigate("/rooms");
       }
+      if (response.status < 400 && response.status > 450) {
+        handleLogout();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -176,6 +185,9 @@ export default function RoomInventory() {
       if (response.ok) {
         const responseBody = await response.json();
         navigate("/rooms");
+      }
+      if (response.status < 400 && response.status > 450) {
+        handleLogout();
       }
     } catch (error) {
       console.log(error);
@@ -206,6 +218,9 @@ export default function RoomInventory() {
           const responseData = await response.json();
           handleDeleteToggle(false);
           navigate("/rooms");
+        }
+        if (response.status < 400 && response.status > 450) {
+          handleLogout();
         }
       } catch (error) {
         console.log(error);
@@ -252,17 +267,24 @@ export default function RoomInventory() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
-                    <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">Category:</span>
-                    {item.itemCategoryName}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
                     <FloorIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Floor:</span>
                     {room.roomFloorName}
                   </div>
+                  <div className="flex gap-2 text-sm">
+                    <PackageIcon cssClass="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">Category:</span>
+                    <span className="max-w-[19rem]">
+                      {item.itemCategoryName} ({item.itemSubCategoryName})
+                    </span>
+                  </div>
                 </div>
                 <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <RoomIcon />
+                    <span className="font-medium">Room:</span>
+                    {room.roomName}
+                  </div>
                   <div className="flex items-center gap-2 text-sm">
                     <PenNibIcon cssClass="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">Make/Model No:</span>
@@ -273,11 +295,6 @@ export default function RoomInventory() {
                         Not specified
                       </span>
                     )}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <RoomIcon />
-                    <span className="font-medium">Room:</span>
-                    {room.roomName}
                   </div>
                 </div>
               </div>
@@ -390,7 +407,17 @@ export default function RoomInventory() {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-              {itemTableData.length !== 0 ? (
+              {isLoading ? (
+                <tr className="border-b transition-colors hover:bg-muted/50">
+                  <td
+                    className="p-4 h-24 text-center text-muted-foreground flex flex-col justify-center items-center gap-2 my-2"
+                    colSpan="10"
+                  >
+                    Loading data...
+                    <LoadingIndicator />
+                  </td>
+                </tr>
+              ) : itemTableData.length !== 0 ? (
                 itemTableData.map((item, index) => {
                   const status = item.itemStatus;
 

@@ -49,15 +49,14 @@ function App() {
     refreshToken: loginCredential.refreshToken,
     isLoggedIn: loginCredential.isLoggedIn,
     handleLogin: handleLogin,
+    handleLogout: handleLogout,
   };
 
   return (
     <>
       <AuthProvider.Provider value={ctxValue}>
         <div className="flex min-h-screen">
-          {loginCredential.isLoggedIn && (
-            <SideBar handleLogout={handleLogout} />
-          )}
+          {loginCredential.isLoggedIn && <SideBar />}
           <main className="flex-1 overflow-auto">
             <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 h-full">
               <RoutesManager />
