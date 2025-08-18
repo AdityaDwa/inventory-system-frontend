@@ -28,7 +28,7 @@ export default function DashBoard() {
           const responseBody = await response.json();
           setInventoryStats(responseBody.data);
         }
-        if (response.status < 400 && response.status > 450) {
+        if (response.status >= 400 && response.status <= 450) {
           handleLogout();
         }
       } catch (error) {

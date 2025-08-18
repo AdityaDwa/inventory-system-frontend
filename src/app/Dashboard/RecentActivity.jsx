@@ -30,7 +30,7 @@ export default function RecentActivity() {
           setLogData(responseBody.data);
           setIsLoading(false);
         }
-        if (response.status < 400 && response.status > 450) {
+        if (response.status >= 400 && response.status <= 450) {
           handleLogout();
         }
       } catch (error) {

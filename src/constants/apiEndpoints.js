@@ -48,6 +48,7 @@ export const API_ENDPOINTS = {
     updateMultipleData: "/api/v1/items/similar/bulk/status",
     moveMultipleData: "/api/v1/items/similar/bulk/room",
     deleteMultipleData: "/api/v1/items/similar/bulk",
+    downloadData: "/api/v1/items/export/csv/filter/",
   },
 
   activity: {

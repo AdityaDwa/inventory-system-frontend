@@ -9,8 +9,10 @@ export default function AdvancedFilterModal({
   onFilter,
 }) {
   const [dropdownInfo, setDropdownInfo] = useState({
+    floor: "0",
     room: "0",
     category: "0",
+    subCategory: "0",
     item: "0",
     status: "0",
   });
@@ -35,7 +37,7 @@ export default function AdvancedFilterModal({
     submittedStartDate = submittedStartDate === "" ? "0" : submittedStartDate;
     submittedEndDate = submittedEndDate === "" ? "0" : submittedEndDate;
 
-    const payloadBody = `${dropdownInfo.category}/${dropdownInfo.room}/${dropdownInfo.status}/${dropdownInfo.item}/${submittedStartDate}/${submittedEndDate}`;
+    const payloadBody = `${dropdownInfo.category}/${dropdownInfo.subCategory}/${dropdownInfo.room}/${dropdownInfo.floor}/${dropdownInfo.status}/${dropdownInfo.item}/${submittedStartDate}/${submittedEndDate}`;
 
     onFilter(payloadBody);
     onToggle(false);
@@ -63,20 +65,41 @@ export default function AdvancedFilterModal({
             <div className="space-y-2">
               <label
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                htmlFor="item-filter-floor"
+              >
+                Floor:
+              </label>
+              <TableFilter
+                dropdownInitialValue="All floors"
+                dropdownConfigKey="floor"
+                isInitialValueAnOption={true}
+                onStateChange={handleDropdownChange}
+                widthSize="100%"
+                id="item-filter-floor"
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 htmlFor="item-filter-room"
               >
                 Room:
               </label>
               <TableFilter
+                key={dropdownInfo.floor}
                 dropdownInitialValue="All rooms"
                 dropdownConfigKey="room"
                 isInitialValueAnOption={true}
                 onStateChange={handleDropdownChange}
+                isDisabled={dropdownInfo.floor === "0"}
                 widthSize="100%"
                 id="item-filter-room"
-                apiPayload="0"
+                apiPayload={dropdownInfo.floor}
               />
             </div>
+          </section>
+
+          <section className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -91,6 +114,25 @@ export default function AdvancedFilterModal({
                 onStateChange={handleDropdownChange}
                 widthSize="100%"
                 id="item-filter-category"
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                htmlFor="item-filter-sub-category"
+              >
+                Sub Category:
+              </label>
+              <TableFilter
+                key={dropdownInfo.category}
+                dropdownInitialValue="All sub-categories"
+                dropdownConfigKey="subCategory"
+                isInitialValueAnOption={true}
+                onStateChange={handleDropdownChange}
+                isDisabled={dropdownInfo.category === "0"}
+                widthSize="100%"
+                id="item-filter-sub-category"
+                apiPayload={dropdownInfo.category}
               />
             </div>
           </section>

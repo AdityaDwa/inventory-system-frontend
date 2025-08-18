@@ -42,7 +42,7 @@ export default function AddCategoryModal({
           onToggle(false);
           onSuccess();
         }
-        if (response.status < 400 && response.status > 450) {
+        if (response.status >= 400 && response.status <= 450) {
           handleLogout();
         }
       } catch (error) {

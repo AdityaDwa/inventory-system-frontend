@@ -89,7 +89,7 @@ export default function RoomDetail() {
           setRoomStatusBreakdown(breakdown);
           setIsLoading(false);
         }
-        if (response.status < 400 && response.status > 450) {
+        if (response.status >= 400 && response.status <= 450) {
           handleLogout();
         }
       } catch (error) {
@@ -144,7 +144,7 @@ export default function RoomDetail() {
           handleDeleteToggle(false);
           navigate("/rooms");
         }
-        if (response.status < 400 && response.status > 450) {
+        if (response.status >= 400 && response.status <= 450) {
           handleLogout();
         }
       } catch (error) {
